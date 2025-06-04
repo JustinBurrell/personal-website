@@ -7,8 +7,8 @@ const Navbar = () => {
   const navItems = [
     { name: 'About', to: 'about' },
     { name: 'Education', to: 'education' },
+    { name: 'Organizations', to: 'organizations' },
     { name: 'Experience', to: 'experience' },
-    { name: 'Leadership', to: 'leadership' },
     { name: 'Projects', to: 'projects' },
     { name: 'Awards', to: 'awards' },
     { name: 'Gallery', to: 'gallery' },
@@ -19,15 +19,10 @@ const Navbar = () => {
     <nav className="fixed w-full bg-white shadow-md z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
+
+          {/* Logo */}  
           <div className="flex-shrink-0 flex items-center">
-            <Link
-              to="about"
-              smooth={true}
-              duration={500}
-              className="text-xl font-bold cursor-pointer"
-            >
-              Justin Burrell
-            </Link>
+            <Link smooth={true} duration={500} className="text-xl font-bold cursor-pointer">Justin Burrell</Link>
           </div>
           
           {/* Desktop Navigation */}

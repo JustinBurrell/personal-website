@@ -1,12 +1,16 @@
 import React from 'react';
-   
+import SectionTitle from '../ui/SectionTitle';
+import Card from '../ui/Card';
+
 const Experience = () => {
   return (
-    <section id="experience" className="min-h-screen flex items-center justify-center">
+    <section id="experience" className="min-h-screen py-16">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-8">Experience</h2>
+        <SectionTitle>Experience</SectionTitle>
         <div className="max-w-3xl mx-auto">
-          {/* Section specific content */}
+          <Card>
+            {/* Section specific content */}
+          </Card>
         </div>
       </div>
     </section>
