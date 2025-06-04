@@ -1,7 +1,7 @@
 import React from 'react';
-import SectionTitle from '../ui/SectionTitle';
-import Card from '../ui/Card';
-import Button from '../ui/Button';
+import SectionTitle from '../../assets/ui/SectionTitle.js';
+import Card from '../../assets/ui/Card.js';
+import Button from '../../assets/ui/Button.js';
 import portfolioData from '../../data/portfolioData.ts';
 
 const Projects = () => {

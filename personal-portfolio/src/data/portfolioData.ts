@@ -34,6 +34,7 @@ interface ExperienceItem {
     endDate: string;
     location: string;
     responsibilities: string[];
+    skills: string[];
     technologies?: string[];
 }
 
@@ -57,6 +58,7 @@ interface ProjectItem {
     title: string;
     description: string;
     technologies: string[];
+    skills: string[];
     githubUrl?: string;
     liveUrl?: string;
     imageUrl?: string;
@@ -129,6 +131,7 @@ const portfolioData: PortfolioData = {
                 "Key responsibility 1",
                 "Key responsibility 2"
             ],
+            skills: ["Skill 1", "Skill 2"],
             technologies: ["Tech 1", "Tech 2"]
         }
     ],
@@ -155,6 +158,7 @@ const portfolioData: PortfolioData = {
             title: "Project Name",
             description: "Project description",
             technologies: ["Tech 1", "Tech 2", "Tech 3"],
+            skills: ["Skill 1", "Skill 2"],
             githubUrl: "https://github.com/username/project",
             liveUrl: "https://project-demo.com",
             imageUrl: "/path/to/project-image.jpg",
@@ -167,6 +171,7 @@ const portfolioData: PortfolioData = {
             title: "Minimal Project",
             description: "This is a minimal project entry",
             technologies: ["React"],
+            skills: ["Skill 1", "Skill 2"],
             highlights: ["Main feature"]
         }
     ]
