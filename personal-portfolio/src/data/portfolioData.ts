@@ -20,8 +20,8 @@ interface AwardItem {
 
 interface EducationItem {
     school: string;
-    degree: string;
-    field: string;
+    education_type: string;
+    major: string;
     graduationDate: string;
     gpa?: string;
     relevantCourses?: string[];
@@ -75,7 +75,7 @@ interface PortfolioData {
 }
 
 // Portfolio data
-export const portfolioData: PortfolioData = {
+const portfolioData: PortfolioData = {
     home: {
         title: "Your Name",
         subtitle: "Your Title/Role",
@@ -100,13 +100,19 @@ export const portfolioData: PortfolioData = {
             organization: "Organization Name",
             date: "Month Year",
             description: "Description of the award and its significance"
+        },
+        {
+            title: "Second Award",
+            organization: "Another Organization",
+            date: "January 2024",
+            description: "Description of your second award and its achievements"
         }
     ],
     education: [
         {
             school: "University Name",
-            degree: "Degree Type",
-            field: "Field of Study",
+            education_type: "Degree Type",
+            major: "Field of Study",
             graduationDate: "Month Year",
             gpa: "X.XX",
             relevantCourses: ["Course 1", "Course 2", "Course 3"]
@@ -156,6 +162,14 @@ export const portfolioData: PortfolioData = {
                 "Key feature 1",
                 "Key feature 2"
             ]
+        },
+        {
+            title: "Minimal Project",
+            description: "This is a minimal project entry",
+            technologies: ["React"],
+            highlights: ["Main feature"]
         }
     ]
-}; 
+};
+
+export default portfolioData; 

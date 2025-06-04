@@ -1,6 +1,8 @@
 import React from 'react';
 import SectionTitle from '../ui/SectionTitle';
 import Card from '../ui/Card';
+import Button from '../ui/Button';
+import portfolioData from '../../data/portfolioData.ts';
 
 const Contact = () => {
   return (

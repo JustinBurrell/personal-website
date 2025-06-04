@@ -9,6 +9,7 @@ import Projects from './components/sections/Projects';
 import Awards from './components/sections/Awards';
 import Gallery from './components/sections/Gallery';
 import Contact from './components/sections/Contact';
+import portfolioData from './data/portfolioData.ts';
 import './App.css';
 
 function App() {
