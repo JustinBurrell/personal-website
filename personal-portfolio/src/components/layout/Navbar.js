@@ -26,7 +26,7 @@ const Navbar = () => {
               duration={500}
               className="text-xl font-bold cursor-pointer"
             >
-              Your Name
+              Justin Burrell
             </Link>
           </div>
           
