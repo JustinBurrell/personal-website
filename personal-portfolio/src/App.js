@@ -1,5 +1,6 @@
 import React from 'react';
 import Navbar from './components/layout/Navbar';
+import Home from './components/sections/Home';
 import About from './components/sections/About';
 import Education from './components/sections/Education';
 import Experience from './components/sections/Experience';
@@ -12,6 +13,7 @@ import './App.css';
 
 function App() {
   const sections = [
+    { Component: Home, id: 'home' },
     { Component: About, id: 'about' },
     { Component: Education, id: 'education' },
     { Component: Organizations, id: 'organizations' },

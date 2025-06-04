@@ -22,7 +22,7 @@ const Navbar = () => {
 
           {/* Logo */}  
           <div className="flex-shrink-0 flex items-center">
-            <Link smooth={true} duration={500} className="text-xl font-bold cursor-pointer">Justin Burrell</Link>
+            <Link to="home" smooth={true} duration={500} className="text-xl font-bold cursor-pointer">Justin Burrell</Link>
           </div>
           
           {/* Desktop Navigation */}
