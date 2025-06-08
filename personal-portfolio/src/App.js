@@ -18,8 +18,8 @@ function App() {
     { Component: About, id: 'about' },
     { Component: Education, id: 'education' },
     { Component: Organizations, id: 'organizations' },
-    { Component: Experience, id: 'experience' },
     { Component: Projects, id: 'projects' },
+    { Component: Experience, id: 'experience' },
     { Component: Awards, id: 'awards' },
     { Component: Gallery, id: 'gallery' },
     { Component: Contact, id: 'contact' }

@@ -1,8 +1,9 @@
 // Type definitions for portfolio sections
 interface HomeSection {
+    imageUrl: string;
     title: string;
-    subtitle: string;
     description: string;
+    resumeUrl: string;
 }
 
 interface AboutSection {
@@ -79,21 +80,41 @@ interface PortfolioData {
 // Portfolio data
 const portfolioData: PortfolioData = {
     home: {
-        title: "Your Name",
-        subtitle: "Your Title/Role",
-        description: "Brief introduction or tagline about yourself"
+        imageUrl: "/public/assets/images/home/FLOC Headshot.jpeg",
+        title: "Hi, I'm Justin Burrell.",
+        description: "With a passion for technology and a knack for problem-solving, I aim to leverage my technical skills, consulting experience, and leadership background to drive innovation and create scalable solutions that make a positive impact.",
+        resumeUrl: "/public/assets/documents/Justin Burrell 6-4-25 Resume.pdf"
     },
     about: {
-        introduction: "Detailed introduction about yourself and your professional journey",
+        introduction: "Growing up in the Bronx, NY, I was always interested in technology. Whether it was helping my grandmother set up her iPad, or keeping up to date with the newest iPhone rolout, I was curious about how tech improved our quality of life. I joined the Prep for Prep program in 2016, which led to me pursuing robotics and leadership development at Horace Mann School. Upon graduating from Horace Mann, I began my collegiate career at Lehigh University, where I am a rising senior pursuing a Bachelor's of Science in Computer Science and Engineering. At Lehigh, I have been able to explore my interests in software engineering, consulting, and project management. I have leveraged experiences such as a 2024 Launch Tech Consulting Internship with EY, and a current Full Stack Engineering and Business Strategist role at Frood, formerly known as Hungry Hawks, to develop the skillset needed to deliver real-world impact. I am also an advocate for diversity, equity, and inclusion, building leadership skills through Kappa Alpha Psi Fraternity, Inc., Lehigh's Black Student Union, ColorStack, the Men of Color Alliance, and Student Senate. My ultimate goal is to leverage my technical skills, consulting experience, and leadership background to drive innovation and create scalable solutions that make a positive impact.",
         skills: [
-            "Skill 1",
-            "Skill 2",
-            "Skill 3"
+            "Python",
+            "Java",
+            "JavaScript",
+            "SQL",
+            "C#",
+            "HTML",
+            "CSS",
+            "React",
+            "Maven",
+            "Flutter",
+            "ASP.NET",
+            "Firebase",
+            "Docker",
+            "Git",
+            "People Management",
+            "Problem Solving",
+            "Effective Communication",
         ],
         interests: [
-            "Interest 1",
-            "Interest 2",
-            "Interest 3"
+            "New York Knicks",
+            "Cooking",
+            "Travel",
+            "R&B and Hip Hop",
+            "Software Engineering",
+            "Consulting",
+            "Project Management",
+            "Entrepreneurship",
         ]
     },
     awards: [
