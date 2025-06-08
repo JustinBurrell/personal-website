@@ -4,6 +4,9 @@ interface HomeSection {
     title: string;
     description: string;
     resumeUrl: string;
+    linkedinUrl: string;
+    githubUrl: string;
+    email: string;
 }
 
 interface AboutSection {
@@ -80,10 +83,13 @@ interface PortfolioData {
 // Portfolio data
 const portfolioData: PortfolioData = {
     home: {
-        imageUrl: "/public/assets/images/home/FLOC Headshot.jpeg",
+        imageUrl: "/assets/images/home/FLOC Headshot.jpeg",
         title: "Hi, I'm Justin Burrell.",
         description: "With a passion for technology and a knack for problem-solving, I aim to leverage my technical skills, consulting experience, and leadership background to drive innovation and create scalable solutions that make a positive impact.",
-        resumeUrl: "/public/assets/documents/Justin Burrell 6-4-25 Resume.pdf"
+        resumeUrl: "/assets/documents/Justin Burrell 6-4-25 Resume.pdf",
+        linkedinUrl: "https://www.linkedin.com/in/thejustinburrell/",
+        githubUrl: "https://github.com/JustinBurrell",
+        email: "justinburrell715@gmail.com",
     },
     about: {
         introduction: "Growing up in the Bronx, NY, I was always interested in technology. Whether it was helping my grandmother set up her iPad, or keeping up to date with the newest iPhone rolout, I was curious about how tech improved our quality of life. I joined the Prep for Prep program in 2016, which led to me pursuing robotics and leadership development at Horace Mann School. Upon graduating from Horace Mann, I began my collegiate career at Lehigh University, where I am a rising senior pursuing a Bachelor's of Science in Computer Science and Engineering. At Lehigh, I have been able to explore my interests in software engineering, consulting, and project management. I have leveraged experiences such as a 2024 Launch Tech Consulting Internship with EY, and a current Full Stack Engineering and Business Strategist role at Frood, formerly known as Hungry Hawks, to develop the skillset needed to deliver real-world impact. I am also an advocate for diversity, equity, and inclusion, building leadership skills through Kappa Alpha Psi Fraternity, Inc., Lehigh's Black Student Union, ColorStack, the Men of Color Alliance, and Student Senate. My ultimate goal is to leverage my technical skills, consulting experience, and leadership background to drive innovation and create scalable solutions that make a positive impact.",
