@@ -11,7 +11,7 @@ const Home = () => {
   return (
     <section id="home" className="min-h-screen py-4">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col space-y-8 max-w-6xl mx-auto">
+        <div className="flex flex-col space-y-16 max-w-6xl mx-auto">
           {/* Title, Description, and Image grid */}
           <div className="grid md:grid-cols-5 gap-8">
             {/* Left side: Content */}
