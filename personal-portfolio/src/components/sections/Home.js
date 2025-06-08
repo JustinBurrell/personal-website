@@ -16,7 +16,7 @@ const Home = () => {
           <div className="grid md:grid-cols-5 gap-8">
             {/* Left side: Content */}
             <div className="md:col-span-3">
-              <Card className="h-full flex flex-col justify-center py-2">
+              <Card variant="transparent" className="h-full flex flex-col justify-center p-2">
                 <div className="space-y-3">
                   <h1 className="text-5xl md:text-6xl font-bold text-gray-800">
                     {home.title}
