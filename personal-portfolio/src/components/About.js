@@ -15,23 +15,11 @@ const About = () => {
               {/* Title */}
               <h2 className="text-4xl font-bold text-gray-800 mb-12 text-center">My Journey</h2>
 
-              {/* Photo and Introduction */}
-              <div className="grid md:grid-cols-2 gap-8 mb-12">
-                {/* Left side: Image */}
-                <div className="flex items-center justify-center">
-                  <img
-                    src={about.imageUrl}
-                    alt="My Journey"
-                    className="rounded-lg shadow-lg w-full h-full object-cover"
-                  />
-                </div>
-
-                {/* Right side: Introduction */}
-                <div className="flex flex-col justify-center">
-                  <p className="text-xl text-gray-600 leading-relaxed whitespace-pre-wrap">
-                    {about.introduction}
-                  </p>
-                </div>
+              {/* Introduction */}
+              <div className="mb-12">
+                <p className="text-lg text-gray-600 leading-relaxed whitespace-pre-wrap">
+                  {about.introduction}
+                </p>
               </div>
 
               {/* Divider */}
