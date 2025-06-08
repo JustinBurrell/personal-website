@@ -51,7 +51,7 @@ const Home = () => {
                       href={home.resumeUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 text-base rounded-lg transition-colors"
+                      className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-1.5 text-base rounded-md transition-colors"
                     >
                       Resume
                     </Button>
