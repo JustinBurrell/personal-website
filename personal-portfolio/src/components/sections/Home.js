@@ -77,11 +77,11 @@ const Home = () => {
           <Card className="w-full">
             <div className="grid md:grid-cols-3 gap-8 p-6">
               {home.qualities.map((quality, index) => (
-                <div key={index} className="flex flex-col items-center text-center space-y-4">
-                  <h3 className="text-2xl font-bold text-gray-800">
+                <div key={index} className="flex flex-col h-full">
+                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-4">
                     {quality.attribute}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-gray-600 leading-relaxed text-center flex-grow">
                     {quality.description}
                   </p>
                 </div>
