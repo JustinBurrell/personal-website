@@ -1,28 +1,29 @@
 import React, { useState } from 'react';
-import { Link } from 'react-scroll';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
   const navItems = [
-    { name: 'About', to: 'about' },
-    { name: 'Education', to: 'education' },
-    { name: 'Organizations', to: 'organizations' },
-    { name: 'Projects', to: 'projects' },
-    { name: 'Experience', to: 'experience' },
-    { name: 'Awards', to: 'awards' },
-    { name: 'Gallery', to: 'gallery' },
-    { name: 'Contact', to: 'contact' },
+    { name: 'Home', to: '/' },
+    { name: 'Education', to: '/education' },
+    { name: 'Experience', to: '/experience' },
+    { name: 'Projects', to: '/projects' },
+    { name: 'Awards', to: '/awards' },
   ];
+
+  const isActive = (path) => {
+    return location.pathname === path ? 'text-indigo-600' : 'text-gray-700';
+  };
 
   return (
     <nav className="fixed w-full bg-white shadow-md z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-
           {/* Logo */}  
           <div className="flex-shrink-0 flex items-center">
-            <Link to="home" smooth={true} duration={500} className="text-xl font-bold cursor-pointer">Justin Burrell</Link>
+            <Link to="/" className="text-xl font-bold">Justin Burrell</Link>
           </div>
           
           {/* Desktop Navigation */}
@@ -31,9 +32,7 @@ const Navbar = () => {
               <Link
                 key={item.name}
                 to={item.to}
-                smooth={true}
-                duration={500}
-                className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 cursor-pointer"
+                className={`px-3 py-2 rounded-md text-sm font-medium ${isActive(item.to)} hover:text-gray-900 hover:bg-gray-50`}
               >
                 {item.name}
               </Link>
@@ -91,9 +90,7 @@ const Navbar = () => {
               <Link
                 key={item.name}
                 to={item.to}
-                smooth={true}
-                duration={500}
-                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 cursor-pointer"
+                className={`block px-3 py-2 rounded-md text-base font-medium ${isActive(item.to)} hover:text-gray-900 hover:bg-gray-50`}
                 onClick={() => setIsOpen(false)}
               >
                 {item.name}
