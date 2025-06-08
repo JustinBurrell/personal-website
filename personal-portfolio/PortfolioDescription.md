@@ -13,28 +13,43 @@ This is my personal portfolio website built with React and Tailwind CSS. It show
 | Data Format | JSON                   | Used for storing project and leadership content       |
 
 ## Project Structure
-/public
-  /assets          # Images, resume, etc.
-
-/src
-  /components       # React components for each portfolio section
-    Navbar.js
-    Footer.js
-    About.js
-    Education.js
-    Experience.js
-    Leadership.js
-    Organizations.js
-    Projects.js
-    Awards.js
-    Gallery.js
-    Contact.js
-
-  /data             # Optional static content in JSON format
-    projects.json
-    leadership.json
-
-  App.js            # Root application component
-  index.js          # Entry point
-  index.css         # Tailwind base styles
-  tailwind.config.js
+personal-portfolio/
+├── src/
+│   ├── assets/
+│   │   ├── ui/
+│   │   │   ├── Button.js
+│   │   │   ├── Card.js
+│   │   │   └── SectionTitle.js
+│   │   └── shared/
+│   │       ├── Navbar.js
+│   │       └── PageTransition.js
+│   ├── components/
+│   │   ├── About.js
+│   │   ├── Awards.js
+│   │   ├── Contact.js
+│   │   ├── Education.js
+│   │   ├── Experience.js
+│   │   ├── Gallery.js
+│   │   ├── Home.js
+│   │   ├── Organizations.js
+│   │   └── Projects.js
+│   ├── data/
+│   │   └── portfolioData.ts
+│   ├── App.js
+│   ├── App.css
+│   ├── App.test.js
+│   ├── index.js
+│   ├── index.css
+│   └── reportWebVitals.js
+├── public/
+│   ├── assets/
+│   ├── index.html
+│   └── manifest.json
+├── node_modules/        # Dependencies directory (numerous files)
+├── package.json        # Project configuration and dependencies
+├── package-lock.json   # Locked versions of dependencies
+├── tailwind.config.js  # Tailwind CSS configuration
+├── postcss.config.js   # PostCSS configuration
+├── .gitignore         # Git ignore rules
+├── README.md          # Project documentation
+└── PortfolioDescription.md  # Additional project documentation
