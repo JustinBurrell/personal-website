@@ -7,6 +7,10 @@ interface HomeSection {
     linkedinUrl: string;
     githubUrl: string;
     email: string;
+    qualities: Array<{
+        attribute: string;
+        description: string;
+    }>;
 }
 
 interface AboutSection {
@@ -90,6 +94,20 @@ const portfolioData: PortfolioData = {
         linkedinUrl: "https://www.linkedin.com/in/thejustinburrell/",
         githubUrl: "https://github.com/JustinBurrell",
         email: "justinburrell715@gmail.com",
+        qualities: [
+            {
+                attribute: "Aspiring Software Engineer and Tech Consultant",
+                description: "Inspired by advancement in Artificial Intelligence and Software, I wish to pursue a tech career where I can lead and assist others in creating innovative products and services."
+            },
+            {
+                attribute: "Culture-Driven Leader",
+                description: "I believe strong team culture is the foundation of success. As a leader, I set the tone for communication, advocacy, and inclusion, creating an environment where every team member feels empowered to contribute fully and operate efficiently."
+            },
+            {
+                attribute: "Analytical Problem Solver",
+                description: "Through experiences within Kappa Alpha Psi Fraternity Inc., Lehigh University, and Prep for Prep, I am an analytical thinker with a proven track record of breaking down complex challenges into manageable solutions."
+            },
+        ]
     },
     about: {
         introduction: "Growing up in the Bronx, NY, I was always interested in technology. Whether it was helping my grandmother set up her iPad, or keeping up to date with the newest iPhone rolout, I was curious about how tech improved our quality of life. I joined the Prep for Prep program in 2016, which led to me pursuing robotics and leadership development at Horace Mann School. Upon graduating from Horace Mann, I began my collegiate career at Lehigh University, where I am a rising senior pursuing a Bachelor's of Science in Computer Science and Engineering. At Lehigh, I have been able to explore my interests in software engineering, consulting, and project management. I have leveraged experiences such as a 2024 Launch Tech Consulting Internship with EY, and a current Full Stack Engineering and Business Strategist role at Frood, formerly known as Hungry Hawks, to develop the skillset needed to deliver real-world impact. I am also an advocate for diversity, equity, and inclusion, building leadership skills through Kappa Alpha Psi Fraternity, Inc., Lehigh's Black Student Union, ColorStack, the Men of Color Alliance, and Student Senate. My ultimate goal is to leverage my technical skills, consulting experience, and leadership background to drive innovation and create scalable solutions that make a positive impact.",
