@@ -25,7 +25,8 @@ const Home = () => {
                     {home.description}
                   </p>
                   {/* Organizations */}
-                  <div className="flex flex-wrap gap-1 justify-center pt-2">
+                  <div className="flex flex-wrap gap-1 justify-center py-6">
+                    <span className="text-sm text-gray-600 mr-2 self-center">Organizations: </span>
                     {home.organizations.map((org, index) => (
                       <Button
                         key={index}
@@ -41,6 +42,8 @@ const Home = () => {
                       </Button>
                     ))}
                   </div>
+                  {/* Divider */}
+                  <div className="w-full h-px bg-gray-300 mx-auto"></div>
                   {/* Resume and Social Links */}
                   <div className="flex items-center justify-center gap-8 pt-3">
                     <Button
