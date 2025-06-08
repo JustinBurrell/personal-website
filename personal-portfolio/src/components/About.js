@@ -28,7 +28,7 @@ const About = () => {
 
                 {/* Right side: Introduction */}
                 <div className="flex flex-col justify-center">
-                  <p className="text-xl text-gray-600 leading-relaxed">
+                  <p className="text-xl text-gray-600 leading-relaxed whitespace-pre-wrap">
                     {about.introduction}
                   </p>
                 </div>
