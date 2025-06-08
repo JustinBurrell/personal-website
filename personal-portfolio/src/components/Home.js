@@ -24,6 +24,24 @@ const Home = () => {
                   <p className="text-xl md:text-2xl text-gray-600 leading-relaxed">
                     {home.description}
                   </p>
+                  {/* Organizations */}
+                  <div className="flex flex-wrap gap-1 justify-center pt-2">
+                    {home.organizations.map((org, index) => (
+                      <Button
+                        key={index}
+                        as="a"
+                        href={org.orgUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        variant="organization"
+                        size="small"
+                        customColor={org.orgColor}
+                      >
+                        {org.name}
+                      </Button>
+                    ))}
+                  </div>
+                  {/* Resume and Social Links */}
                   <div className="flex items-center justify-center gap-8 pt-3">
                     <Button
                       as="a"

@@ -7,6 +7,12 @@ interface HomeSection {
     linkedinUrl: string;
     githubUrl: string;
     email: string;
+    organizations: Array<{
+        name: string;
+        orgUrl: string;
+        orgColor: string;
+        orgPortfolioUrl?: string;
+    }>;
     qualities: Array<{
         attribute: string;
         description: string;
@@ -94,6 +100,33 @@ const portfolioData: PortfolioData = {
         linkedinUrl: "https://www.linkedin.com/in/thejustinburrell/",
         githubUrl: "https://github.com/JustinBurrell",
         email: "justinburrell715@gmail.com",
+        organizations: [
+            {
+                name: "Kappa Alpha Psi Fraternity, Inc.",
+                orgUrl: "https://www.kappaalphapsi1911.com/",
+                orgColor: "crimson",
+            },
+            {
+                name: "Prep for Prep",
+                orgUrl: "https://www.prepforprep.org/",
+                orgColor: "crimson",
+            },
+            {
+                name: "ColorStack",
+                orgUrl: "https://www.colorstack.org/",
+                orgColor: "#008B8B",
+            },
+            {
+                name: "NSBE",
+                orgUrl: "https://www.nsbe.org/",
+                orgColor: "#DAA520",
+            },
+            {
+                name: "All Star Code",
+                orgUrl: "https://www.allstarcode.org/",
+                orgColor: "blue",
+            }
+        ],
         qualities: [
             {
                 attribute: "Aspiring Software Engineer and Tech Consultant",
