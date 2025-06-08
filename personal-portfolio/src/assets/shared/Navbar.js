@@ -1,11 +1,30 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Link as ScrollLink } from 'react-scroll';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link as ScrollLink, scroller } from 'react-scroll';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState(null);
   const location = useLocation();
+  const navigate = useNavigate();
+  const navRef = useRef(null);
+  const timeoutRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        setActiveSubmenu(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   const navItems = [
     {
@@ -28,14 +47,38 @@ const Navbar = () => {
   };
 
   const handleMouseEnter = (itemName) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
     setActiveSubmenu(itemName);
   };
 
   const handleMouseLeave = () => {
-    // Add a small delay before closing the submenu
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       setActiveSubmenu(null);
-    }, 100);
+    }, 300);
+  };
+
+  const handleNavItemClick = (item) => {
+    navigate(item.to);
+    if (location.pathname === '/' && item.to === '/') {
+      scrollToTop();
+    }
+    setActiveSubmenu(null);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  const handleHomeClick = (e) => {
+    if (location.pathname === '/') {
+      e.preventDefault();
+      scrollToTop();
+    }
   };
 
   const handleSubItemClick = (subItem) => {
@@ -72,12 +115,12 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed w-full bg-white shadow-md z-50">
+    <nav className="fixed w-full bg-white shadow-md z-50" ref={navRef}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo */}  
           <div className="flex-shrink-0 flex items-center">
-            <Link to="/" className="text-xl font-bold">Justin Burrell</Link>
+            <Link to="/" onClick={handleHomeClick} className="text-xl font-bold">Justin Burrell</Link>
           </div>
           
           {/* Desktop Navigation */}
@@ -86,15 +129,15 @@ const Navbar = () => {
               <div 
                 key={item.name} 
                 className="relative"
-                onMouseEnter={() => handleMouseEnter(item.name)}
-                onMouseLeave={handleMouseLeave}
+                onMouseEnter={() => item.subItems && handleMouseEnter(item.name)}
+                onMouseLeave={item.subItems ? handleMouseLeave : undefined}
               >
-                <Link
-                  to={item.to}
+                <button
+                  onClick={() => handleNavItemClick(item)}
                   className={`px-3 py-2 rounded-md text-sm font-medium ${isActive(item.to)} hover:text-gray-900 hover:bg-gray-50`}
                 >
                   {item.name}
-                </Link>
+                </button>
                 {item.subItems && activeSubmenu === item.name && (
                   <div 
                     className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
@@ -163,16 +206,12 @@ const Navbar = () => {
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             {navItems.map((item) => (
               <div key={item.name}>
-                <Link
-                  to={item.to}
-                  className={`block px-3 py-2 rounded-md text-base font-medium ${isActive(item.to)} hover:text-gray-900 hover:bg-gray-50`}
-                  onClick={() => {
-                    if (!item.subItems) setIsOpen(false);
-                    setActiveSubmenu(activeSubmenu === item.name ? null : item.name);
-                  }}
+                <button
+                  onClick={() => handleNavItemClick(item)}
+                  className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium ${isActive(item.to)} hover:text-gray-900 hover:bg-gray-50`}
                 >
                   {item.name}
-                </Link>
+                </button>
                 {item.subItems && activeSubmenu === item.name && (
                   <div className="pl-4 py-2 space-y-1">
                     {item.subItems.map((subItem) => (
