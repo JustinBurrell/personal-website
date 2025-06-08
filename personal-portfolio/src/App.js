@@ -11,7 +11,6 @@ import Projects from './components/Projects';
 import Awards from './components/Awards';
 import Gallery from './components/Gallery';
 import Contact from './components/Contact';
-import portfolioData from './data/portfolioData.ts';
 import './App.css';
 
 // Wrap each page component with PageTransition

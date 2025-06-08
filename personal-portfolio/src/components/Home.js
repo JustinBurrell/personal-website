@@ -11,11 +11,11 @@ const Home = () => {
 
   return (
     <AnimationWrapper>
-      <section id="home" className="min-h-screen py-4">
+      <section id="home" className="min-h-screen py-2">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col space-y-16 max-w-6xl mx-auto">
+          <div className="flex flex-col space-y-24 max-w-6xl mx-auto">
             {/* Title, Description, and Image grid */}
-            <div className="grid md:grid-cols-5 gap-8">
+            <div className="grid md:grid-cols-5 gap-8 pt-32">
               {/* Left side: Content */}
               <div className="md:col-span-3">
                 <Card variant="transparent" className="h-full flex flex-col justify-center p-2">
