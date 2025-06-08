@@ -1,34 +1,42 @@
 import React from 'react';
-import SectionTitle from '../assets/ui/SectionTitle';
-import Card from '../assets/ui/Card';
-import Button from '../assets/ui/Button';
+import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import portfolioData from '../data/portfolioData.ts';
 
 const Education = () => {
+  const { education } = portfolioData;
+
   return (
-    <section id="education" className="min-h-screen py-16 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <SectionTitle>Education</SectionTitle>
-        <div className="max-w-3xl mx-auto">
-          <div className="space-y-8">
-            <Card>
-              <h3 className="text-2xl font-semibold mb-2">University Name</h3>
-              <p className="text-gray-600 mb-2">Degree • Major</p>
-              <p className="text-gray-500 mb-4">Expected Graduation: Year</p>
-              <div className="space-y-4">
-                <div>
-                  <h4 className="text-lg font-medium mb-2">Relevant Coursework</h4>
-                  <ul className="list-disc list-inside text-gray-700">
-                    <li>Course 1</li>
-                    <li>Course 2</li>
-                  </ul>
-                </div>
+    <AnimationWrapper>
+      <section id="education" className="min-h-screen py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-bold text-center mb-12">Education</h2>
+          <div className="max-w-4xl mx-auto space-y-8">
+            {education.map((edu, index) => (
+              <div key={index} className="bg-white rounded-lg shadow-lg p-6">
+                <h3 className="text-2xl font-semibold mb-2">{edu.school}</h3>
+                <p className="text-gray-600 mb-2">{edu.education_type} in {edu.major}</p>
+                <p className="text-gray-600 mb-4">Graduation: {edu.graduationDate}</p>
+                {edu.gpa && (
+                  <p className="text-gray-600 mb-4">GPA: {edu.gpa}</p>
+                )}
+                {edu.relevantCourses && (
+                  <div>
+                    <h4 className="text-lg font-semibold mb-2">Relevant Courses</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {edu.relevantCourses.map((course, idx) => (
+                        <span key={idx} className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">
+                          {course}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-            </Card>
+            ))}
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </AnimationWrapper>
   );
 };
 
