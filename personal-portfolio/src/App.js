@@ -1,18 +1,43 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Navbar from './components/layout/Navbar';
-import Home from './components/sections/Home';
-import About from './components/sections/About';
-import Education from './components/sections/Education';
-import Experience from './components/sections/Experience';
-import Projects from './components/sections/Projects';
-import Awards from './components/sections/Awards';
-import Gallery from './components/sections/Gallery';
-import Contact from './components/sections/Contact';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import Navbar from './assets/shared/Navbar';
+import PageTransition from './assets/shared/PageTransition';
+import Home from './components/Home';
+import About from './components/About';
+import Education from './components/Education';
+import Experience from './components/Experience';
+import Projects from './components/Projects';
+import Awards from './components/Awards';
+import Gallery from './components/Gallery';
+import Contact from './components/Contact';
 import portfolioData from './data/portfolioData.ts';
 import './App.css';
 
+// Wrap each page component with PageTransition
+const TransitionWrapper = ({ children }) => {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait">
+      <PageTransition key={location.pathname}>
+        {children}
+      </PageTransition>
+    </AnimatePresence>
+  );
+};
+
 function HomePage() {
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      const element = document.querySelector(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [hash]);
+
   return (
     <div>
       <Home />
@@ -24,25 +49,54 @@ function HomePage() {
 }
 
 function App() {
+  const location = useLocation();
+
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-50">
-        <Navbar />
-        {/* Main content with routes */}
-        <main className="pt-16"> {/* Padding top for fixed navbar */}
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/education" element={<Education />} />
-            <Route path="/experience" element={<Experience />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/awards" element={<Awards />} />
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      {/* Main content with routes */}
+      <main className="pt-16"> {/* Padding top for fixed navbar */}
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={
+              <TransitionWrapper>
+                <HomePage />
+              </TransitionWrapper>
+            } />
+            <Route path="/education" element={
+              <TransitionWrapper>
+                <Education />
+              </TransitionWrapper>
+            } />
+            <Route path="/experience" element={
+              <TransitionWrapper>
+                <Experience />
+              </TransitionWrapper>
+            } />
+            <Route path="/projects" element={
+              <TransitionWrapper>
+                <Projects />
+              </TransitionWrapper>
+            } />
+            <Route path="/awards" element={
+              <TransitionWrapper>
+                <Awards />
+              </TransitionWrapper>
+            } />
             {/* Redirect any unknown routes to home */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-        </main>
-      </div>
-    </Router>
+        </AnimatePresence>
+      </main>
+    </div>
   );
 }
 
-export default App;
+// Wrap the entire app with Router
+const AppWrapper = () => (
+  <Router>
+    <App />
+  </Router>
+);
+
+export default AppWrapper;
