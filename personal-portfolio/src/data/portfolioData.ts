@@ -151,7 +151,7 @@ const portfolioData: PortfolioData = {
             "Java",
             "JavaScript",
             "SQL",
-            "C#",
+            "C",
             "HTML",
             "CSS",
             "React",
@@ -161,9 +161,8 @@ const portfolioData: PortfolioData = {
             "Firebase",
             "Docker",
             "Git",
-            "People Management",
-            "Problem Solving",
-            "Effective Communication",
+            "Kubernetes",
+            "Dart"
         ],
         interests: [
             "New York Knicks",

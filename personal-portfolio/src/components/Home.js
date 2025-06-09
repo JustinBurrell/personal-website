@@ -48,15 +48,15 @@ const Home = () => {
                     <div className="w-full h-px bg-gray-300 mx-auto"></div>
                     {/* Resume and Contact Buttons */}
                     <div className="flex items-center justify-center gap-4 pt-3">
-                      <Button
-                        as="a"
-                        href={home.resumeUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    <Button
+                      as="a"
+                      href={home.resumeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
                         className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-1.5 text-base rounded-md transition-colors"
-                      >
-                        Resume
-                      </Button>
+                    >
+                      Resume
+                    </Button>
                       <Button
                         as="button"
                         className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-1.5 text-base rounded-md transition-colors"
@@ -70,7 +70,7 @@ const Home = () => {
                       >
                         Contact
                       </Button>
-                    </div>
+                  </div>
                 </div>
               </Card>
             </div>
