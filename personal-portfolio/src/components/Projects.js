@@ -1,16 +1,22 @@
 import React from 'react';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import { useLanguage } from '../features/language';
+import { useTranslateText } from '../features/language/useTranslateText';
 
 const Projects = () => {
   const { translatedData } = useLanguage();
   const { projects } = translatedData;
 
+  // Use translation hook for static text
+  const projectsTitle = useTranslateText("Projects");
+  const githubText = useTranslateText("GitHub");
+  const liveDemoText = useTranslateText("Live Demo");
+
   return (
     <AnimationWrapper>
       <section id="projects" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">Projects</h2>
+          <h2 className="text-4xl font-bold text-center mb-12">{projectsTitle}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {projects.map((project, index) => (
               <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -52,7 +58,7 @@ const Projects = () => {
                           rel="noopener noreferrer"
                           className="text-blue-600 hover:text-blue-800 transition-colors"
                         >
-                          GitHub
+                          {githubText}
                         </a>
                       )}
                       {project.liveUrl && (
@@ -62,7 +68,7 @@ const Projects = () => {
                           rel="noopener noreferrer"
                           className="text-blue-600 hover:text-blue-800 transition-colors"
                         >
-                          Live Demo
+                          {liveDemoText}
                         </a>
                       )}
                     </div>

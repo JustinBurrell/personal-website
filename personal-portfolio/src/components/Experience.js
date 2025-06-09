@@ -1,16 +1,21 @@
 import React from 'react';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import { useLanguage } from '../features/language';
+import { useTranslateText } from '../features/language/useTranslateText';
 
 const Experience = () => {
   const { translatedData } = useLanguage();
   const { experience } = translatedData;
 
+  // Use translation hook for static text
+  const experienceTitle = useTranslateText("Experience");
+  const technologiesUsedText = useTranslateText("Technologies Used");
+
   return (
     <AnimationWrapper>
       <section id="experience" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">Experience</h2>
+          <h2 className="text-4xl font-bold text-center mb-12">{experienceTitle}</h2>
           <div className="max-w-4xl mx-auto space-y-8">
             {experience.map((exp, index) => (
               <div key={index} className="bg-white rounded-lg shadow-lg p-6">
@@ -31,7 +36,7 @@ const Experience = () => {
                 </div>
                 {exp.technologies && (
                   <div className="mt-4">
-                    <h4 className="text-lg font-semibold mb-2">Technologies Used</h4>
+                    <h4 className="text-lg font-semibold mb-2">{technologiesUsedText}</h4>
                     <div className="flex flex-wrap gap-2">
                       {exp.technologies.map((tech, idx) => (
                         <span key={idx} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">

@@ -3,6 +3,7 @@ import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import Card from '../assets/ui/Card';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../features/language';
+import { useTranslateText } from '../features/language/useTranslateText';
 import { 
   FaPython, 
   FaJava, 
@@ -119,6 +120,11 @@ const About = () => {
   const { translatedData } = useLanguage();
   const { about } = translatedData;
 
+  // Use the translation hook for inline text
+  const journeyTitle = useTranslateText("My Journey");
+  const skillsTitle = useTranslateText("Skills");
+  const interestsTitle = useTranslateText("Interests");
+
   return (
     <AnimationWrapper>
     <section id="about" className="py-16 bg-gray-50">
@@ -139,7 +145,7 @@ const About = () => {
                   viewport={{ margin: "-20px" }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                 >
-                  {about.journey_title || "My Journey"}
+                  {journeyTitle}
                 </motion.h2>
 
                 {/* Introduction */}
@@ -174,7 +180,7 @@ const About = () => {
                       transition={{ duration: 0.5, delay: 0.4 }}
                     >
                       <h3 className="text-2xl font-semibold mb-6 text-center">
-                        {about.skills_title || "Skills"}
+                        {skillsTitle}
                       </h3>
                       <div className="flex flex-wrap gap-6 justify-center">
                         {about.skills.map((skill, index) => {
@@ -222,7 +228,7 @@ const About = () => {
                       transition={{ duration: 0.5, delay: 0.4 }}
                     >
                       <h3 className="text-2xl font-semibold mb-6 text-center">
-                        {about.interests_title || "Interests"}
+                        {interestsTitle}
                       </h3>
                       <div className="flex flex-wrap gap-2 justify-center">
                         {about.interests.map((interest, index) => (

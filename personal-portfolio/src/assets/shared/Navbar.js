@@ -4,6 +4,7 @@ import { Link as ScrollLink, Events, scrollSpy } from 'react-scroll';
 import { scroller } from 'react-scroll';
 import LanguageSelector from './LanguageSelector';
 import { useLanguage } from '../../features/language';
+import { useTranslateText } from '../../features/language/useTranslateText';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,8 +14,42 @@ const Navbar = () => {
   const navigate = useNavigate();
   const navRef = useRef(null);
   const timeoutRef = useRef(null);
-  const { currentLanguage, changeLanguage, translatedData } = useLanguage();
+  const { currentLanguage, changeLanguage } = useLanguage();
 
+  // Use translation hook for navigation items
+  const homeText = useTranslateText("Home");
+  const aboutText = useTranslateText("About");
+  const galleryText = useTranslateText("Gallery");
+  const contactText = useTranslateText("Contact");
+  const educationText = useTranslateText("Education");
+  const experienceText = useTranslateText("Experience");
+  const projectsText = useTranslateText("Projects");
+  const awardsText = useTranslateText("Awards");
+  const menuText = useTranslateText("Open main menu");
+
+  // Initialize scroll spy
+  useEffect(() => {
+    // Always remove existing event listeners first
+    Events.scrollEvent.remove('begin');
+    Events.scrollEvent.remove('end');
+
+    if (location.pathname === '/') {
+      // Register new event listeners
+      Events.scrollEvent.register('begin', () => {});
+      Events.scrollEvent.register('end', () => {});
+      
+      // Initialize scrollspy
+      scrollSpy.update();
+
+      // Cleanup function
+      return () => {
+        Events.scrollEvent.remove('begin');
+        Events.scrollEvent.remove('end');
+      };
+    }
+  }, [location.pathname]);
+
+  // Handle device detection and click outside
   useEffect(() => {
     const checkDevice = () => {
       // More comprehensive device detection
@@ -28,49 +63,39 @@ const Navbar = () => {
       setIsMobileDevice(isMobile || isTablet || isIPad);
     };
 
-    checkDevice();
-    window.addEventListener('resize', checkDevice);
-
-    // Initialize scrollspy only on home page
-    if (location.pathname === '/') {
-      scrollSpy.update();
-      Events.scrollEvent.register('begin', () => {});
-      Events.scrollEvent.register('end', () => {});
-    }
-
     const handleClickOutside = (event) => {
       if (navRef.current && !navRef.current.contains(event.target)) {
         setActiveSubmenu(null);
       }
     };
 
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
     document.addEventListener('mousedown', handleClickOutside);
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       window.removeEventListener('resize', checkDevice);
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-      // Cleanup scroll events
-      Events.scrollEvent.remove('begin');
-      Events.scrollEvent.remove('end');
     };
-  }, [location.pathname]);
+  }, []);
 
   const navItems = [
     {
-      name: translatedData.nav_home || 'Home',
+      name: homeText,
       to: '/',
       subItems: [
-        { name: translatedData.nav_about || 'About', to: 'about' },
-        { name: translatedData.nav_gallery || 'Gallery', to: 'gallery' },
-        { name: translatedData.nav_contact || 'Contact', to: 'contact' }
+        { name: aboutText, to: 'about' },
+        { name: galleryText, to: 'gallery' },
+        { name: contactText, to: 'contact' }
       ]
     },
-    { name: translatedData.nav_education || 'Education', to: '/education' },
-    { name: translatedData.nav_experience || 'Experience', to: '/experience' },
-    { name: translatedData.nav_projects || 'Projects', to: '/projects' },
-    { name: translatedData.nav_awards || 'Awards', to: '/awards' },
+    { name: educationText, to: '/education' },
+    { name: experienceText, to: '/experience' },
+    { name: projectsText, to: '/projects' },
+    { name: awardsText, to: '/awards' },
   ];
 
   const isActive = (path) => {
@@ -206,7 +231,7 @@ const Navbar = () => {
               onClick={() => setIsOpen(!isOpen)}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
             >
-              <span className="sr-only">Open main menu</span>
+              <span className="sr-only">{menuText}</span>
               {!isOpen ? (
                 <svg
                   className="block h-6 w-6"

@@ -31,23 +31,28 @@ const TRANSLATABLE_FIELDS = new Set([
   'attribute',
   'view_resume_button',
   'contact_me_button',
+  'organizations_label',
+  'name', // For organization names
   
   // About section
   'introduction',
   'journey_title',
-  'skills_title',
+  'skills_title', // Only translate the title "Skills", not the actual skills
   'interests_title',
+  'interests',
   
   // Experience section
   'position',
   'company',
   'location',
   'responsibilities',
+  'technologies',
   
   // Projects section
   'description',
   'highlights',
   'project_title',
+  'technologies',
   
   // Awards section
   'title',
@@ -55,6 +60,7 @@ const TRANSLATABLE_FIELDS = new Set([
   'description',
   
   // Education section
+  'name',
   'education_type',
   'major',
   'course',
@@ -79,6 +85,11 @@ const TRANSLATABLE_FIELDS = new Set([
   'send_message_button',
   'get_in_touch_text',
   'contact_blurb',
+  'fill_all_fields',
+  'first_name_required',
+  'last_name_required',
+  'email_required',
+  'message_required',
   
   // Form placeholders
   'first_name_placeholder',
@@ -93,7 +104,12 @@ const TRANSLATABLE_FIELDS = new Set([
   'button_text',
   'learn_more',
   'view_project',
-  'close'
+  'close',
+  
+  // Quality attributes from home section
+  'qualities',
+  'attribute',
+  'description'
 ]);
 
 // Load cache from localStorage

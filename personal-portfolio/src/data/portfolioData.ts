@@ -177,7 +177,7 @@ const portfolioData: PortfolioData = {
             "New York Knicks",
             "Cooking",
             "Travel",
-            "R&B and Hip Hop",
+            "Hip Hop",
             "Software Engineering",
             "Consulting",
             "Project Management",

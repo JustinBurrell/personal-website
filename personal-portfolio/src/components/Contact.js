@@ -5,11 +5,38 @@ import { FaLinkedin, FaGithub } from 'react-icons/fa';
 import Card from '../assets/ui/Card';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../features/language';
+import { useTranslateText } from '../features/language/useTranslateText';
 import Button from '../assets/ui/Button';
 
 const Contact = () => {
   const { translatedData } = useLanguage();
   const { home } = translatedData;
+
+  // Use the translation hook for inline text
+  const getInTouchText = useTranslateText("Get in Touch");
+  const contactBlurb = useTranslateText("I'd love to hear from you! Whether you have a question or just want to say hi, feel free to drop me a message.");
+  const firstNameLabel = useTranslateText("First Name");
+  const lastNameLabel = useTranslateText("Last Name");
+  const emailLabel = useTranslateText("Email");
+  const subjectLabel = useTranslateText("Subject");
+  const messageLabel = useTranslateText("Message");
+  const requiredText = useTranslateText("*");
+  const firstNamePlaceholder = useTranslateText("Enter your first name");
+  const lastNamePlaceholder = useTranslateText("Enter your last name");
+  const emailPlaceholder = useTranslateText("Enter your email");
+  const subjectPlaceholder = useTranslateText("Enter your subject");
+  const messagePlaceholder = useTranslateText("Enter your message");
+  const firstNameError = useTranslateText("Please enter your first name");
+  const lastNameError = useTranslateText("Please enter your last name");
+  const emailError = useTranslateText("Please enter your email");
+  const subjectError = useTranslateText("Please enter a subject");
+  const messageError = useTranslateText("Please enter a message");
+  const formError = useTranslateText("Please fill in all required fields");
+  const successMessage = useTranslateText("Message sent successfully!");
+  const errorMessage = useTranslateText("Failed to send message. Please try again.");
+  const sendMessageText = useTranslateText("Send Message");
+  const sendingText = useTranslateText("Sending...");
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -171,7 +198,7 @@ const Contact = () => {
                   viewport={{ margin: "-20px" }}
                   transition={{ duration: 0.5 }}
                 >
-                  {translatedData.get_in_touch || "Get in Touch"}
+                  {getInTouchText}
                 </motion.h2>
 
                 <motion.p 
@@ -181,14 +208,14 @@ const Contact = () => {
                   viewport={{ margin: "-20px" }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                 >
-                  {translatedData.contact_description || "I'd love to hear from you! Whether you have a question or just want to say hi, feel free to drop me a message."}
+                  {contactBlurb}
                 </motion.p>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-                        {translatedData.first_name || "First Name"} <span className="text-red-500">*</span>
+                        {firstNameLabel} <span className="text-red-500">{requiredText}</span>
                       </label>
                       <input
                         type="text"
@@ -196,20 +223,20 @@ const Contact = () => {
                         id="firstName"
                         value={formData.firstName}
                         onChange={handleChange}
-                        placeholder={translatedData.first_name_placeholder || "Enter your first name"}
+                        placeholder={firstNamePlaceholder}
                         className={`mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
                           fieldErrors.firstName ? 'border-red-500' : 'border-gray-300'
                         }`}
                       />
                       {fieldErrors.firstName && (
                         <p className="mt-1 text-sm text-red-500">
-                          {translatedData.first_name_required || "Please enter your first name"}
+                          {firstNameError}
                         </p>
                       )}
                     </div>
                     <div>
                       <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-                        {translatedData.last_name || "Last Name"} <span className="text-red-500">*</span>
+                        {lastNameLabel} <span className="text-red-500">{requiredText}</span>
                       </label>
                       <input
                         type="text"
@@ -217,14 +244,14 @@ const Contact = () => {
                         id="lastName"
                         value={formData.lastName}
                         onChange={handleChange}
-                        placeholder={translatedData.last_name_placeholder || "Enter your last name"}
+                        placeholder={lastNamePlaceholder}
                         className={`mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
                           fieldErrors.lastName ? 'border-red-500' : 'border-gray-300'
                         }`}
                       />
                       {fieldErrors.lastName && (
                         <p className="mt-1 text-sm text-red-500">
-                          {translatedData.last_name_required || "Please enter your last name"}
+                          {lastNameError}
                         </p>
                       )}
                     </div>
@@ -232,7 +259,7 @@ const Contact = () => {
 
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                      {translatedData.email || "Email"} <span className="text-red-500">*</span>
+                      {emailLabel} <span className="text-red-500">{requiredText}</span>
                     </label>
                     <input
                       type="email"
@@ -240,21 +267,21 @@ const Contact = () => {
                       id="email"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder={translatedData.email_placeholder || "Enter your email"}
+                      placeholder={emailPlaceholder}
                       className={`mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
                         fieldErrors.email ? 'border-red-500' : 'border-gray-300'
                       }`}
                     />
                     {fieldErrors.email && (
                       <p className="mt-1 text-sm text-red-500">
-                        {translatedData.email_required || "Please enter your email"}
+                        {emailError}
                       </p>
                     )}
                   </div>
 
                   <div>
                     <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
-                      {translatedData.subject || "Subject"} <span className="text-red-500">*</span>
+                      {subjectLabel} <span className="text-red-500">{requiredText}</span>
                     </label>
                     <input
                       type="text"
@@ -262,21 +289,21 @@ const Contact = () => {
                       id="subject"
                       value={formData.subject}
                       onChange={handleChange}
-                      placeholder={translatedData.subject_placeholder || "What is this regarding?"}
+                      placeholder={subjectPlaceholder}
                       className={`mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
                         fieldErrors.subject ? 'border-red-500' : 'border-gray-300'
                       }`}
                     />
                     {fieldErrors.subject && (
                       <p className="mt-1 text-sm text-red-500">
-                        {translatedData.subject_required || "Please enter a subject"}
+                        {subjectError}
                       </p>
                     )}
                   </div>
 
                   <div>
                     <label htmlFor="content" className="block text-sm font-medium text-gray-700">
-                      {translatedData.message || "Message"} <span className="text-red-500">*</span>
+                      {messageLabel} <span className="text-red-500">{requiredText}</span>
                     </label>
                     <textarea
                       name="content"
@@ -284,28 +311,34 @@ const Contact = () => {
                       rows={4}
                       value={formData.content}
                       onChange={handleChange}
-                      placeholder={translatedData.message_placeholder || "Enter your message"}
+                      placeholder={messagePlaceholder}
                       className={`mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
                         fieldErrors.content ? 'border-red-500' : 'border-gray-300'
                       }`}
                     />
                     {fieldErrors.content && (
                       <p className="mt-1 text-sm text-red-500">
-                        {translatedData.message_required || "Please enter your message"}
+                        {messageError}
                       </p>
                     )}
                   </div>
 
                   {showFormError && (
-                    <div className="text-red-500 text-sm text-center bg-red-50 p-2 rounded">
-                      {translatedData.fill_all_fields || "Please fill out all required fields"}
-                    </div>
+                    <p className="text-red-500 text-center">
+                      {formError}
+                    </p>
                   )}
 
-                  {submitStatus.message && (
-                    <div className={`text-sm text-center ${submitStatus.type === 'success' ? 'text-green-500' : 'text-red-500'}`}>
-                      {submitStatus.message}
-                    </div>
+                  {submitStatus.type === 'success' && (
+                    <p className="text-green-500 text-center">
+                      {successMessage}
+                    </p>
+                  )}
+
+                  {submitStatus.type === 'error' && (
+                    <p className="text-red-500 text-center">
+                      {errorMessage}
+                    </p>
                   )}
 
                   <div className="flex justify-center">
@@ -323,10 +356,10 @@ const Contact = () => {
                       {isSubmitting ? (
                         <span className="flex items-center justify-center">
                           <span className="animate-spin h-5 w-5 mr-3 border-2 border-white rounded-full border-t-transparent"></span>
-                          {translatedData.sending || "Sending..."}
+                          {sendingText}
                         </span>
                       ) : (
-                        translatedData.send_message || "Send Message"
+                        sendMessageText
                       )}
                     </button>
                   </div>

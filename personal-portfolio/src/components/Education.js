@@ -1,16 +1,22 @@
 import React from 'react';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import { useLanguage } from '../features/language';
+import { useTranslateText } from '../features/language/useTranslateText';
 
 const Education = () => {
   const { translatedData } = useLanguage();
   const { education } = translatedData;
 
+  // Use translation hook for static text
+  const educationTitle = useTranslateText("Education");
+  const relevantCoursesText = useTranslateText("Relevant Courses");
+  const organizationInvolvementText = useTranslateText("Organization Involvement");
+
   return (
     <AnimationWrapper>
       <section id="education" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">Education</h2>
+          <h2 className="text-4xl font-bold text-center mb-12">{educationTitle}</h2>
           <div className="max-w-4xl mx-auto space-y-8">
             {education.map((edu, index) => (
               <div key={index} className="bg-white rounded-lg shadow-lg p-6">
@@ -40,7 +46,7 @@ const Education = () => {
                 {/* Relevant Courses Section */}
                 {edu.relevantCourses && edu.relevantCourses.length > 0 && (
                   <div className="mb-6">
-                    <h4 className="text-lg font-semibold mb-4">Relevant Courses</h4>
+                    <h4 className="text-lg font-semibold mb-4">{relevantCoursesText}</h4>
                     <div className="flex flex-wrap gap-3">
                       {edu.relevantCourses.map((course, idx) => (
                         <a
@@ -60,7 +66,7 @@ const Education = () => {
                 {/* Organization Involvement Section */}
                 {edu.organizationInvolvement && edu.organizationInvolvement.length > 0 && (
                   <div>
-                    <h4 className="text-lg font-semibold mb-4">Organization Involvement</h4>
+                    <h4 className="text-lg font-semibold mb-4">{organizationInvolvementText}</h4>
                     <div className="flex flex-wrap gap-3">
                       {edu.organizationInvolvement.map((org, idx) => (
                         <div

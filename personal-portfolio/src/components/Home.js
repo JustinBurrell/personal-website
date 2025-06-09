@@ -6,10 +6,16 @@ import Button from '../assets/ui/Button';
 import { scroller } from 'react-scroll';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import { useLanguage } from '../features/language';
+import { useTranslateText } from '../features/language/useTranslateText';
 
 const Home = () => {
   const { translatedData } = useLanguage();
   const { home } = translatedData;
+
+  // Use the translation hook for inline text
+  const organizationsLabel = useTranslateText("Organizations:");
+  const viewResumeText = useTranslateText("View Resume");
+  const contactMeText = useTranslateText("Contact Me");
 
   return (
     <AnimationWrapper>
@@ -54,7 +60,7 @@ const Home = () => {
                       viewport={{ margin: "-20px" }}
                       transition={{ duration: 0.5, delay: 0.3 }}
                     >
-                      <span className="text-sm text-gray-600 mr-2 self-center">Organizations: </span>
+                      <span className="text-sm text-gray-600 mr-2 self-center">{organizationsLabel}</span>
                       {home.organizations.map((org, index) => (
                         <Button
                           key={index}
@@ -93,7 +99,7 @@ const Home = () => {
                         rel="noopener noreferrer"
                         variant="primary"
                       >
-                        {home.view_resume_button || "View Resume"}
+                        {viewResumeText}
                       </Button>
                       <Button
                         onClick={() => {
@@ -105,7 +111,7 @@ const Home = () => {
                         }}
                         variant="secondary"
                       >
-                        {home.contact_me_button || "Contact Me"}
+                        {contactMeText}
                       </Button>
                     </motion.div>
                   </div>

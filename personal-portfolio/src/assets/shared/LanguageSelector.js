@@ -13,7 +13,7 @@ const LanguageSelector = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         disabled={isLoading}
-        className={`flex items-center space-x-2 px-3 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
+        className={`flex items-center space-x-2 px-3 py-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors ${
           isLoading ? 'opacity-50 cursor-not-allowed' : ''
         }`}
         aria-label="Select language"
@@ -34,7 +34,7 @@ const LanguageSelector = () => {
 
       {isOpen && (
         <div 
-          className="absolute right-0 mt-2 py-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl z-50"
+          className="absolute right-0 mt-2 py-1 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50"
           onMouseLeave={() => setIsOpen(false)}
         >
           {supportedLanguages.map((lang) => (
@@ -45,8 +45,8 @@ const LanguageSelector = () => {
                 setIsOpen(false);
               }}
               disabled={isLoading}
-              className={`w-full flex items-center space-x-3 px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-                currentLanguage === lang.code ? 'bg-gray-100 dark:bg-gray-700' : ''
+              className={`w-full flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 text-left hover:bg-gray-50 hover:text-gray-900 transition-colors ${
+                currentLanguage === lang.code ? 'bg-gray-50 text-gray-900' : ''
               } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <ReactCountryFlag
@@ -57,7 +57,7 @@ const LanguageSelector = () => {
                   height: '1.5em',
                 }}
               />
-              <span className="text-sm">{lang.name}</span>
+              <span>{lang.name}</span>
             </button>
           ))}
         </div>

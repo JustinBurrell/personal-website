@@ -4,6 +4,7 @@ import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import Card from '../assets/ui/Card';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../features/language';
+import { useTranslateText } from '../features/language/useTranslateText';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
@@ -11,6 +12,10 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 const Gallery = () => {
   const { translatedData } = useLanguage();
   const { gallery } = translatedData;
+
+  // Use translation hook for static text
+  const galleryTitle = useTranslateText("Gallery");
+  const galleryDescription = useTranslateText("Check out moments from various experiences in my professional and academic career.");
 
   // Custom arrow components
   const NextArrow = ({ onClick }) => (
@@ -71,7 +76,7 @@ const Gallery = () => {
                   viewport={{ margin: "-20px" }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                 >
-                  Gallery
+                  {galleryTitle}
                 </motion.h2>
                 <motion.p 
                   className="text-gray-600 text-center mb-12 text-lg"
@@ -80,7 +85,7 @@ const Gallery = () => {
                   viewport={{ margin: "-20px" }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  Check out moments from various experiences in my professional and academic career.
+                  {galleryDescription}
                 </motion.p>
                 <motion.div 
                   className="relative"
