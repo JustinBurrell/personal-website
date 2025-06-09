@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import SectionTitle from '../assets/ui/SectionTitle';
 import Card from '../assets/ui/Card';
 import Button from '../assets/ui/Button';
@@ -12,22 +13,46 @@ const Home = () => {
   return (
     <AnimationWrapper>
       <section id="home" className="min-h-screen py-2">
-      <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4">
           <div className="flex flex-col space-y-6 max-w-6xl mx-auto">
-          {/* Title, Description, and Image grid */}
+            {/* Title, Description, and Image grid */}
             <div className="grid md:grid-cols-5 gap-6 pt-24">
-            {/* Left side: Content */}
-            <div className="md:col-span-3">
-              <Card variant="transparent" className="h-full flex flex-col justify-center p-2">
-                <div className="space-y-3">
-                  <h1 className="text-5xl md:text-6xl font-bold text-gray-800">
-                    {home.title}
-                  </h1>
-                  <p className="text-xl md:text-2xl text-gray-600 leading-relaxed">
-                    {home.description}
-                  </p>
+              {/* Left side: Content */}
+              <motion.div 
+                className="md:col-span-3"
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <Card variant="transparent" className="h-full flex flex-col justify-center p-2">
+                  <div className="space-y-3">
+                    <motion.h1 
+                      className="text-5xl md:text-6xl font-bold text-gray-800"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 0.3 }}
+                    >
+                      {home.title}
+                    </motion.h1>
+                    <motion.p 
+                      className="text-xl md:text-2xl text-gray-600 leading-relaxed"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 0.4 }}
+                    >
+                      {home.description}
+                    </motion.p>
                     {/* Organizations */}
-                    <div className="flex flex-wrap gap-1 justify-center py-6">
+                    <motion.div 
+                      className="flex flex-wrap gap-1 justify-center py-6"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 0.5 }}
+                    >
                       <span className="text-sm text-gray-600 mr-2 self-center">Organizations: </span>
                       {home.organizations.map((org, index) => (
                         <Button
@@ -43,66 +68,98 @@ const Home = () => {
                           {org.name}
                         </Button>
                       ))}
-                    </div>
+                    </motion.div>
                     {/* Divider */}
-                    <div className="w-full h-px bg-gray-300 mx-auto"></div>
+                    <motion.div 
+                      className="w-full h-px bg-gray-300 mx-auto"
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 0.6 }}
+                    />
                     {/* Resume and Contact Buttons */}
-                    <div className="flex items-center justify-center gap-4 pt-3">
-                    <Button
-                      as="a"
-                      href={home.resumeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                        className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-1.5 text-base rounded-md transition-colors"
+                    <motion.div 
+                      className="flex flex-wrap gap-4 justify-center pt-6"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 0.7 }}
                     >
-                      Resume
-                    </Button>
                       <Button
-                        as="button"
-                        className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-1.5 text-base rounded-md transition-colors"
+                        as="a"
+                        href={home.resumeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        variant="primary"
+                      >
+                        View Resume
+                      </Button>
+                      <Button
                         onClick={() => {
                           scroller.scrollTo('contact', {
-                            smooth: true,
-                            offset: -64,
-                            duration: 500,
+                            duration: 800,
+                            delay: 0,
+                            smooth: 'easeInOutQuart'
                           });
                         }}
+                        variant="outline"
                       >
-                        Contact
+                        Contact Me
                       </Button>
+                    </motion.div>
                   </div>
+                </Card>
+              </motion.div>
+              {/* Right side: Image */}
+              <motion.div 
+                className="md:col-span-2"
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                <Card className="h-full">
+                  <img
+                    src={home.imageUrl}
+                    alt="Justin Burrell"
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </Card>
+              </motion.div>
+            </div>
+
+            {/* Qualities Grid */}
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+            >
+              <Card className="w-full">
+                <div className="grid md:grid-cols-3 gap-8 p-6">
+                  {home.qualities.map((quality, index) => (
+                    <motion.div 
+                      key={index} 
+                      className="flex flex-col h-full"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 0.2 * (index + 1) }}
+                    >
+                      <h3 className="text-2xl font-bold text-gray-800 text-center mb-4">
+                        {quality.attribute}
+                      </h3>
+                      <p className="text-gray-600 leading-relaxed text-center flex-grow">
+                        {quality.description}
+                      </p>
+                    </motion.div>
+                  ))}
                 </div>
               </Card>
-            </div>
-
-            {/* Right side: Image */}
-            <div className="md:col-span-2 flex items-start justify-center">
-              <img
-                src={home.imageUrl}
-                alt="Justin Burrell"
-                className="rounded-lg shadow-lg w-full max-w-xs h-auto object-cover"
-              />
-            </div>
+            </motion.div>
           </div>
-
-          {/* Qualities grid */}
-          <Card className="w-full">
-            <div className="grid md:grid-cols-3 gap-8 p-6">
-              {home.qualities.map((quality, index) => (
-                <div key={index} className="flex flex-col h-full">
-                  <h3 className="text-2xl font-bold text-gray-800 text-center mb-4">
-                    {quality.attribute}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed text-center flex-grow">
-                    {quality.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </Card>
         </div>
-      </div>
-    </section>
+      </section>
     </AnimationWrapper>
   );
 };

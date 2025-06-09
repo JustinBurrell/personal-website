@@ -3,6 +3,7 @@ import Slider from 'react-slick';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import Card from '../assets/ui/Card';
 import portfolioData from '../data/portfolioData.ts';
+import { motion } from 'framer-motion';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
@@ -12,23 +13,27 @@ const Gallery = () => {
 
   // Custom arrow components
   const NextArrow = ({ onClick }) => (
-    <button
+    <motion.button
       onClick={onClick}
       className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all duration-200"
       aria-label="Next slide"
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
     >
       <FaChevronRight className="text-gray-800 text-xl" />
-    </button>
+    </motion.button>
   );
 
   const PrevArrow = ({ onClick }) => (
-    <button
+    <motion.button
       onClick={onClick}
       className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all duration-200"
       aria-label="Previous slide"
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
     >
       <FaChevronLeft className="text-gray-800 text-xl" />
-    </button>
+    </motion.button>
   );
 
   // Slider settings
@@ -51,43 +56,96 @@ const Gallery = () => {
       <section id="gallery" className="min-h-screen py-8">
         <div className="container mx-auto px-4">
           <div className="flex flex-col space-y-8 max-w-6xl mx-auto">
-            <Card className="p-8 bg-white">
-              <h2 className="text-4xl font-bold text-center mb-4">Gallery</h2>
-              <p className="text-gray-600 text-center mb-12 text-lg">
-                Check out moments from various experiences in my professional and academic career.
-              </p>
-              <div className="relative">
-                <Slider {...settings}>
-                  {gallery.map((item, index) => (
-                    <div key={index} className="outline-none">
-                      <div className="overflow-hidden">
-                        <div className="relative">
-                          <img
-                            src={item.imageUrl}
-                            alt={item.title}
-                            className="w-full h-[400px] object-cover rounded-t-lg"
-                          />
-                        </div>
-                        <div className="p-6 bg-white rounded-b-lg">
-                          <h3 className="text-2xl font-semibold mb-3">{item.title}</h3>
-                          <p className="text-gray-600 mb-4">{item.description}</p>
-                          <div className="flex flex-wrap gap-2">
-                            {item.category && item.category.map((cat, catIndex) => (
-                              <span
-                                key={catIndex}
-                                className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm"
-                              >
-                                {cat.categoryName}
-                              </span>
-                            ))}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <Card className="p-8 bg-white">
+                <motion.h2 
+                  className="text-4xl font-bold text-center mb-4"
+                  initial={{ opacity: 0, y: -20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
+                  Gallery
+                </motion.h2>
+                <motion.p 
+                  className="text-gray-600 text-center mb-12 text-lg"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                >
+                  Check out moments from various experiences in my professional and academic career.
+                </motion.p>
+                <motion.div 
+                  className="relative"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                >
+                  <Slider {...settings}>
+                    {gallery.map((item, index) => (
+                      <div key={index} className="outline-none">
+                        <motion.div 
+                          className="overflow-hidden"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          <div className="relative">
+                            <motion.img
+                              src={item.imageUrl}
+                              alt={item.title}
+                              className="w-full h-[400px] object-cover rounded-t-lg"
+                              initial={{ scale: 1.1 }}
+                              whileInView={{ scale: 1 }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 1 }}
+                            />
                           </div>
-                        </div>
+                          <motion.div 
+                            className="p-6 bg-white rounded-b-lg"
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                          >
+                            <h3 className="text-2xl font-semibold mb-3">{item.title}</h3>
+                            <p className="text-gray-600 mb-4">{item.description}</p>
+                            <div className="flex flex-wrap gap-2">
+                              {item.category && item.category.map((cat, catIndex) => (
+                                <motion.span
+                                  key={catIndex}
+                                  className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm"
+                                  initial={{ opacity: 0, scale: 0.5 }}
+                                  whileInView={{ opacity: 1, scale: 1 }}
+                                  viewport={{ once: true }}
+                                  transition={{ 
+                                    duration: 0.5, 
+                                    delay: 0.3 + (catIndex * 0.1),
+                                    type: "spring",
+                                    stiffness: 260,
+                                    damping: 20 
+                                  }}
+                                  whileHover={{ scale: 1.1 }}
+                                >
+                                  {cat.categoryName}
+                                </motion.span>
+                              ))}
+                            </div>
+                          </motion.div>
+                        </motion.div>
                       </div>
-                    </div>
-                  ))}
-                </Slider>
-              </div>
-            </Card>
+                    ))}
+                  </Slider>
+                </motion.div>
+              </Card>
+            </motion.div>
           </div>
         </div>
       </section>

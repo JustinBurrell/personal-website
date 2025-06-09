@@ -2,6 +2,7 @@ import React from 'react';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import Card from '../assets/ui/Card';
 import portfolioData from '../data/portfolioData.ts';
+import { motion } from 'framer-motion';
 import { 
   FaPython, 
   FaJava, 
@@ -122,69 +123,131 @@ const About = () => {
     <section id="about" className="min-h-screen py-8">
       <div className="container mx-auto px-4">
           <div className="flex flex-col space-y-8 max-w-6xl mx-auto">
-            <Card className="p-8">
-              {/* Title */}
-              <h2 className="text-4xl font-bold text-gray-800 mb-12 text-center">My Journey</h2>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <Card className="p-8">
+                {/* Title */}
+                <motion.h2 
+                  className="text-4xl font-bold text-gray-800 mb-12 text-center"
+                  initial={{ opacity: 0, y: -20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
+                  My Journey
+                </motion.h2>
 
-              {/* Introduction */}
-              <div className="mb-12">
-                <p className="text-lg text-gray-600 leading-relaxed whitespace-pre-wrap">
-                  {renderTextWithLinks(about.introduction)}
-                </p>
-              </div>
+                {/* Introduction */}
+                <motion.div 
+                  className="mb-12"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                >
+                  <p className="text-lg text-gray-600 leading-relaxed whitespace-pre-wrap">
+                    {renderTextWithLinks(about.introduction)}
+                  </p>
+                </motion.div>
 
-              {/* Divider */}
-              <div className="w-full h-px bg-gray-300 mx-auto mb-12"></div>
+                {/* Divider */}
+                <motion.div 
+                  className="w-full h-px bg-gray-300 mx-auto mb-12"
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                />
 
-              {/* Bottom section: Skills and Interests */}
-              <div className="max-w-4xl mx-auto">
-                <div className="grid md:grid-cols-2 gap-12">
-                  <div>
-                    <h3 className="text-2xl font-semibold mb-6 text-center">Skills</h3>
-                    <div className="flex flex-wrap gap-6 justify-center">
-                      {about.skills.map((skill, index) => {
-                        const Icon = skillIcons[skill];
-                        return Icon ? (
-                          <div
-                            key={index}
-                            className="group relative cursor-pointer"
-                            title={`Click to visit ${skill} website`}
-                          >
-                            <a
-                              href={skillUrls[skill]}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="block"
+                {/* Bottom section: Skills and Interests */}
+                <div className="max-w-4xl mx-auto">
+                  <div className="grid md:grid-cols-2 gap-12">
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 0.5 }}
+                    >
+                      <h3 className="text-2xl font-semibold mb-6 text-center">Skills</h3>
+                      <div className="flex flex-wrap gap-6 justify-center">
+                        {about.skills.map((skill, index) => {
+                          const Icon = skillIcons[skill];
+                          return Icon ? (
+                            <motion.div
+                              key={index}
+                              className="group relative cursor-pointer"
+                              title={`Click to visit ${skill} website`}
+                              initial={{ opacity: 0, scale: 0.5 }}
+                              whileInView={{ opacity: 1, scale: 1 }}
+                              viewport={{ once: true }}
+                              transition={{ 
+                                duration: 0.5, 
+                                delay: 0.6 + (index * 0.1),
+                                type: "spring",
+                                stiffness: 260,
+                                damping: 20 
+                              }}
+                              whileHover={{ scale: 1.2 }}
                             >
-                              <Icon 
-                                className="text-4xl transition-transform hover:scale-125" 
-                                style={{ color: skillIconColors[skill] }}
-                              />
-                            </a>
-                            <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                              {skill}
-                            </div>
-                          </div>
-                        ) : null;
-                      })}
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-semibold mb-6 text-center">Interests</h3>
-                    <div className="flex flex-wrap gap-2 justify-center">
-                      {about.interests.map((interest, index) => (
-                        <span key={index} className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">
-                          {interest}
-                        </span>
-                      ))}
-                    </div>
+                              <a
+                                href={skillUrls[skill]}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block"
+                              >
+                                <Icon 
+                                  className="text-4xl transition-transform" 
+                                  style={{ color: skillIconColors[skill] }}
+                                />
+                              </a>
+                              <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                {skill}
+                              </div>
+                            </motion.div>
+                          ) : null;
+                        })}
+                      </div>
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, x: 20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 0.5 }}
+                    >
+                      <h3 className="text-2xl font-semibold mb-6 text-center">Interests</h3>
+                      <div className="flex flex-wrap gap-2 justify-center">
+                        {about.interests.map((interest, index) => (
+                          <motion.span 
+                            key={index} 
+                            className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm"
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ 
+                              duration: 0.5, 
+                              delay: 0.7 + (index * 0.1),
+                              type: "spring",
+                              stiffness: 260,
+                              damping: 20 
+                            }}
+                            whileHover={{ scale: 1.1 }}
+                          >
+                            {interest}
+                          </motion.span>
+                        ))}
+                      </div>
+                    </motion.div>
                   </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            </motion.div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
     </AnimationWrapper>
   );
 };

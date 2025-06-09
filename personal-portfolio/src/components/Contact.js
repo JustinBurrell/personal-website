@@ -5,6 +5,7 @@ import contactData, { ContactMessage } from '../data/contactData.ts';
 import emailjs from '@emailjs/browser';
 import { FaLinkedin, FaGithub } from 'react-icons/fa';
 import Card from '../assets/ui/Card';
+import { motion } from 'framer-motion';
 
 const Contact = () => {
   const { home } = portfolioData;
@@ -101,138 +102,213 @@ const Contact = () => {
     }
   };
 
+  const formAnimation = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemAnimation = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.6 }
+    }
+  };
+
   return (
     <AnimationWrapper>
       <section id="contact" className="min-h-screen py-8">
         <div className="container mx-auto px-4">
           <div className="flex flex-col space-y-16 max-w-6xl mx-auto">
-            <Card className="p-8">
-              <h2 className="text-4xl font-bold text-center mb-6">Get in Touch</h2>
-              <p className="text-lg text-gray-600 text-center mb-12">
-                Thank you for checking out my website! I would love to connect. Feel free to connect with me on LinkedIn, check out my Github, or send me an email using this form!
-              </p>
-              
-              <form onSubmit={handleSubmit} className="max-w-4xl mx-auto space-y-6">
-                {formErrors && (
-                  <div className="text-red-500 text-center font-medium">
-                    Please fill out all fields before submitting.
-                  </div>
-                )}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <Card className="p-8">
+                <motion.h2 
+                  className="text-4xl font-bold text-center mb-6"
+                  initial={{ opacity: 0, y: -20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
+                  Get in Touch
+                </motion.h2>
+                <motion.p 
+                  className="text-lg text-gray-600 text-center mb-12"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                >
+                  Thank you for checking out my website! I would love to connect. Feel free to connect with me on LinkedIn, check out my Github, or send me an email using this form!
+                </motion.p>
+                
+                <motion.form 
+                  onSubmit={handleSubmit} 
+                  className="max-w-4xl mx-auto space-y-6"
+                  variants={formAnimation}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                >
+                  {formErrors && (
+                    <motion.div 
+                      className="text-red-500 text-center font-medium"
+                      variants={itemAnimation}
+                    >
+                      Please fill out all fields before submitting.
+                    </motion.div>
+                  )}
 
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-                      First Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-                      Last Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                    Email <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
-                    Subject <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
-                    Message <span className="text-red-500">*</span>
-                  </label>
-                  <textarea
-                    id="content"
-                    name="content"
-                    value={formData.content}
-                    onChange={handleChange}
-                    required
-                    rows={6}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  />
-                </div>
-
-                {submitStatus.message && (
-                  <div className={`text-center p-3 rounded-md ${
-                    submitStatus.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                  }`}>
-                    {submitStatus.message}
-                  </div>
-                )}
-
-                <div className="flex justify-center">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                  <motion.div 
+                    className="grid md:grid-cols-2 gap-6"
+                    variants={itemAnimation}
                   >
-                    {isSubmitting ? 'Sending...' : 'Send Message'}
-                  </button>
-                </div>
-              </form>
+                    <motion.div variants={itemAnimation}>
+                      <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
+                        First Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="firstName"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                    </motion.div>
+                    <motion.div variants={itemAnimation}>
+                      <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
+                        Last Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="lastName"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        required
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                    </motion.div>
+                  </motion.div>
 
-              <div className="mt-12 flex justify-center space-x-6">
-                <a
-                  href={home.linkedinUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-600 hover:text-blue-600 transition-colors"
+                  <motion.div variants={itemAnimation}>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                      Email <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                  </motion.div>
+
+                  <motion.div variants={itemAnimation}>
+                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
+                      Subject <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="subject"
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                  </motion.div>
+
+                  <motion.div variants={itemAnimation}>
+                    <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
+                      Message <span className="text-red-500">*</span>
+                    </label>
+                    <textarea
+                      id="content"
+                      name="content"
+                      value={formData.content}
+                      onChange={handleChange}
+                      required
+                      rows={6}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                  </motion.div>
+
+                  {submitStatus.message && (
+                    <motion.div 
+                      className={`text-center p-3 rounded-md ${
+                        submitStatus.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                      }`}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {submitStatus.message}
+                    </motion.div>
+                  )}
+
+                  <motion.div 
+                    className="flex justify-center"
+                    variants={itemAnimation}
+                  >
+                    <motion.button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {isSubmitting ? 'Sending...' : 'Send Message'}
+                    </motion.button>
+                  </motion.div>
+                </motion.form>
+
+                <motion.div 
+                  className="mt-12 flex justify-center space-x-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.8 }}
                 >
-                  <FaLinkedin className="w-8 h-8" />
-                </a>
-                <a
-                  href={home.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-600 hover:text-gray-900 transition-colors"
-                >
-                  <FaGithub className="w-8 h-8" />
-                </a>
-              </div>
-            </Card>
+                  <motion.a
+                    href={home.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-600 hover:text-blue-600 transition-colors"
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <FaLinkedin className="w-8 h-8" />
+                  </motion.a>
+                  <motion.a
+                    href={home.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-600 hover:text-gray-900 transition-colors"
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <FaGithub className="w-8 h-8" />
+                  </motion.a>
+                </motion.div>
+              </Card>
+            </motion.div>
           </div>
         </div>
       </section>
