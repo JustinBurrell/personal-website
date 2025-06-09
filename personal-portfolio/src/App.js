@@ -1,17 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navbar from './assets/shared/Navbar';
 import PageTransition from './assets/shared/PageTransition';
-import Home from './components/Home';
-import About from './components/About';
-import Education from './components/Education';
-import Experience from './components/Experience';
-import Projects from './components/Projects';
-import Awards from './components/Awards';
-import Gallery from './components/Gallery';
-import Contact from './components/Contact';
 import './App.css';
+
+// Lazy load components
+const Home = lazy(() => import('./components/Home'));
+const About = lazy(() => import('./components/About'));
+const Education = lazy(() => import('./components/Education'));
+const Experience = lazy(() => import('./components/Experience'));
+const Projects = lazy(() => import('./components/Projects'));
+const Awards = lazy(() => import('./components/Awards'));
+const Gallery = lazy(() => import('./components/Gallery'));
+const Contact = lazy(() => import('./components/Contact'));
+
+// Loading fallback component
+const LoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+  </div>
+);
 
 // Wrap each page component with PageTransition
 const TransitionWrapper = ({ children }) => {
@@ -39,10 +48,12 @@ function HomePage() {
 
   return (
     <div>
-      <Home />
-      <About />
-      <Gallery />
-      <Contact />
+      <Suspense fallback={<LoadingFallback />}>
+        <Home />
+        <About />
+        <Gallery />
+        <Contact />
+      </Suspense>
     </div>
   );
 }
@@ -64,22 +75,30 @@ function App() {
             } />
             <Route path="/education" element={
               <TransitionWrapper>
-                <Education />
+                <Suspense fallback={<LoadingFallback />}>
+                  <Education />
+                </Suspense>
               </TransitionWrapper>
             } />
             <Route path="/experience" element={
               <TransitionWrapper>
-                <Experience />
+                <Suspense fallback={<LoadingFallback />}>
+                  <Experience />
+                </Suspense>
               </TransitionWrapper>
             } />
             <Route path="/projects" element={
               <TransitionWrapper>
-                <Projects />
+                <Suspense fallback={<LoadingFallback />}>
+                  <Projects />
+                </Suspense>
               </TransitionWrapper>
             } />
             <Route path="/awards" element={
               <TransitionWrapper>
-                <Awards />
+                <Suspense fallback={<LoadingFallback />}>
+                  <Awards />
+                </Suspense>
               </TransitionWrapper>
             } />
             {/* Redirect any unknown routes to home */}
