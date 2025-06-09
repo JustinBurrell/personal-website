@@ -7,7 +7,7 @@ const Awards = () => {
 
   return (
     <AnimationWrapper>
-      <section id="awards" className="py-16 bg-gray-50">
+      <section id="awards" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-12">Awards & Recognition</h2>
           <div className="max-w-4xl mx-auto grid gap-8">

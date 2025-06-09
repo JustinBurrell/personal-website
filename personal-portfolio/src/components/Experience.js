@@ -7,7 +7,7 @@ const Experience = () => {
 
   return (
     <AnimationWrapper>
-      <section id="experience" className="py-16 bg-gray-50">
+      <section id="experience" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-12">Experience</h2>
           <div className="max-w-4xl mx-auto space-y-8">
