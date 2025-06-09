@@ -57,6 +57,7 @@ The website uses a multi-page architecture with React Router, featuring:
 - Gallery (/#gallery)
 
 ## Project Structure
+```
 personal-portfolio/
 ├── src/
 │   ├── assets/
@@ -97,6 +98,7 @@ personal-portfolio/
 ├── .gitignore         # Git ignore rules
 ├── README.md          # Project documentation
 └── PortfolioDescription.md  # Additional project documentation
+```
 
 ## Features
 
