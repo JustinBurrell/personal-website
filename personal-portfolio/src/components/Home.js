@@ -3,7 +3,7 @@ import SectionTitle from '../assets/ui/SectionTitle';
 import Card from '../assets/ui/Card';
 import Button from '../assets/ui/Button';
 import portfolioData from '../data/portfolioData.ts';
-import { FaLinkedin, FaGithub, FaEnvelope } from 'react-icons/fa';
+import { scroller } from 'react-scroll';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
 
 const Home = () => {
@@ -46,42 +46,31 @@ const Home = () => {
                     </div>
                     {/* Divider */}
                     <div className="w-full h-px bg-gray-300 mx-auto"></div>
-                    {/* Resume and Social Links */}
-                  <div className="flex items-center justify-center gap-8 pt-3">
-                    <Button
-                      as="a"
-                      href={home.resumeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    {/* Resume and Contact Buttons */}
+                    <div className="flex items-center justify-center gap-4 pt-3">
+                      <Button
+                        as="a"
+                        href={home.resumeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-1.5 text-base rounded-md transition-colors"
-                    >
-                      Resume
-                    </Button>
-                    <a
-                      href={home.linkedinUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-600 hover:text-blue-600 transition-colors"
-                    >
-                      <FaLinkedin size={32} />
-                    </a>
-                    <a
-                      href={home.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-600 hover:text-gray-800 transition-colors"
-                    >
-                      <FaGithub size={32} />
-                    </a>
-                    <a
-                      href={`mailto:${home.email}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-600 hover:text-red-600 transition-colors"
-                    >
-                      <FaEnvelope size={32} />
-                    </a>
-                  </div>
+                      >
+                        Resume
+                      </Button>
+                      <Button
+                        as="button"
+                        className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-1.5 text-base rounded-md transition-colors"
+                        onClick={() => {
+                          scroller.scrollTo('contact', {
+                            smooth: true,
+                            offset: -64,
+                            duration: 500,
+                          });
+                        }}
+                      >
+                        Contact
+                      </Button>
+                    </div>
                 </div>
               </Card>
             </div>
