@@ -28,8 +28,12 @@ const Navbar = () => {
     checkDevice();
     window.addEventListener('resize', checkDevice);
 
-    // Initialize scrollspy
-    scrollSpy.update();
+    // Initialize scrollspy only on home page
+    if (location.pathname === '/') {
+      scrollSpy.update();
+      Events.scrollEvent.register('begin', () => {});
+      Events.scrollEvent.register('end', () => {});
+    }
 
     const handleClickOutside = (event) => {
       if (navRef.current && !navRef.current.contains(event.target)) {
@@ -44,10 +48,11 @@ const Navbar = () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+      // Cleanup scroll events
       Events.scrollEvent.remove('begin');
       Events.scrollEvent.remove('end');
     };
-  }, []);
+  }, [location.pathname]);
 
   const navItems = [
     {
@@ -83,25 +88,16 @@ const Navbar = () => {
   };
 
   const handleNavItemClick = (item) => {
-    navigate(item.to);
-    if (location.pathname === '/' && item.to === '/') {
-      scrollToTop();
-    }
-    setActiveSubmenu(null);
     setIsOpen(false);
-  };
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  };
-
-  const handleHomeClick = (e) => {
-    if (location.pathname === '/') {
-      e.preventDefault();
-      scrollToTop();
+    setActiveSubmenu(null);
+    
+    if (location.pathname === item.to) {
+      // If clicking home while on home, scroll to top
+      if (item.to === '/') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    } else {
+      navigate(item.to);
     }
   };
 
@@ -146,7 +142,21 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           {/* Logo */}  
           <div className="flex-shrink-0 flex items-center">
-            <Link to="/" onClick={handleHomeClick} className="text-xl font-bold">Justin Burrell</Link>
+            <Link 
+              to="/" 
+              onClick={(e) => {
+                e.preventDefault();
+                setIsOpen(false);
+                if (location.pathname === '/') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                  navigate('/');
+                }
+              }}
+              className="text-xl font-bold"
+            >
+              Justin Burrell
+            </Link>
           </div>
           
           {/* Desktop Navigation - Only show if not a mobile device */}
@@ -234,10 +244,7 @@ const Navbar = () => {
               <div key={item.name}>
                 <div className="flex items-center justify-between">
                   <button
-                    onClick={() => {
-                      handleNavItemClick(item);
-                      setIsOpen(false);
-                    }}
+                    onClick={() => handleNavItemClick(item)}
                     className={`flex-grow text-left px-3 py-2 rounded-md text-base font-medium ${isActive(item.to)} hover:text-gray-900 hover:bg-gray-50`}
                   >
                     {item.name}
@@ -274,7 +281,7 @@ const Navbar = () => {
                             to={subItem.to}
                             spy={true}
                             smooth={true}
-                            offset={-100}
+                            offset={-25}
                             duration={500}
                             activeClass="text-indigo-600"
                             className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"

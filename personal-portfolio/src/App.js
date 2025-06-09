@@ -26,8 +26,9 @@ const LoadingFallback = () => (
 // Wrap each page component with PageTransition
 const TransitionWrapper = ({ children }) => {
   const location = useLocation();
+  
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="wait" initial={false}>
       <PageTransition key={location.pathname}>
         {children}
       </PageTransition>
@@ -39,11 +40,14 @@ function HomePage() {
   const { hash } = useLocation();
 
   useEffect(() => {
+    // Only handle smooth scrolling for hash changes on home page
     if (hash) {
-      const element = document.querySelector(hash);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
+      setTimeout(() => {
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
     }
   }, [hash]);
 
@@ -62,50 +66,52 @@ function HomePage() {
 function App() {
   const location = useLocation();
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar />
       {/* Main content with routes */}
       <main className="pt-16 flex-grow"> {/* Added flex-grow */}
-        <AnimatePresence mode="wait">
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={
-              <TransitionWrapper>
-                <HomePage />
-              </TransitionWrapper>
-            } />
-            <Route path="/education" element={
-              <TransitionWrapper>
-                <Suspense fallback={<LoadingFallback />}>
-                  <Education />
-                </Suspense>
-              </TransitionWrapper>
-            } />
-            <Route path="/experience" element={
-              <TransitionWrapper>
-                <Suspense fallback={<LoadingFallback />}>
-                  <Experience />
-                </Suspense>
-              </TransitionWrapper>
-            } />
-            <Route path="/projects" element={
-              <TransitionWrapper>
-                <Suspense fallback={<LoadingFallback />}>
-                  <Projects />
-                </Suspense>
-              </TransitionWrapper>
-            } />
-            <Route path="/awards" element={
-              <TransitionWrapper>
-                <Suspense fallback={<LoadingFallback />}>
-                  <Awards />
-                </Suspense>
-              </TransitionWrapper>
-            } />
-            {/* Redirect any unknown routes to home */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </AnimatePresence>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={
+            <TransitionWrapper>
+              <HomePage />
+            </TransitionWrapper>
+          } />
+          <Route path="/education" element={
+            <TransitionWrapper>
+              <Suspense fallback={<LoadingFallback />}>
+                <Education />
+              </Suspense>
+            </TransitionWrapper>
+          } />
+          <Route path="/experience" element={
+            <TransitionWrapper>
+              <Suspense fallback={<LoadingFallback />}>
+                <Experience />
+              </Suspense>
+            </TransitionWrapper>
+          } />
+          <Route path="/projects" element={
+            <TransitionWrapper>
+              <Suspense fallback={<LoadingFallback />}>
+                <Projects />
+              </Suspense>
+            </TransitionWrapper>
+          } />
+          <Route path="/awards" element={
+            <TransitionWrapper>
+              <Suspense fallback={<LoadingFallback />}>
+                <Awards />
+              </Suspense>
+            </TransitionWrapper>
+          } />
+          {/* Redirect any unknown routes to home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </main>
       <Footer />
     </div>

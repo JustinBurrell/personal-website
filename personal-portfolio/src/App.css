@@ -3,8 +3,12 @@
   text-align: center;
 }
 
-/* Smooth scrolling for the whole page */
+/* Smooth scrolling only for anchor links */
 html {
+  scroll-behavior: auto;
+}
+
+html:focus-within {
   scroll-behavior: smooth;
 }
 
