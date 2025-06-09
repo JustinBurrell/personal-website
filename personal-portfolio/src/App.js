@@ -2,6 +2,7 @@ import React, { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navbar from './assets/shared/Navbar';
+import Footer from './assets/shared/Footer';
 import PageTransition from './assets/shared/PageTransition';
 import './App.css';
 
@@ -62,10 +63,10 @@ function App() {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar />
       {/* Main content with routes */}
-      <main className="pt-16"> {/* Padding top for fixed navbar */}
+      <main className="pt-16 flex-grow"> {/* Added flex-grow */}
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={
@@ -106,6 +107,7 @@ function App() {
           </Routes>
         </AnimatePresence>
       </main>
+      <Footer />
     </div>
   );
 }
