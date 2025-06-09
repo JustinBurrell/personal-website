@@ -34,12 +34,20 @@ interface AwardItem {
 }
 
 interface EducationItem {
-    school: string;
+    name: string;
+    nameUrl?: string;
     education_type: string;
-    major: string;
-    graduationDate: string;
+    major?: string;
+    completionDate: string;
     gpa?: string;
-    relevantCourses?: string[];
+    relevantCourses?: Array<{
+        course: string;
+        courseUrl: string;
+    }>;
+    organizationInvolvement?: Array<{
+        organization: string;
+        role: string;
+    }>;
 }
 
 interface ExperienceItem {
@@ -191,12 +199,85 @@ const portfolioData: PortfolioData = {
     ],
     education: [
         {
-            school: "University Name",
-            education_type: "Degree Type",
-            major: "Field of Study",
-            graduationDate: "Month Year",
-            gpa: "X.XX",
-            relevantCourses: ["Course 1", "Course 2", "Course 3"]
+            name: "Lehigh University",
+            nameUrl: "https://www.lehigh.edu/",
+            education_type: "Bachelor's of Science",
+            major: "Computer Science and Engineering",
+            completionDate: "May 2026",
+            relevantCourses: [
+                {
+                    course: "CSE 007",
+                    courseUrl: "https://www.lehigh.edu/academics/courses/cse-007"
+                },
+                
+                {
+                    course: "CSE 017",
+                    courseUrl: "https://www.lehigh.edu/academics/courses/cse-017"
+                },
+                
+                {
+                    course: "CSE 140",
+                    courseUrl: "https://www.lehigh.edu/academics/courses/cse-140"
+                },
+                {
+                    course: "CSE 216",
+                    courseUrl: "https://www.lehigh.edu/academics/courses/cse-216"
+                },
+                {
+                    course: "CSE 280",
+                    courseUrl: "https://www.lehigh.edu/academics/courses/cse-280"
+                }
+            ],
+            organizationInvolvement: [
+                {
+                    organization: "Kappa Alpha Psi Fraternity, Inc.",
+                    role: "Polemarch and MTA Chairman"
+                },
+                {
+                    organization: "Lehigh University Black Student Union",
+                    role: "President"
+                },
+                {
+                    organization: "ColorStack",
+                    role: "Co-Founder and Secretary"
+                },
+                {
+                    organization: "Men of Color Alliance",
+                    role: "Former President"
+                },
+                {
+                    organization: "Student Senate",
+                    role: "Assistant Vice President of Finance"
+                },
+                {
+                    organization: "Lamberton Hall Building Supervisor",
+                    role: "Great and Game Room Supervisor"
+                }
+            ]
+        },
+        {
+            name: "Horace Mann School",
+            nameUrl: "https://www.horacemann.org/",
+            education_type: "High School Diploma",
+            completionDate: "June 2022",
+            organizationInvolvement: [
+                {
+                    organization: "Varsity Track and Field",
+                    role: "Captain"
+                },
+                {
+                    organization: "Varsity Cross Country",
+                    role: "Captain"
+                },
+                {
+                    organization: "Office of Admissions",
+                    role: "Ambassador"
+                },
+                {
+                    organization: "Blex (Black Excellence)",
+                    role: "President"
+                }
+            ]
         }
     ],
     experience: [
