@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Link as ScrollLink, scroller } from 'react-scroll';
+import { Link as ScrollLink, Events, scrollSpy } from 'react-scroll';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +11,9 @@ const Navbar = () => {
   const timeoutRef = useRef(null);
 
   useEffect(() => {
+    // Initialize scrollspy
+    scrollSpy.update();
+
     const handleClickOutside = (event) => {
       if (navRef.current && !navRef.current.contains(event.target)) {
         setActiveSubmenu(null);
@@ -23,6 +26,9 @@ const Navbar = () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+      // Remove all Events listeners
+      Events.scrollEvent.remove('begin');
+      Events.scrollEvent.remove('end');
     };
   }, []);
 
@@ -88,8 +94,10 @@ const Navbar = () => {
           to={subItem.to}
           spy={true}
           smooth={true}
+          offset={-64} // Adjust this value based on your navbar height
           duration={500}
-          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-indigo-600"
+          activeClass="text-indigo-600"
+          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-indigo-600 cursor-pointer"
           onClick={() => {
             setActiveSubmenu(null);
             setIsOpen(false);
