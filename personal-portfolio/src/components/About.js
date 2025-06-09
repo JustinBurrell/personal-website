@@ -3,6 +3,38 @@ import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import Card from '../assets/ui/Card';
 import portfolioData from '../data/portfolioData.ts';
 
+const renderTextWithLinks = (text) => {
+  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = linkRegex.exec(text)) !== null) {
+    // Add text before the link
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    // Add the link
+    parts.push(
+      <a
+        key={match.index}
+        href={match[2]}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-rose-500 hover:text-emerald-600 font-bold transition-colors"
+      >
+        {match[1]}
+      </a>
+    );
+    lastIndex = match.index + match[0].length;
+  }
+  // Add remaining text
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+  return parts;
+};
+
 const About = () => {
   const { about } = portfolioData;
 
@@ -18,7 +50,7 @@ const About = () => {
               {/* Introduction */}
               <div className="mb-12">
                 <p className="text-lg text-gray-600 leading-relaxed whitespace-pre-wrap">
-                  {about.introduction}
+                  {renderTextWithLinks(about.introduction)}
                 </p>
               </div>
 
