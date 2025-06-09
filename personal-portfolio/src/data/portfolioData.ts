@@ -65,7 +65,9 @@ interface GalleryItem {
     title: string;
     imageUrl: string;
     description: string;
-    category?: string;
+    category?: Array<{
+        categoryName: string;
+    }>;
 }
 
 interface OrganizationItem {
@@ -95,7 +97,6 @@ interface PortfolioData {
     education: EducationItem[];
     experience: ExperienceItem[];
     gallery: GalleryItem[];
-    organizations: OrganizationItem[];
     projects: ProjectItem[];
 }
 
@@ -297,20 +298,75 @@ const portfolioData: PortfolioData = {
     ],
     gallery: [
         {
-            title: "Project/Work Title",
-            imageUrl: "/path/to/image.jpg",
-            description: "Description of the work",
-            category: "Category"
-        }
-    ],
-    organizations: [
+            title: "Lehigh University BSU Leadership",
+            imageUrl: "/assets/images/gallery/bsu-leadership.jpg",
+            description: "Leading the Black Student Union at Lehigh University, organizing events and fostering community engagement.",
+            category: [
+                {
+                    categoryName: "Leadership"
+                },
+                {
+                    categoryName: "Community"
+                }
+            ]
+        },
         {
-            name: "Organization Name",
-            role: "Your Role",
-            startDate: "Month Year",
-            endDate: "Month Year",
-            description: "Description of your involvement",
-            achievements: ["Achievement 1", "Achievement 2"]
+            title: "EY Tech Consulting Project",
+            imageUrl: "/assets/images/gallery/ey-consulting.jpg",
+            description: "Working on innovative technology solutions during my internship at EY, collaborating with cross-functional teams.",
+            category: [
+                {
+                    categoryName: "Professional"
+                },
+                {
+                    categoryName: "Technology"
+                },
+                {
+                    categoryName: "Consulting"
+                }
+            ]
+        },
+        {
+            title: "Kappa Alpha Psi Event",
+            imageUrl: "/assets/images/gallery/kappa-event.jpg",
+            description: "Organizing and participating in fraternity events that promote leadership and community service.",
+            category: [
+                {
+                    categoryName: "Greek Life"
+                },
+                {
+                    categoryName: "Service"
+                }
+            ]
+        },
+        {
+            title: "Frood App Development",
+            imageUrl: "/assets/images/gallery/frood-dev.jpg",
+            description: "Building and improving the Frood application, implementing new features and enhancing user experience.",
+            category: [
+                {
+                    categoryName: "Development"
+                },
+                {
+                    categoryName: "Startup"
+                }
+            ]
+        },
+        {
+            title: "ColorStack Tech Workshop",
+            imageUrl: "/assets/images/gallery/colorstack-workshop.jpg",
+            description: "Leading technical workshops and mentoring sessions for ColorStack members, sharing knowledge and building community.",
+            category: [
+                {
+                    categoryName: "Education"
+                },
+                {
+                    categoryName: "Mentorship"
+                },
+                {
+                    categoryName: "Technology"
+                }
+            ]
         }
     ],
     projects: [
