@@ -23,19 +23,6 @@ const LoadingFallback = () => (
   </div>
 );
 
-// Wrap each page component with PageTransition
-const TransitionWrapper = ({ children }) => {
-  const location = useLocation();
-  
-  return (
-    <AnimatePresence mode="wait" initial={false}>
-      <PageTransition key={location.pathname}>
-        {children}
-      </PageTransition>
-    </AnimatePresence>
-  );
-};
-
 function HomePage() {
   const { hash } = useLocation();
 
@@ -71,49 +58,65 @@ function App() {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen">
       <Navbar />
       {/* Main content with routes */}
-      <main className="pt-16 flex-grow"> {/* Added flex-grow */}
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={
-            <TransitionWrapper>
-              <HomePage />
-            </TransitionWrapper>
-          } />
-          <Route path="/education" element={
-            <TransitionWrapper>
-              <Suspense fallback={<LoadingFallback />}>
-                <Education />
-              </Suspense>
-            </TransitionWrapper>
-          } />
-          <Route path="/experience" element={
-            <TransitionWrapper>
-              <Suspense fallback={<LoadingFallback />}>
-                <Experience />
-              </Suspense>
-            </TransitionWrapper>
-          } />
-          <Route path="/projects" element={
-            <TransitionWrapper>
-              <Suspense fallback={<LoadingFallback />}>
-                <Projects />
-              </Suspense>
-            </TransitionWrapper>
-          } />
-          <Route path="/awards" element={
-            <TransitionWrapper>
-              <Suspense fallback={<LoadingFallback />}>
-                <Awards />
-              </Suspense>
-            </TransitionWrapper>
-          } />
-          {/* Redirect any unknown routes to home */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+      <main className="relative bg-gray-50">
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={
+              <PageTransition>
+                <div className="pt-16">
+                  <HomePage />
+                  <Footer />
+                </div>
+              </PageTransition>
+            } />
+            <Route path="/education" element={
+              <PageTransition>
+                <div className="pt-16">
+                  <Suspense fallback={<LoadingFallback />}>
+                    <Education />
+                    <Footer />
+                  </Suspense>
+                </div>
+              </PageTransition>
+            } />
+            <Route path="/experience" element={
+              <PageTransition>
+                <div className="pt-16">
+                  <Suspense fallback={<LoadingFallback />}>
+                    <Experience />
+                    <Footer />
+                  </Suspense>
+                </div>
+              </PageTransition>
+            } />
+            <Route path="/projects" element={
+              <PageTransition>
+                <div className="pt-16">
+                  <Suspense fallback={<LoadingFallback />}>
+                    <Projects />
+                    <Footer />
+                  </Suspense>
+                </div>
+              </PageTransition>
+            } />
+            <Route path="/awards" element={
+              <PageTransition>
+                <div className="pt-16">
+                  <Suspense fallback={<LoadingFallback />}>
+                    <Awards />
+                    <Footer />
+                  </Suspense>
+                </div>
+              </PageTransition>
+            } />
+            {/* Redirect any unknown routes to home */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AnimatePresence>
       </main>
-      <Footer />
     </div>
   );
 }
