@@ -19,6 +19,7 @@ A modern, responsive personal portfolio website built with React, showcasing my 
 | Type Safety | TypeScript        | Static typing for improved code reliability             |
 | Build Tool  | Create React App  | Project scaffolding and build configuration             |
 | Package Mgmt| npm               | Dependency management and script running                 |
+| Translation | Google Cloud      | Translation API for multilingual support                |
 
 ## Key Features
 
@@ -28,6 +29,14 @@ A modern, responsive personal portfolio website built with React, showcasing my 
 - Page transitions with fade animations
 - Fixed navigation bar for easy access
 - Proper scroll position management between routes
+
+### Multilingual Support
+- Dynamic language switching with i18next integration
+- Google Cloud Translation API for accurate translations
+- Language detection based on user's browser settings
+- Seamless translation of all content including dynamic data
+- Support for multiple languages with easy addition of new languages
+- Persistent language preference across sessions
 
 ### Home Page
 - Hero section with professional introduction
@@ -109,6 +118,8 @@ A modern, responsive personal portfolio website built with React, showcasing my 
 - React Slick
 - React Icons
 - React Helmet Async
+- Google Cloud Translation API
+- i18next
 
 ## Development Setup
 1. Clone the repository
