@@ -74,6 +74,7 @@ function App() {
               <PageTransition>
                 <div className="pt-16">
                   <HomePage />
+                  <Footer />
                 </div>
               </PageTransition>
             } />
@@ -82,6 +83,7 @@ function App() {
                 <div className="pt-16">
                   <Suspense fallback={<LoadingFallback />}>
                     <Education />
+                    <Footer />
                   </Suspense>
                 </div>
               </PageTransition>
@@ -91,6 +93,7 @@ function App() {
                 <div className="pt-16">
                   <Suspense fallback={<LoadingFallback />}>
                     <Experience />
+                    <Footer />
                   </Suspense>
                 </div>
               </PageTransition>
@@ -100,6 +103,7 @@ function App() {
                 <div className="pt-16">
                   <Suspense fallback={<LoadingFallback />}>
                     <Projects />
+                    <Footer />
                   </Suspense>
                 </div>
               </PageTransition>
@@ -109,6 +113,7 @@ function App() {
                 <div className="pt-16">
                   <Suspense fallback={<LoadingFallback />}>
                     <Awards />
+                    <Footer />
                   </Suspense>
                 </div>
               </PageTransition>
@@ -118,7 +123,6 @@ function App() {
           </Routes>
         </AnimatePresence>
       </main>
-      <Footer />
     </div>
   );
 }
