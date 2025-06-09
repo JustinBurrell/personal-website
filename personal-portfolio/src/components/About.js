@@ -120,7 +120,7 @@ const About = () => {
 
   return (
     <AnimationWrapper>
-    <section id="about" className="min-h-screen py-8">
+    <section id="about" className="py-16 bg-gray-50">
       <div className="container mx-auto px-4">
           <div className="flex flex-col space-y-8 max-w-6xl mx-auto">
             <motion.div

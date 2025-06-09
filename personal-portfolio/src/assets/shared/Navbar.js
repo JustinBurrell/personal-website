@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Link as ScrollLink, Events, scrollSpy } from 'react-scroll';
 import { scroller } from 'react-scroll';
+import LanguageSelector from '../../components/LanguageSelector';
+import { useLanguage } from '../../features/language';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +13,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const navRef = useRef(null);
   const timeoutRef = useRef(null);
+  const { currentLanguage, changeLanguage } = useLanguage();
 
   useEffect(() => {
     const checkDevice = () => {
@@ -192,11 +195,13 @@ const Navbar = () => {
                   )}
                 </div>
               ))}
+              <LanguageSelector />
             </div>
           )}
 
           {/* Mobile menu button */}
           <div className={isMobileDevice ? "flex items-center" : "md:hidden flex items-center"}>
+            <LanguageSelector />
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"

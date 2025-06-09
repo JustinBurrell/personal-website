@@ -7,8 +7,8 @@ const Education = () => {
 
   return (
     <AnimationWrapper>
-      <section id="education" className="min-h-screen py-16">
-      <div className="container mx-auto px-4">
+      <section id="education" className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-12">Education</h2>
           <div className="max-w-4xl mx-auto space-y-8">
             {education.map((edu, index) => (
@@ -71,13 +71,13 @@ const Education = () => {
                         </div>
                       ))}
                     </div>
-                </div>
+                  </div>
                 )}
               </div>
             ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
     </AnimationWrapper>
   );
 };

@@ -6,6 +6,7 @@ import Navbar from './assets/shared/Navbar';
 import Footer from './assets/shared/Footer';
 import PageTransition from './assets/shared/PageTransition';
 import CustomCursor from './assets/shared/CustomCursor';
+import { LanguageProvider } from './features/language';
 import './App.css';
 
 // Lazy load components
@@ -29,7 +30,6 @@ function HomePage() {
   const { hash } = useLocation();
 
   useEffect(() => {
-    // Only handle smooth scrolling for hash changes on home page
     if (hash) {
       setTimeout(() => {
         const element = document.querySelector(hash);
@@ -41,14 +41,15 @@ function HomePage() {
   }, [hash]);
 
   return (
-    <div>
+    <>
       <Suspense fallback={<LoadingFallback />}>
         <Home />
         <About />
         <Gallery />
         <Contact />
       </Suspense>
-    </div>
+      <Footer />
+    </>
   );
 }
 
@@ -60,7 +61,7 @@ function App() {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen">
+    <div className="flex flex-col min-h-screen">
       <CustomCursor />
       <Helmet>
         <title>Justin Burrell</title>
@@ -68,59 +69,46 @@ function App() {
         <meta name="keywords" content="Justin Burrell, thejustinburrell.com, Justin Burrell portfolio website, Justin Burrell Lehigh, Justin Burrell Computer Science, Justin Burrell CSE, Lehigh University Computer Science, Lehigh CSE, Lehigh University Class of 2026, Software Engineer, Horace Mann, Prep for Prep, All Star Code, Lehigh University, Consulting, Portfolio, Python, Java, Kappa Alpha Psi, Kappa" />
       </Helmet>
       <Navbar />
-      {/* Main content with routes */}
-      <main className="relative bg-gray-50">
+      <main className="flex-grow pt-16 bg-gray-50">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={
               <PageTransition>
-                <div className="pt-16">
-                  <HomePage />
-                  <Footer />
-                </div>
+                <HomePage />
               </PageTransition>
             } />
             <Route path="/education" element={
               <PageTransition>
-                <div className="pt-16">
-                  <Suspense fallback={<LoadingFallback />}>
-                    <Education />
-                    <Footer />
-                  </Suspense>
-                </div>
+                <Suspense fallback={<LoadingFallback />}>
+                  <Education />
+                  <Footer />
+                </Suspense>
               </PageTransition>
             } />
             <Route path="/experience" element={
               <PageTransition>
-                <div className="pt-16">
-                  <Suspense fallback={<LoadingFallback />}>
-                    <Experience />
-                    <Footer />
-                  </Suspense>
-                </div>
+                <Suspense fallback={<LoadingFallback />}>
+                  <Experience />
+                  <Footer />
+                </Suspense>
               </PageTransition>
             } />
             <Route path="/projects" element={
               <PageTransition>
-                <div className="pt-16">
-                  <Suspense fallback={<LoadingFallback />}>
-                    <Projects />
-                    <Footer />
-                  </Suspense>
-                </div>
+                <Suspense fallback={<LoadingFallback />}>
+                  <Projects />
+                  <Footer />
+                </Suspense>
               </PageTransition>
             } />
             <Route path="/awards" element={
               <PageTransition>
-                <div className="pt-16">
-                  <Suspense fallback={<LoadingFallback />}>
-                    <Awards />
-                    <Footer />
-                  </Suspense>
-                </div>
+                <Suspense fallback={<LoadingFallback />}>
+                  <Awards />
+                  <Footer />
+                </Suspense>
               </PageTransition>
             } />
-            {/* Redirect any unknown routes to home */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </AnimatePresence>
@@ -129,11 +117,12 @@ function App() {
   );
 }
 
-// Wrap the entire app with Router and HelmetProvider
 const AppWrapper = () => (
   <Router>
     <HelmetProvider>
-      <App />
+      <LanguageProvider>
+        <App />
+      </LanguageProvider>
     </HelmetProvider>
   </Router>
 );

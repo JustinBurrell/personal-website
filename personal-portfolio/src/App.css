@@ -3,6 +3,14 @@
   text-align: center;
 }
 
+/* Layout styles */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: rgb(249 250 251);
+}
+
 /* Hide default cursor */
 * {
   cursor: none !important;
@@ -22,6 +30,7 @@
 /* Smooth scrolling only for anchor links */
 html {
   scroll-behavior: auto;
+  background-color: rgb(249 250 251);
 }
 
 html:focus-within {
@@ -60,4 +69,20 @@ h1, h2, h3 {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Ensure main content takes up remaining space */
+main {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(249 250 251);
+}
+
+/* Footer styles */
+footer {
+  margin-top: auto;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
 } 
