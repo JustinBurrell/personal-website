@@ -120,3 +120,32 @@ personal-portfolio/
    - Code splitting with React Router
    - Optimized images
    - Efficient component rendering
+
+5. **Local Development & Testing**
+   
+   **Desktop/Laptop Deployment:**
+   ```bash
+   # Install dependencies
+   npm install
+
+   # Start development server
+   npm start
+   ```
+   Open your browser and visit `http://localhost:3000`
+
+   **Mobile Device Testing:**
+   
+   Method 1 - Real Device Testing:
+   1. Ensure development server is running (`npm start`)
+   2. Connect your mobile device to the same WiFi network as your development machine
+   3. Find your computer's local IP address:
+      - Mac: Run `ifconfig | grep "inet " | grep -v 127.0.0.1`
+      - Windows: Run `ipconfig`
+   4. On your mobile device, visit: `http://[YOUR_IP_ADDRESS]:3000`
+      Example: `http://192.168.1.31:3000`
+
+   Method 2 - Chrome DevTools:
+   1. Open Chrome DevTools (F12 or right-click → Inspect)
+   2. Click "Toggle Device Toolbar" (Cmd+Shift+M on Mac, Ctrl+Shift+M on Windows)
+   3. Select a mobile device preset or set custom dimensions
+   4. Test responsive design, touch events, and mobile features
