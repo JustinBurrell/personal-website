@@ -112,7 +112,7 @@ const Navbar = () => {
           to={subItem.to}
           spy={true}
           smooth={true}
-          offset={-64} // Adjust this value based on your navbar height
+          offset={-25}
           duration={500}
           activeClass="text-indigo-600"
           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-indigo-600 cursor-pointer"
@@ -274,7 +274,7 @@ const Navbar = () => {
                             to={subItem.to}
                             spy={true}
                             smooth={true}
-                            offset={-64}
+                            offset={-100}
                             duration={500}
                             activeClass="text-indigo-600"
                             className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"

@@ -119,9 +119,9 @@ const About = () => {
 
   return (
     <AnimationWrapper>
-    <section id="about" className="min-h-screen py-16">
+    <section id="about" className="min-h-screen py-8">
       <div className="container mx-auto px-4">
-          <div className="flex flex-col space-y-16 max-w-6xl mx-auto">
+          <div className="flex flex-col space-y-8 max-w-6xl mx-auto">
             <Card className="p-8">
               {/* Title */}
               <h2 className="text-4xl font-bold text-gray-800 mb-12 text-center">My Journey</h2>

@@ -47,9 +47,12 @@ const Gallery = () => {
 
   return (
     <AnimationWrapper>
-      <section id="gallery" className="min-h-screen py-16">
+      <section id="gallery" className="min-h-screen py-8">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">Gallery</h2>
+          <h2 className="text-4xl font-bold text-center mb-4">Gallery</h2>
+          <p className="text-gray-600 text-center mb-12 text-lg">
+            Check out moments from various experiences in my professional and academic career.
+          </p>
           <div className="max-w-4xl mx-auto relative">
             <Slider {...settings}>
               {gallery.map((item, index) => (
