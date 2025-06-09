@@ -8,8 +8,8 @@ const About = () => {
 
   return (
     <AnimationWrapper>
-      <section id="about" className="min-h-screen py-16">
-        <div className="container mx-auto px-4">
+    <section id="about" className="min-h-screen py-16">
+      <div className="container mx-auto px-4">
           <div className="flex flex-col space-y-16 max-w-6xl mx-auto">
             <Card className="p-8">
               {/* Title */}
@@ -51,9 +51,9 @@ const About = () => {
                 </div>
               </div>
             </Card>
-          </div>
         </div>
-      </section>
+      </div>
+    </section>
     </AnimationWrapper>
   );
 };

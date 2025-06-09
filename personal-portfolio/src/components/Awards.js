@@ -7,8 +7,8 @@ const Awards = () => {
 
   return (
     <AnimationWrapper>
-      <section id="awards" className="min-h-screen py-16">
-        <div className="container mx-auto px-4">
+    <section id="awards" className="min-h-screen py-16">
+      <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-12">Awards & Recognition</h2>
           <div className="max-w-4xl mx-auto grid gap-8">
             {awards.map((award, index) => (
@@ -18,9 +18,9 @@ const Awards = () => {
                 <p className="text-gray-700">{award.description}</p>
               </div>
             ))}
-          </div>
         </div>
-      </section>
+      </div>
+    </section>
     </AnimationWrapper>
   );
 };

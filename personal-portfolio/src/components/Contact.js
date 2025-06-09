@@ -103,8 +103,8 @@ const Contact = () => {
 
   return (
     <AnimationWrapper>
-      <section id="contact" className="min-h-screen py-16">
-        <div className="container mx-auto px-4">
+    <section id="contact" className="min-h-screen py-16">
+      <div className="container mx-auto px-4">
           <div className="flex flex-col space-y-16 max-w-6xl mx-auto">
             <Card className="p-8">
               <h2 className="text-4xl font-bold text-center mb-6">Get in Touch</h2>
@@ -232,10 +232,10 @@ const Contact = () => {
                   <FaGithub className="w-8 h-8" />
                 </a>
               </div>
-            </Card>
-          </div>
+          </Card>
         </div>
-      </section>
+      </div>
+    </section>
     </AnimationWrapper>
   );
 };
