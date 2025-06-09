@@ -171,7 +171,8 @@ const portfolioData: PortfolioData = {
             "Docker",
             "Git",
             "Kubernetes",
-            "Dart"
+            "Dart",
+            "Google Cloud"
         ],
         interests: [
             "New York Knicks",

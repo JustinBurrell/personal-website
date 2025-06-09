@@ -22,7 +22,8 @@ import {
   SiFirebase,
   SiC,
   SiKubernetes,
-  SiDart
+  SiDart,
+  SiGooglecloud
 } from 'react-icons/si';
 
 // Define official website URLs for each technology
@@ -42,7 +43,8 @@ const skillUrls = {
   'Docker': 'https://www.docker.com/',
   'Git': 'https://git-scm.com/',
   'Kubernetes': 'https://kubernetes.io/',
-  'Dart': 'https://dart.dev/'
+  'Dart': 'https://dart.dev/',
+  'Google Cloud': 'https://cloud.google.com/'
 };
 
 // Define icon colors based on official brand colors
@@ -62,7 +64,8 @@ const skillIconColors = {
   'Docker': '#2496ED',
   'Git': '#F05032',
   'Kubernetes': '#326CE5',
-  'Dart': '#0175C2'
+  'Dart': '#0175C2',
+  'Google Cloud': '#4285F4'
 };
 
 const skillIcons = {
@@ -81,7 +84,8 @@ const skillIcons = {
   'Docker': FaDocker,
   'Git': FaGitAlt,
   'Kubernetes': SiKubernetes,
-  'Dart': SiDart
+  'Dart': SiDart,
+  'Google Cloud': SiGooglecloud
 };
 
 const renderTextWithLinks = (text) => {
