@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Link as ScrollLink, Events, scrollSpy } from 'react-scroll';
 import { scroller } from 'react-scroll';
-import LanguageSelector from '../../components/LanguageSelector';
+import LanguageSelector from './LanguageSelector';
 import { useLanguage } from '../../features/language';
 
 const Navbar = () => {
@@ -13,7 +13,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const navRef = useRef(null);
   const timeoutRef = useRef(null);
-  const { currentLanguage, changeLanguage } = useLanguage();
+  const { currentLanguage, changeLanguage, translatedData } = useLanguage();
 
   useEffect(() => {
     const checkDevice = () => {
@@ -59,18 +59,18 @@ const Navbar = () => {
 
   const navItems = [
     {
-      name: 'Home',
+      name: translatedData.nav_home || 'Home',
       to: '/',
       subItems: [
-        { name: 'About', to: 'about' },
-        { name: 'Gallery', to: 'gallery' },
-        { name: 'Contact', to: 'contact' }
+        { name: translatedData.nav_about || 'About', to: 'about' },
+        { name: translatedData.nav_gallery || 'Gallery', to: 'gallery' },
+        { name: translatedData.nav_contact || 'Contact', to: 'contact' }
       ]
     },
-    { name: 'Education', to: '/education' },
-    { name: 'Experience', to: '/experience' },
-    { name: 'Projects', to: '/projects' },
-    { name: 'Awards', to: '/awards' },
+    { name: translatedData.nav_education || 'Education', to: '/education' },
+    { name: translatedData.nav_experience || 'Experience', to: '/experience' },
+    { name: translatedData.nav_projects || 'Projects', to: '/projects' },
+    { name: translatedData.nav_awards || 'Awards', to: '/awards' },
   ];
 
   const isActive = (path) => {

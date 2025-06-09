@@ -9,6 +9,93 @@ let translationCache = new Map();
 let monthlyCharCount = 0;
 const currentMonth = new Date().getMonth();
 
+// Define which fields should be translated (content fields)
+const TRANSLATABLE_FIELDS = new Set([
+  // Navigation and common UI elements
+  'nav_home',
+  'nav_about',
+  'nav_experience',
+  'nav_projects',
+  'nav_education',
+  'nav_awards',
+  'nav_gallery',
+  'nav_contact',
+  'button_text',
+  'label_text',
+  'placeholder_text',
+  'section_title',
+  
+  // Home section
+  'title',
+  'description',
+  'attribute',
+  'view_resume_button',
+  'contact_me_button',
+  
+  // About section
+  'introduction',
+  'journey_title',
+  'skills_title',
+  'interests_title',
+  
+  // Experience section
+  'position',
+  'company',
+  'location',
+  'responsibilities',
+  
+  // Projects section
+  'description',
+  'highlights',
+  'project_title',
+  
+  // Awards section
+  'title',
+  'organization',
+  'description',
+  
+  // Education section
+  'education_type',
+  'major',
+  'course',
+  'organization',
+  'role',
+  
+  // Gallery section
+  'title',
+  'description',
+  'categoryName',
+  'moments_text',
+  'gallery_title',
+  
+  // Contact section
+  'contact_title',
+  'contact_description',
+  'first_name_label',
+  'last_name_label',
+  'email_label',
+  'subject_label',
+  'message_label',
+  'send_message_button',
+  'get_in_touch_text',
+  'contact_blurb',
+  
+  // Form placeholders
+  'first_name_placeholder',
+  'last_name_placeholder',
+  'email_placeholder',
+  'subject_placeholder',
+  'message_placeholder',
+  
+  // General fields
+  'content',
+  'achievements',
+  'button_text',
+  'learn_more',
+  'view_project',
+  'close'
+]);
+
 // Load cache from localStorage
 const loadCache = () => {
   try {
@@ -47,38 +134,29 @@ const saveCache = () => {
 // Load cache on initialization
 loadCache();
 
-// Batch texts for translation to minimize API calls
-const batchTexts = (texts, maxChars = MAX_CHARS_PER_REQUEST) => {
-  const batches = [];
-  let currentBatch = [];
-  let currentLength = 0;
-
-  for (const text of texts) {
-    const textLength = text.length;
-    if (currentLength + textLength > maxChars) {
-      batches.push(currentBatch);
-      currentBatch = [text];
-      currentLength = textLength;
-    } else {
-      currentBatch.push(text);
-      currentLength += textLength;
-    }
-  }
-
-  if (currentBatch.length > 0) {
-    batches.push(currentBatch);
-  }
-
-  return batches;
-};
-
 const translateText = async (text, targetLang) => {
+  console.log('Translating text:', text);
+  
   if (!text) return text;
   if (targetLang === 'en') return text;
+  if (typeof text !== 'string') return text;
+
+  // Don't translate URLs or file paths
+  if (text.startsWith('http') || text.startsWith('/')) {
+    console.log('Skipping URL/path:', text);
+    return text;
+  }
+
+  // Don't translate dates
+  if (/^\d{4}-\d{2}-\d{2}|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d{4}$/i.test(text)) {
+    console.log('Skipping date:', text);
+    return text;
+  }
 
   // Check cache first
   const cacheKey = `${text}_${targetLang}`;
   if (translationCache.has(cacheKey)) {
+    console.log('Cache hit for:', text);
     return translationCache.get(cacheKey);
   }
 
@@ -89,6 +167,7 @@ const translateText = async (text, targetLang) => {
   }
 
   try {
+    console.log('Making API call for:', text);
     const response = await fetch(`https://translation.googleapis.com/language/translate/v2?key=${process.env.REACT_APP_GOOGLE_TRANSLATE_API_KEY}`, {
       method: 'POST',
       headers: {
@@ -108,6 +187,8 @@ const translateText = async (text, targetLang) => {
     const data = await response.json();
     const translatedText = data.data.translations[0].translatedText;
     
+    console.log('Translated:', text, 'to:', translatedText);
+    
     // Update character count and cache
     monthlyCharCount += text.length;
     translationCache.set(cacheKey, translatedText);
@@ -120,107 +201,52 @@ const translateText = async (text, targetLang) => {
   }
 };
 
-const translateBatch = async (texts, targetLang) => {
-  if (!texts.length) return [];
-  if (targetLang === 'en') return texts;
-
-  const batches = batchTexts(texts);
-  const results = [];
-
-  for (const batch of batches) {
-    const uncachedTexts = batch.filter(text => {
-      const cacheKey = `${text}_${targetLang}`;
-      if (translationCache.has(cacheKey)) {
-        results.push(translationCache.get(cacheKey));
-        return false;
-      }
-      return true;
-    });
-
-    if (uncachedTexts.length === 0) continue;
-
-    // Check monthly character limit
-    const batchLength = uncachedTexts.reduce((sum, text) => sum + text.length, 0);
-    if (monthlyCharCount + batchLength > MONTHLY_CHAR_LIMIT) {
-      console.warn('Monthly character limit reached, returning original texts');
-      results.push(...uncachedTexts);
-      continue;
-    }
-
-    try {
-      const response = await fetch(`https://translation.googleapis.com/language/translate/v2?key=${process.env.REACT_APP_GOOGLE_TRANSLATE_API_KEY}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          q: uncachedTexts,
-          target: targetLang,
-          source: 'en'
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`Translation API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const translations = data.data.translations.map(t => t.translatedText);
-      
-      // Update character count and cache
-      monthlyCharCount += batchLength;
-      uncachedTexts.forEach((text, i) => {
-        const cacheKey = `${text}_${targetLang}`;
-        translationCache.set(cacheKey, translations[i]);
-      });
-      saveCache();
-      
-      results.push(...translations);
-    } catch (error) {
-      console.error('Batch translation error:', error);
-      results.push(...uncachedTexts); // Fallback to original texts
-    }
-  }
-
-  return results;
+const shouldTranslateValue = (key, value) => {
+  const should = TRANSLATABLE_FIELDS.has(key) && typeof value === 'string';
+  console.log('Should translate', key, '?', should);
+  return should;
 };
 
 const translateObject = async (obj, targetLang) => {
-  if (typeof obj !== 'object' || obj === null) {
-    return typeof obj === 'string' ? await translateText(obj, targetLang) : obj;
+  if (!obj || typeof obj !== 'object') {
+    return obj;
   }
 
   if (Array.isArray(obj)) {
-    const stringItems = obj.filter(item => typeof item === 'string');
-    const translatedStrings = await translateBatch(stringItems, targetLang);
-    let stringIndex = 0;
-    
-    return obj.map(item => {
-      if (typeof item === 'string') {
-        return translatedStrings[stringIndex++];
-      }
-      return translateObject(item, targetLang);
-    });
+    return Promise.all(obj.map(item => translateObject(item, targetLang)));
   }
 
-  const entries = Object.entries(obj);
-  const stringValues = entries
-    .filter(([_, value]) => typeof value === 'string')
-    .map(([_, value]) => value);
-  
-  const translatedStrings = await translateBatch(stringValues, targetLang);
-  let stringIndex = 0;
+  const result = { ...obj };
 
-  const translated = {};
-  for (const [key, value] of entries) {
-    if (typeof value === 'string') {
-      translated[key] = translatedStrings[stringIndex++];
+  for (const [key, value] of Object.entries(obj)) {
+    console.log('Processing key:', key);
+    
+    if (shouldTranslateValue(key, value)) {
+      // Directly translate the string value
+      console.log('Translating string value for key:', key);
+      result[key] = await translateText(value, targetLang);
+    } else if (Array.isArray(value)) {
+      // For arrays, translate each item if it's a string and the key is translatable
+      console.log('Processing array for key:', key);
+      result[key] = await Promise.all(
+        value.map(item => 
+          typeof item === 'string' && TRANSLATABLE_FIELDS.has(key)
+            ? translateText(item, targetLang)
+            : translateObject(item, targetLang)
+        )
+      );
+    } else if (value && typeof value === 'object') {
+      // Recursively translate nested objects
+      console.log('Processing nested object for key:', key);
+      result[key] = await translateObject(value, targetLang);
     } else {
-      translated[key] = await translateObject(value, targetLang);
+      // Keep non-translatable values as is
+      console.log('Keeping original value for key:', key);
+      result[key] = value;
     }
   }
 
-  return translated;
+  return result;
 };
 
-export { translateText, translateObject, translateBatch }; 
+export { translateText, translateObject }; 

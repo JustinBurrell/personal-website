@@ -3,12 +3,13 @@ import { motion } from 'framer-motion';
 import SectionTitle from '../assets/ui/SectionTitle';
 import Card from '../assets/ui/Card';
 import Button from '../assets/ui/Button';
-import portfolioData from '../data/portfolioData.ts';
 import { scroller } from 'react-scroll';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
+import { useLanguage } from '../features/language';
 
 const Home = () => {
-  const { home } = portfolioData;
+  const { translatedData } = useLanguage();
+  const { home } = translatedData;
 
   return (
     <AnimationWrapper>
@@ -79,7 +80,7 @@ const Home = () => {
                     />
                     {/* Resume and Contact Buttons */}
                     <motion.div 
-                      className="flex flex-wrap gap-4 justify-center pt-6"
+                      className="flex flex-wrap gap-4 mt-6 justify-center"
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ margin: "-20px" }}
@@ -92,7 +93,7 @@ const Home = () => {
                         rel="noopener noreferrer"
                         variant="primary"
                       >
-                        View Resume
+                        {home.view_resume_button || "View Resume"}
                       </Button>
                       <Button
                         onClick={() => {
@@ -102,9 +103,9 @@ const Home = () => {
                             smooth: 'easeInOutQuart'
                           });
                         }}
-                        variant="outline"
+                        variant="secondary"
                       >
-                        Contact Me
+                        {home.contact_me_button || "Contact Me"}
                       </Button>
                     </motion.div>
                   </div>

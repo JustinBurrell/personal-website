@@ -1,9 +1,10 @@
 import React from 'react';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
-import portfolioData from '../data/portfolioData.ts';
+import { useLanguage } from '../features/language';
 
 const Experience = () => {
-  const { experience } = portfolioData;
+  const { translatedData } = useLanguage();
+  const { experience } = translatedData;
 
   return (
     <AnimationWrapper>

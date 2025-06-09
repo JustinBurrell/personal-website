@@ -37,14 +37,24 @@ export const LanguageProvider = ({ children }) => {
   // Update translations when language changes
   useEffect(() => {
     const updateTranslations = async () => {
+      console.log('Language changed to:', currentLanguage);
+      
       if (currentLanguage === 'en') {
+        console.log('Setting English data');
         setTranslatedData(portfolioData);
         return;
       }
 
       setIsLoading(true);
       try {
+        console.log('Starting translation to', currentLanguage);
+        console.log('Original home title:', portfolioData.home.title);
+        
         const translated = await translateObject(portfolioData, currentLanguage);
+        
+        console.log('Translation complete');
+        console.log('Translated home title:', translated.home.title);
+        
         setTranslatedData(translated);
       } catch (error) {
         console.error('Translation error:', error);
@@ -57,6 +67,7 @@ export const LanguageProvider = ({ children }) => {
   }, [currentLanguage]);
 
   const changeLanguage = (langCode) => {
+    console.log('Changing language to:', langCode);
     if (SUPPORTED_LANGUAGES.find(lang => lang.code === langCode)) {
       setCurrentLanguage(langCode);
     }

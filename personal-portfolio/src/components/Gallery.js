@@ -2,14 +2,15 @@ import React from 'react';
 import Slider from 'react-slick';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import Card from '../assets/ui/Card';
-import portfolioData from '../data/portfolioData.ts';
 import { motion } from 'framer-motion';
+import { useLanguage } from '../features/language';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 const Gallery = () => {
-  const { gallery } = portfolioData;
+  const { translatedData } = useLanguage();
+  const { gallery } = translatedData;
 
   // Custom arrow components
   const NextArrow = ({ onClick }) => (

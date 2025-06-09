@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
-import portfolioData from '../data/portfolioData.ts';
-import contactData, { ContactMessage } from '../data/contactData.ts';
 import emailjs from '@emailjs/browser';
 import { FaLinkedin, FaGithub } from 'react-icons/fa';
 import Card from '../assets/ui/Card';
 import { motion } from 'framer-motion';
+import { useLanguage } from '../features/language';
+import Button from '../assets/ui/Button';
 
 const Contact = () => {
-  const { home } = portfolioData;
+  const { translatedData } = useLanguage();
+  const { home } = translatedData;
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -18,7 +19,14 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState({ type: '', message: '' });
-  const [formErrors, setFormErrors] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({
+    firstName: false,
+    lastName: false,
+    email: false,
+    subject: false,
+    content: false
+  });
+  const [showFormError, setShowFormError] = useState(false);
 
   useEffect(() => {
     // Initialize EmailJS
@@ -31,59 +39,72 @@ const Contact = () => {
       ...prev,
       [name]: value
     }));
-    // Clear error message when user starts typing
-    setFormErrors(false);
+    // Clear error for this field when user starts typing
+    setFieldErrors(prev => ({
+      ...prev,
+      [name]: false
+    }));
+    setShowFormError(false);
   };
 
   const validateForm = () => {
-    const { firstName, lastName, email, subject, content } = formData;
-    return firstName.trim() !== '' && 
-           lastName.trim() !== '' && 
-           email.trim() !== '' && 
-           subject.trim() !== '' && 
-           content.trim() !== '';
+    const errors = {
+      firstName: formData.firstName.trim() === '',
+      lastName: formData.lastName.trim() === '',
+      email: formData.email.trim() === '',
+      subject: formData.subject.trim() === '',
+      content: formData.content.trim() === ''
+    };
+    
+    setFieldErrors(errors);
+    const hasErrors = Object.values(errors).some(error => error);
+    if (hasErrors) {
+      setShowFormError(true);
+    }
+    return !hasErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Form submission attempted');
     
     if (!validateForm()) {
-      setFormErrors(true);
+      console.log('Form validation failed');
       return;
     }
+    setShowFormError(false);
 
     setIsSubmitting(true);
     setSubmitStatus({ type: '', message: '' });
-    setFormErrors(false);
-
-    const messageData = {
-      ...formData,
-      timestamp: new Date().toISOString()
-    };
 
     try {
-      // Add to contactData
-      contactData.push(messageData);
+      console.log('Sending email...');
+              const templateParams = {
+          from_name: `${formData.firstName} ${formData.lastName}`,
+          from_email: formData.email,
+          to_email: "justinburrell715@gmail.com",
+          subject: formData.subject,
+          message: formData.content,
+          to_name: "Justin Burrell",
+          reply_to: formData.email
+        };
 
-      // Send email using EmailJS
-      const templateParams = {
-        from_name: `${formData.firstName} ${formData.lastName}`,
-        from_email: formData.email,
-        subject: formData.subject,
-        message: formData.content,
-        to_email: 'justinburrell715@gmail.com'
-      };
+      console.log('Template params:', templateParams);
 
       await emailjs.send(
-        'service_h89w0oi',
-        'template_56y72kh',
-        templateParams
+        "service_h89w0oi",
+        "template_56y72kh",
+        templateParams,
+        "NIv9MQw75_UFg-jlH"
       );
 
+      console.log('Email sent successfully');
       setSubmitStatus({
         type: 'success',
         message: 'Message sent successfully!'
       });
+
+      // Clear form
       setFormData({
         firstName: '',
         lastName: '',
@@ -91,15 +112,23 @@ const Contact = () => {
         subject: '',
         content: ''
       });
+      setFieldErrors({
+        firstName: false,
+        lastName: false,
+        email: false,
+        subject: false,
+        content: false
+      });
+
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error('Failed to send email:', error);
       setSubmitStatus({
         type: 'error',
         message: 'Failed to send message. Please try again.'
       });
-    } finally {
-      setIsSubmitting(false);
     }
+
+    setIsSubmitting(false);
   };
 
   const formAnimation = {
@@ -136,148 +165,172 @@ const Contact = () => {
             >
               <Card className="p-8">
                 <motion.h2 
-                  className="text-4xl font-bold text-center mb-6"
+                  className="text-4xl font-bold text-center mb-8"
                   initial={{ opacity: 0, y: -20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ margin: "-20px" }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {translatedData.get_in_touch || "Get in Touch"}
+                </motion.h2>
+
+                <motion.p 
+                  className="text-gray-600 text-center mb-12"
+                  initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ margin: "-20px" }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                 >
-                  Get in Touch
-                </motion.h2>
-                <motion.p 
-                  className="text-lg text-gray-600 text-center mb-12"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ margin: "-20px" }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                >
-                  Thank you for checking out my website! I would love to connect. Feel free to connect with me on LinkedIn, check out my Github, or send me an email using this form!
+                  {translatedData.contact_description || "I'd love to hear from you! Whether you have a question or just want to say hi, feel free to drop me a message."}
                 </motion.p>
-                
-                <motion.form 
-                  onSubmit={handleSubmit} 
-                  className="max-w-4xl mx-auto space-y-6"
-                  variants={formAnimation}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ margin: "-20px" }}
-                >
-                  {formErrors && (
-                    <motion.div 
-                      className="text-red-500 text-center font-medium"
-                      variants={itemAnimation}
-                    >
-                      Please fill out all fields before submitting.
-                    </motion.div>
-                  )}
 
-                  <motion.div 
-                    className="grid md:grid-cols-2 gap-6"
-                    variants={itemAnimation}
-                  >
-                    <motion.div variants={itemAnimation}>
-                      <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-                        First Name <span className="text-red-500">*</span>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                        {translatedData.first_name || "First Name"} <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
-                        id="firstName"
                         name="firstName"
+                        id="firstName"
                         value={formData.firstName}
                         onChange={handleChange}
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        placeholder={translatedData.first_name_placeholder || "Enter your first name"}
+                        className={`mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
+                          fieldErrors.firstName ? 'border-red-500' : 'border-gray-300'
+                        }`}
                       />
-                    </motion.div>
-                    <motion.div variants={itemAnimation}>
-                      <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-                        Last Name <span className="text-red-500">*</span>
+                      {fieldErrors.firstName && (
+                        <p className="mt-1 text-sm text-red-500">
+                          {translatedData.first_name_required || "Please enter your first name"}
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                        {translatedData.last_name || "Last Name"} <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
-                        id="lastName"
                         name="lastName"
+                        id="lastName"
                         value={formData.lastName}
                         onChange={handleChange}
-                        required
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        placeholder={translatedData.last_name_placeholder || "Enter your last name"}
+                        className={`mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
+                          fieldErrors.lastName ? 'border-red-500' : 'border-gray-300'
+                        }`}
                       />
-                    </motion.div>
-                  </motion.div>
+                      {fieldErrors.lastName && (
+                        <p className="mt-1 text-sm text-red-500">
+                          {translatedData.last_name_required || "Please enter your last name"}
+                        </p>
+                      )}
+                    </div>
+                  </div>
 
-                  <motion.div variants={itemAnimation}>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                      Email <span className="text-red-500">*</span>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                      {translatedData.email || "Email"} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
-                      id="email"
                       name="email"
+                      id="email"
                       value={formData.email}
                       onChange={handleChange}
-                      required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      placeholder={translatedData.email_placeholder || "Enter your email"}
+                      className={`mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
+                        fieldErrors.email ? 'border-red-500' : 'border-gray-300'
+                      }`}
                     />
-                  </motion.div>
+                    {fieldErrors.email && (
+                      <p className="mt-1 text-sm text-red-500">
+                        {translatedData.email_required || "Please enter your email"}
+                      </p>
+                    )}
+                  </div>
 
-                  <motion.div variants={itemAnimation}>
-                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
-                      Subject <span className="text-red-500">*</span>
+                  <div>
+                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
+                      {translatedData.subject || "Subject"} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      id="subject"
                       name="subject"
+                      id="subject"
                       value={formData.subject}
                       onChange={handleChange}
-                      required
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      placeholder={translatedData.subject_placeholder || "What is this regarding?"}
+                      className={`mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
+                        fieldErrors.subject ? 'border-red-500' : 'border-gray-300'
+                      }`}
                     />
-                  </motion.div>
+                    {fieldErrors.subject && (
+                      <p className="mt-1 text-sm text-red-500">
+                        {translatedData.subject_required || "Please enter a subject"}
+                      </p>
+                    )}
+                  </div>
 
-                  <motion.div variants={itemAnimation}>
-                    <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
-                      Message <span className="text-red-500">*</span>
+                  <div>
+                    <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+                      {translatedData.message || "Message"} <span className="text-red-500">*</span>
                     </label>
                     <textarea
-                      id="content"
                       name="content"
+                      id="content"
+                      rows={4}
                       value={formData.content}
                       onChange={handleChange}
-                      required
-                      rows={6}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                    />
-                  </motion.div>
-
-                  {submitStatus.message && (
-                    <motion.div 
-                      className={`text-center p-3 rounded-md ${
-                        submitStatus.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                      placeholder={translatedData.message_placeholder || "Enter your message"}
+                      className={`mt-1 block w-full rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 ${
+                        fieldErrors.content ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      {submitStatus.message}
-                    </motion.div>
+                    />
+                    {fieldErrors.content && (
+                      <p className="mt-1 text-sm text-red-500">
+                        {translatedData.message_required || "Please enter your message"}
+                      </p>
+                    )}
+                  </div>
+
+                  {showFormError && (
+                    <div className="text-red-500 text-sm text-center bg-red-50 p-2 rounded">
+                      {translatedData.fill_all_fields || "Please fill out all required fields"}
+                    </div>
                   )}
 
-                  <motion.div 
-                    className="flex justify-center"
-                    variants={itemAnimation}
-                  >
-                    <motion.button
+                  {submitStatus.message && (
+                    <div className={`text-sm text-center ${submitStatus.type === 'success' ? 'text-green-500' : 'text-red-500'}`}>
+                      {submitStatus.message}
+                    </div>
+                  )}
+
+                  <div className="flex justify-center">
+                    <button
                       type="submit"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleSubmit(e);
+                      }}
+                      className={`w-full md:w-auto px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                        isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                      }`}
                       disabled={isSubmitting}
-                      className="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
                     >
-                      {isSubmitting ? 'Sending...' : 'Send Message'}
-                    </motion.button>
-                  </motion.div>
-                </motion.form>
+                      {isSubmitting ? (
+                        <span className="flex items-center justify-center">
+                          <span className="animate-spin h-5 w-5 mr-3 border-2 border-white rounded-full border-t-transparent"></span>
+                          {translatedData.sending || "Sending..."}
+                        </span>
+                      ) : (
+                        translatedData.send_message || "Send Message"
+                      )}
+                    </button>
+                  </div>
+                </form>
 
                 <motion.div 
                   className="mt-12 flex justify-center space-x-6"

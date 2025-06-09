@@ -1,13 +1,14 @@
 import React from 'react';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
-import portfolioData from '../data/portfolioData.ts';
+import { useLanguage } from '../features/language';
 
 const Education = () => {
-  const { education } = portfolioData;
+  const { translatedData } = useLanguage();
+  const { education } = translatedData;
 
   return (
     <AnimationWrapper>
-      <section id="education" className="py-16 bg-gray-50">
+      <section id="education" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-12">Education</h2>
           <div className="max-w-4xl mx-auto space-y-8">

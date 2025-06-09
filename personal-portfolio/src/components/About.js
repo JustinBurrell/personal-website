@@ -1,8 +1,8 @@
 import React from 'react';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import Card from '../assets/ui/Card';
-import portfolioData from '../data/portfolioData.ts';
 import { motion } from 'framer-motion';
+import { useLanguage } from '../features/language';
 import { 
   FaPython, 
   FaJava, 
@@ -116,7 +116,8 @@ const renderTextWithLinks = (text) => {
 };
 
 const About = () => {
-  const { about } = portfolioData;
+  const { translatedData } = useLanguage();
+  const { about } = translatedData;
 
   return (
     <AnimationWrapper>
@@ -138,7 +139,7 @@ const About = () => {
                   viewport={{ margin: "-20px" }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                 >
-                  My Journey
+                  {about.journey_title || "My Journey"}
                 </motion.h2>
 
                 {/* Introduction */}
@@ -172,7 +173,9 @@ const About = () => {
                       viewport={{ margin: "-20px" }}
                       transition={{ duration: 0.5, delay: 0.4 }}
                     >
-                      <h3 className="text-2xl font-semibold mb-6 text-center">Skills</h3>
+                      <h3 className="text-2xl font-semibold mb-6 text-center">
+                        {about.skills_title || "Skills"}
+                      </h3>
                       <div className="flex flex-wrap gap-6 justify-center">
                         {about.skills.map((skill, index) => {
                           const Icon = skillIcons[skill];
@@ -218,7 +221,9 @@ const About = () => {
                       viewport={{ margin: "-20px" }}
                       transition={{ duration: 0.5, delay: 0.4 }}
                     >
-                      <h3 className="text-2xl font-semibold mb-6 text-center">Interests</h3>
+                      <h3 className="text-2xl font-semibold mb-6 text-center">
+                        {about.interests_title || "Interests"}
+                      </h3>
                       <div className="flex flex-wrap gap-2 justify-center">
                         {about.interests.map((interest, index) => (
                           <motion.span 
