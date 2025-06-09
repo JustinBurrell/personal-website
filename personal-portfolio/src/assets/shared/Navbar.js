@@ -6,12 +6,28 @@ import { scroller } from 'react-scroll';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState(null);
+  const [isMobileDevice, setIsMobileDevice] = useState(true); // Default to true for SSR
   const location = useLocation();
   const navigate = useNavigate();
   const navRef = useRef(null);
   const timeoutRef = useRef(null);
 
   useEffect(() => {
+    const checkDevice = () => {
+      // More comprehensive device detection
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isMobile = /iphone|ipod|android|blackberry|windows phone|opera mini|silk/i.test(userAgent);
+      const isTablet = /(ipad|tablet|playbook|silk)|(android(?!.*mobile))/i.test(userAgent);
+      
+      // Additional iPad detection
+      const isIPad = /macintosh/i.test(userAgent) && navigator.maxTouchPoints > 1;
+      
+      setIsMobileDevice(isMobile || isTablet || isIPad);
+    };
+
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+
     // Initialize scrollspy
     scrollSpy.update();
 
@@ -24,10 +40,10 @@ const Navbar = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('resize', checkDevice);
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-      // Remove all Events listeners
       Events.scrollEvent.remove('begin');
       Events.scrollEvent.remove('end');
     };
@@ -72,6 +88,7 @@ const Navbar = () => {
       scrollToTop();
     }
     setActiveSubmenu(null);
+    setIsOpen(false);
   };
 
   const scrollToTop = () => {
@@ -132,42 +149,44 @@ const Navbar = () => {
             <Link to="/" onClick={handleHomeClick} className="text-xl font-bold">Justin Burrell</Link>
           </div>
           
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4">
-            {navItems.map((item) => (
-              <div 
-                key={item.name} 
-                className="relative"
-                onMouseEnter={() => item.subItems && handleMouseEnter(item.name)}
-                onMouseLeave={item.subItems ? handleMouseLeave : undefined}
-              >
-                <button
-                  onClick={() => handleNavItemClick(item)}
-                  className={`px-3 py-2 rounded-md text-sm font-medium ${isActive(item.to)} hover:text-gray-900 hover:bg-gray-50`}
+          {/* Desktop Navigation - Only show if not a mobile device */}
+          {!isMobileDevice && (
+            <div className="hidden md:flex items-center space-x-4">
+              {navItems.map((item) => (
+                <div 
+                  key={item.name} 
+                  className="relative"
+                  onMouseEnter={() => item.subItems && handleMouseEnter(item.name)}
+                  onMouseLeave={item.subItems ? handleMouseLeave : undefined}
                 >
-                  {item.name}
-                </button>
-                {item.subItems && activeSubmenu === item.name && (
-                  <div 
-                    className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
-                    onMouseEnter={() => handleMouseEnter(item.name)}
-                    onMouseLeave={handleMouseLeave}
+                  <button
+                    onClick={() => handleNavItemClick(item)}
+                    className={`px-3 py-2 rounded-md text-sm font-medium ${isActive(item.to)} hover:text-gray-900 hover:bg-gray-50`}
                   >
-                    <div className="py-1" role="menu">
-                      {item.subItems.map((subItem) => (
-                        <div key={subItem.name} className="hover:bg-gray-50">
-                          {handleSubItemClick(subItem)}
-                        </div>
-                      ))}
+                    {item.name}
+                  </button>
+                  {item.subItems && activeSubmenu === item.name && (
+                    <div 
+                      className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+                      onMouseEnter={() => handleMouseEnter(item.name)}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      <div className="py-1" role="menu">
+                        {item.subItems.map((subItem) => (
+                          <div key={subItem.name} className="hover:bg-gray-50">
+                            {handleSubItemClick(subItem)}
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
+          <div className={isMobileDevice ? "flex items-center" : "md:hidden flex items-center"}>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
@@ -207,42 +226,30 @@ const Navbar = () => {
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Mobile menu */}
-      {isOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        {/* Mobile menu dropdown */}
+        <div className={`${isOpen && isMobileDevice ? 'block' : 'hidden'}`}>
+          <div className="px-2 pt-2 pb-3 space-y-1">
             {navItems.map((item) => (
               <div key={item.name}>
-                {/* Main nav item */}
-                <div className="flex items-center">
-                  {/* Main button */}
+                <div className="flex items-center justify-between">
                   <button
                     onClick={() => {
-                      if (item.name === 'Home') {
-                        handleNavItemClick(item);
-                        setIsOpen(false);
-                      } else {
-                        handleNavItemClick(item);
-                        setIsOpen(false);
-                        setActiveSubmenu(null);
-                      }
+                      handleNavItemClick(item);
+                      setIsOpen(false);
                     }}
-                    className={`flex-grow px-3 py-2 rounded-md text-base font-medium ${isActive(item.to)} hover:text-gray-900 hover:bg-gray-50 text-left`}
+                    className={`flex-grow text-left px-3 py-2 rounded-md text-base font-medium ${isActive(item.to)} hover:text-gray-900 hover:bg-gray-50`}
                   >
                     {item.name}
                   </button>
-                  
-                  {/* Dropdown toggle for items with subItems */}
                   {item.subItems && (
                     <button
                       onClick={() => setActiveSubmenu(activeSubmenu === item.name ? null : item.name)}
-                      className="px-3 py-2"
+                      className="px-4 py-2 text-gray-500 hover:text-gray-700"
                     >
                       <svg
-                        className={`w-4 h-4 transition-transform ${
-                          activeSubmenu === item.name ? 'transform rotate-180' : ''
+                        className={`w-5 h-5 transform transition-transform ${
+                          activeSubmenu === item.name ? 'rotate-180' : ''
                         }`}
                         fill="none"
                         stroke="currentColor"
@@ -258,31 +265,30 @@ const Navbar = () => {
                     </button>
                   )}
                 </div>
-
-                {/* Submenu items */}
                 {item.subItems && activeSubmenu === item.name && (
-                  <div className="pl-4 py-2 space-y-1">
+                  <div className="pl-4 mt-2 space-y-1">
                     {item.subItems.map((subItem) => (
                       <div key={subItem.name}>
                         {location.pathname === '/' ? (
-                          <button
+                          <ScrollLink
+                            to={subItem.to}
+                            spy={true}
+                            smooth={true}
+                            offset={-64}
+                            duration={500}
+                            activeClass="text-indigo-600"
+                            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                             onClick={() => {
-                              scroller.scrollTo(subItem.to, {
-                                smooth: true,
-                                offset: -64,
-                                duration: 500
-                              });
                               setIsOpen(false);
                               setActiveSubmenu(null);
                             }}
-                            className="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md"
                           >
                             {subItem.name}
-                          </button>
+                          </ScrollLink>
                         ) : (
                           <Link
                             to={`/#${subItem.to}`}
-                            className="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md"
+                            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                             onClick={() => {
                               setIsOpen(false);
                               setActiveSubmenu(null);
@@ -299,7 +305,7 @@ const Navbar = () => {
             ))}
           </div>
         </div>
-      )}
+      </div>
     </nav>
   );
 };
