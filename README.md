@@ -142,7 +142,6 @@ personal-portfolio/
       - Mac: Run `ifconfig | grep "inet " | grep -v 127.0.0.1`
       - Windows: Run `ipconfig`
    4. On your mobile device, visit: `http://[YOUR_IP_ADDRESS]:3000`
-      Example: `http://192.168.1.31:3000`
 
    Method 2 - Chrome DevTools:
    1. Open Chrome DevTools (F12 or right-click → Inspect)
