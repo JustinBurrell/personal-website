@@ -5,6 +5,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 import Navbar from './assets/shared/Navbar';
 import Footer from './assets/shared/Footer';
 import PageTransition from './assets/shared/PageTransition';
+import CustomCursor from './assets/shared/CustomCursor';
 import './App.css';
 
 // Lazy load components
@@ -60,6 +61,7 @@ function App() {
 
   return (
     <div className="min-h-screen">
+      <CustomCursor />
       <Helmet>
         <title>Justin Burrell</title>
         <meta name="description" content="With a passion for technology and a knack for problem-solving, I aim to leverage my technical skills, consulting experience, and leadership background to drive innovation and create scalable solutions that make a positive impact." />

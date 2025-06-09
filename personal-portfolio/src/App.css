@@ -3,6 +3,22 @@
   text-align: center;
 }
 
+/* Hide default cursor */
+* {
+  cursor: none !important;
+}
+
+/* Ensure cursor is visible on mobile/touch devices */
+@media (max-width: 768px) {
+  * {
+    cursor: auto !important;
+  }
+  .custom-cursor,
+  .cursor-trail {
+    display: none !important;
+  }
+}
+
 /* Smooth scrolling only for anchor links */
 html {
   scroll-behavior: auto;
