@@ -108,7 +108,7 @@ const Contact = () => {
       opacity: 1, 
       y: 0,
       transition: {
-        duration: 0.6,
+        duration: 0.5,
         staggerChildren: 0.1
       }
     }
@@ -119,7 +119,7 @@ const Contact = () => {
     visible: { 
       opacity: 1, 
       y: 0,
-      transition: { duration: 0.6 }
+      transition: { duration: 0.5 }
     }
   };
 
@@ -131,16 +131,16 @@ const Contact = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              viewport={{ margin: "-20px" }}
+              transition={{ duration: 0.5 }}
             >
               <Card className="p-8">
                 <motion.h2 
                   className="text-4xl font-bold text-center mb-6"
                   initial={{ opacity: 0, y: -20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
+                  viewport={{ margin: "-20px" }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
                 >
                   Get in Touch
                 </motion.h2>
@@ -148,8 +148,8 @@ const Contact = () => {
                   className="text-lg text-gray-600 text-center mb-12"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
+                  viewport={{ margin: "-20px" }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
                 >
                   Thank you for checking out my website! I would love to connect. Feel free to connect with me on LinkedIn, check out my Github, or send me an email using this form!
                 </motion.p>
@@ -160,7 +160,7 @@ const Contact = () => {
                   variants={formAnimation}
                   initial="hidden"
                   whileInView="visible"
-                  viewport={{ once: true }}
+                  viewport={{ margin: "-20px" }}
                 >
                   {formErrors && (
                     <motion.div 
@@ -283,8 +283,8 @@ const Contact = () => {
                   className="mt-12 flex justify-center space-x-6"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.8 }}
+                  viewport={{ margin: "-20px" }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
                 >
                   <motion.a
                     href={home.linkedinUrl}

@@ -59,16 +59,16 @@ const Gallery = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              viewport={{ margin: "-20px" }}
+              transition={{ duration: 0.5 }}
             >
               <Card className="p-8 bg-white">
                 <motion.h2 
                   className="text-4xl font-bold text-center mb-4"
                   initial={{ opacity: 0, y: -20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
+                  viewport={{ margin: "-20px" }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
                 >
                   Gallery
                 </motion.h2>
@@ -76,8 +76,8 @@ const Gallery = () => {
                   className="text-gray-600 text-center mb-12 text-lg"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
+                  viewport={{ margin: "-20px" }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
                 >
                   Check out moments from various experiences in my professional and academic career.
                 </motion.p>
@@ -85,8 +85,8 @@ const Gallery = () => {
                   className="relative"
                   initial={{ opacity: 0, scale: 0.95 }}
                   whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
+                  viewport={{ margin: "-20px" }}
+                  transition={{ duration: 0.7, delay: 0.3 }}
                 >
                   <Slider {...settings}>
                     {gallery.map((item, index) => (
@@ -94,7 +94,8 @@ const Gallery = () => {
                         <motion.div 
                           className="overflow-hidden"
                           initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
+                          whileInView={{ opacity: 1 }}
+                          viewport={{ margin: "-20px" }}
                           transition={{ duration: 0.5 }}
                         >
                           <div className="relative">
@@ -104,16 +105,16 @@ const Gallery = () => {
                               className="w-full h-[400px] object-cover rounded-t-lg"
                               initial={{ scale: 1.1 }}
                               whileInView={{ scale: 1 }}
-                              viewport={{ once: true }}
-                              transition={{ duration: 1 }}
+                              viewport={{ margin: "-20px" }}
+                              transition={{ duration: 0.8 }}
                             />
                           </div>
                           <motion.div 
                             className="p-6 bg-white rounded-b-lg"
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
+                            viewport={{ margin: "-20px" }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
                           >
                             <h3 className="text-2xl font-semibold mb-3">{item.title}</h3>
                             <p className="text-gray-600 mb-4">{item.description}</p>
@@ -124,13 +125,13 @@ const Gallery = () => {
                                   className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm"
                                   initial={{ opacity: 0, scale: 0.5 }}
                                   whileInView={{ opacity: 1, scale: 1 }}
-                                  viewport={{ once: true }}
+                                  viewport={{ margin: "-20px" }}
                                   transition={{ 
                                     duration: 0.5, 
-                                    delay: 0.3 + (catIndex * 0.1),
+                                    delay: 0.2 + (catIndex * 0.1),
                                     type: "spring",
-                                    stiffness: 260,
-                                    damping: 20 
+                                    stiffness: 100,
+                                    damping: 15
                                   }}
                                   whileHover={{ scale: 1.1 }}
                                 >

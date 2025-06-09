@@ -22,8 +22,8 @@ const Home = () => {
                 className="md:col-span-3"
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2 }}
+                viewport={{ margin: "-20px" }}
+                transition={{ duration: 0.5 }}
               >
                 <Card variant="transparent" className="h-full flex flex-col justify-center p-2">
                   <div className="space-y-3">
@@ -31,8 +31,8 @@ const Home = () => {
                       className="text-5xl md:text-6xl font-bold text-gray-800"
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.3 }}
+                      viewport={{ margin: "-20px" }}
+                      transition={{ duration: 0.5, delay: 0.1 }}
                     >
                       {home.title}
                     </motion.h1>
@@ -40,8 +40,8 @@ const Home = () => {
                       className="text-xl md:text-2xl text-gray-600 leading-relaxed"
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.4 }}
+                      viewport={{ margin: "-20px" }}
+                      transition={{ duration: 0.5, delay: 0.2 }}
                     >
                       {home.description}
                     </motion.p>
@@ -50,8 +50,8 @@ const Home = () => {
                       className="flex flex-wrap gap-1 justify-center py-6"
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.5 }}
+                      viewport={{ margin: "-20px" }}
+                      transition={{ duration: 0.5, delay: 0.3 }}
                     >
                       <span className="text-sm text-gray-600 mr-2 self-center">Organizations: </span>
                       {home.organizations.map((org, index) => (
@@ -74,16 +74,16 @@ const Home = () => {
                       className="w-full h-px bg-gray-300 mx-auto"
                       initial={{ scaleX: 0 }}
                       whileInView={{ scaleX: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.8, delay: 0.6 }}
+                      viewport={{ margin: "-20px" }}
+                      transition={{ duration: 0.7, delay: 0.4 }}
                     />
                     {/* Resume and Contact Buttons */}
                     <motion.div 
                       className="flex flex-wrap gap-4 justify-center pt-6"
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.7 }}
+                      viewport={{ margin: "-20px" }}
+                      transition={{ duration: 0.5, delay: 0.5 }}
                     >
                       <Button
                         as="a"
@@ -115,8 +115,8 @@ const Home = () => {
                 className="md:col-span-2"
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.4 }}
+                viewport={{ margin: "-20px" }}
+                transition={{ duration: 0.5, delay: 0.2 }}
               >
                 <Card className="h-full">
                   <img
@@ -130,10 +130,10 @@ const Home = () => {
 
             {/* Qualities Grid */}
             <motion.div
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.5 }}
+              viewport={{ margin: "-20px" }}
+              transition={{ duration: 0.5 }}
             >
               <Card className="w-full">
                 <div className="grid md:grid-cols-3 gap-8 p-6">
@@ -143,8 +143,14 @@ const Home = () => {
                       className="flex flex-col h-full"
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.2 * (index + 1) }}
+                      viewport={{ margin: "-20px" }}
+                      transition={{ 
+                        duration: 0.5, 
+                        delay: index * 0.1,
+                        type: "spring",
+                        stiffness: 100,
+                        damping: 15
+                      }}
                     >
                       <h3 className="text-2xl font-bold text-gray-800 text-center mb-4">
                         {quality.attribute}

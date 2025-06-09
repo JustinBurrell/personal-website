@@ -126,8 +126,8 @@ const About = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              viewport={{ margin: "-20px" }}
+              transition={{ duration: 0.5 }}
             >
               <Card className="p-8">
                 {/* Title */}
@@ -135,8 +135,8 @@ const About = () => {
                   className="text-4xl font-bold text-gray-800 mb-12 text-center"
                   initial={{ opacity: 0, y: -20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
+                  viewport={{ margin: "-20px" }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
                 >
                   My Journey
                 </motion.h2>
@@ -146,8 +146,8 @@ const About = () => {
                   className="mb-12"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
+                  viewport={{ margin: "-20px" }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
                 >
                   <p className="text-lg text-gray-600 leading-relaxed whitespace-pre-wrap">
                     {renderTextWithLinks(about.introduction)}
@@ -159,8 +159,8 @@ const About = () => {
                   className="w-full h-px bg-gray-300 mx-auto mb-12"
                   initial={{ scaleX: 0 }}
                   whileInView={{ scaleX: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
+                  viewport={{ margin: "-20px" }}
+                  transition={{ duration: 0.7, delay: 0.3 }}
                 />
 
                 {/* Bottom section: Skills and Interests */}
@@ -169,8 +169,8 @@ const About = () => {
                     <motion.div
                       initial={{ opacity: 0, x: -20 }}
                       whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.5 }}
+                      viewport={{ margin: "-20px" }}
+                      transition={{ duration: 0.5, delay: 0.4 }}
                     >
                       <h3 className="text-2xl font-semibold mb-6 text-center">Skills</h3>
                       <div className="flex flex-wrap gap-6 justify-center">
@@ -183,13 +183,13 @@ const About = () => {
                               title={`Click to visit ${skill} website`}
                               initial={{ opacity: 0, scale: 0.5 }}
                               whileInView={{ opacity: 1, scale: 1 }}
-                              viewport={{ once: true }}
+                              viewport={{ margin: "-20px" }}
                               transition={{ 
                                 duration: 0.5, 
-                                delay: 0.6 + (index * 0.1),
+                                delay: 0.5 + (index * 0.1),
                                 type: "spring",
-                                stiffness: 260,
-                                damping: 20 
+                                stiffness: 100,
+                                damping: 15
                               }}
                               whileHover={{ scale: 1.2 }}
                             >
@@ -215,8 +215,8 @@ const About = () => {
                     <motion.div
                       initial={{ opacity: 0, x: 20 }}
                       whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 0.5 }}
+                      viewport={{ margin: "-20px" }}
+                      transition={{ duration: 0.5, delay: 0.4 }}
                     >
                       <h3 className="text-2xl font-semibold mb-6 text-center">Interests</h3>
                       <div className="flex flex-wrap gap-2 justify-center">
@@ -226,13 +226,13 @@ const About = () => {
                             className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm"
                             initial={{ opacity: 0, scale: 0.5 }}
                             whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
+                            viewport={{ margin: "-20px" }}
                             transition={{ 
                               duration: 0.5, 
-                              delay: 0.7 + (index * 0.1),
+                              delay: 0.6 + (index * 0.1),
                               type: "spring",
-                              stiffness: 260,
-                              damping: 20 
+                              stiffness: 100,
+                              damping: 15
                             }}
                             whileHover={{ scale: 1.1 }}
                           >
