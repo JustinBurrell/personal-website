@@ -1,6 +1,7 @@
 import React, { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import Navbar from './assets/shared/Navbar';
 import Footer from './assets/shared/Footer';
 import PageTransition from './assets/shared/PageTransition';
@@ -59,6 +60,11 @@ function App() {
 
   return (
     <div className="min-h-screen">
+      <Helmet>
+        <title>Justin Burrell</title>
+        <meta name="description" content="With a passion for technology and a knack for problem-solving, I aim to leverage my technical skills, consulting experience, and leadership background to drive innovation and create scalable solutions that make a positive impact." />
+        <meta name="keywords" content="Justin Burrell, Software Engineer, Horace Mann, Prep for Prep, All Star Code, Lehigh University, Consulting, Portfolio, Python, Java" />
+      </Helmet>
       <Navbar />
       {/* Main content with routes */}
       <main className="relative bg-gray-50">
@@ -68,7 +74,6 @@ function App() {
               <PageTransition>
                 <div className="pt-16">
                   <HomePage />
-                  <Footer />
                 </div>
               </PageTransition>
             } />
@@ -77,7 +82,6 @@ function App() {
                 <div className="pt-16">
                   <Suspense fallback={<LoadingFallback />}>
                     <Education />
-                    <Footer />
                   </Suspense>
                 </div>
               </PageTransition>
@@ -87,7 +91,6 @@ function App() {
                 <div className="pt-16">
                   <Suspense fallback={<LoadingFallback />}>
                     <Experience />
-                    <Footer />
                   </Suspense>
                 </div>
               </PageTransition>
@@ -97,7 +100,6 @@ function App() {
                 <div className="pt-16">
                   <Suspense fallback={<LoadingFallback />}>
                     <Projects />
-                    <Footer />
                   </Suspense>
                 </div>
               </PageTransition>
@@ -107,7 +109,6 @@ function App() {
                 <div className="pt-16">
                   <Suspense fallback={<LoadingFallback />}>
                     <Awards />
-                    <Footer />
                   </Suspense>
                 </div>
               </PageTransition>
@@ -117,14 +118,17 @@ function App() {
           </Routes>
         </AnimatePresence>
       </main>
+      <Footer />
     </div>
   );
 }
 
-// Wrap the entire app with Router
+// Wrap the entire app with Router and HelmetProvider
 const AppWrapper = () => (
   <Router>
-    <App />
+    <HelmetProvider>
+      <App />
+    </HelmetProvider>
   </Router>
 );
 
