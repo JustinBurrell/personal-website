@@ -21,7 +21,7 @@ const Home = () => {
     <AnimationWrapper>
       <section id="home" className="min-h-screen py-2">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col space-y-6 max-w-6xl mx-auto">
+          <div className="flex flex-col space-y-20 max-w-6xl mx-auto">
             {/* Title, Description, and Image grid */}
             <div className="grid md:grid-cols-5 gap-6 pt-24">
               {/* Left side: Content */}

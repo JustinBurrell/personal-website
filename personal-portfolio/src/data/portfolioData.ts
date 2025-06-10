@@ -106,7 +106,7 @@ const portfolioData: PortfolioData = {
         imageUrl: "/assets/images/home/FLOC Headshot.jpeg",
         title: "Hi, I'm Justin Burrell.",
         description: "With a passion for technology and a knack for problem-solving, I aim to leverage my technical skills, consulting experience, and leadership background to drive innovation and create scalable solutions that make a positive impact.",
-        resumeUrl: "/assets/documents/Justin Burrell 6-4-25 Resume.pdf",
+        resumeUrl: "/assets/documents/Justin Burrell Resume.pdf",
         linkedinUrl: "https://www.linkedin.com/in/thejustinburrell/",
         githubUrl: "https://github.com/JustinBurrell",
         email: "justinburrell715@gmail.com",
