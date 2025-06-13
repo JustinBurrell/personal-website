@@ -299,75 +299,36 @@ const portfolioData: PortfolioData = {
     ],
     gallery: [
         {
-            title: "Lehigh University BSU Leadership",
-            imageUrl: "/assets/images/gallery/bsu-leadership.jpg",
-            description: "Leading the Black Student Union at Lehigh University, organizing events and fostering community engagement.",
+            title: "Men of Color Symposium",
+            imageUrl: "assets/images/gallery/moca/mocs group photo.jpeg", 
+            description: "I proposed and planned the First Annual Men of Color Symposium, brought together men of color from Lehigh University, Moravian University, Lafayette College, Muhlenberg College, and East Stroudsburg University for a day of professional development, empowerment, and connection. With engaging keynote speakers, insightful breakout sessions, and impactful dialogues, the symposium sparked both personal and professional growth for everyone who attended.",
             category: [
                 {
-                    categoryName: "Leadership"
+                    categoryName: "Men of Color Alliance"
                 },
                 {
-                    categoryName: "Community"
+                    categoryName: "Community Building"
+                },
+                {
+                    categoryName: "Professional Development"
                 }
             ]
         },
         {
-            title: "EY Tech Consulting Project",
-            imageUrl: "/assets/images/gallery/ey-consulting.jpg",
-            description: "Working on innovative technology solutions during my internship at EY, collaborating with cross-functional teams.",
+            title: "Founded ColorStack Chapter at Lehigh",
+            imageUrl: "assets/images/gallery/colorstack/colorstack exec.jpg",
+            description: "I helped found the ColorStack chapter at Lehigh University. In the Spring 2025 semester, our exec has been dedicated to bridging the gap in the tech industry for Black and Latinx students. After earning Student Senate recognition as an official student organization at Lehigh University, I’m confident in our ability to make a lasting impact. I’m looking forward to what’s ahead for the chapter!",
             category: [
                 {
-                    categoryName: "Professional"
+                    categoryName: "ColorStack"
                 },
                 {
-                    categoryName: "Technology"
+                    categoryName: "Computer Science"
                 },
                 {
-                    categoryName: "Consulting"
+                    categoryName: "Community Building"
                 }
-            ]
-        },
-        {
-            title: "Kappa Alpha Psi Event",
-            imageUrl: "/assets/images/gallery/kappa-event.jpg",
-            description: "Organizing and participating in fraternity events that promote leadership and community service.",
-            category: [
-                {
-                    categoryName: "Greek Life"
-                },
-                {
-                    categoryName: "Service"
-                }
-            ]
-        },
-        {
-            title: "Frood App Development",
-            imageUrl: "/assets/images/gallery/frood-dev.jpg",
-            description: "Building and improving the Frood application, implementing new features and enhancing user experience.",
-            category: [
-                {
-                    categoryName: "Development"
-                },
-                {
-                    categoryName: "Startup"
-                }
-            ]
-        },
-        {
-            title: "ColorStack Tech Workshop",
-            imageUrl: "/assets/images/gallery/colorstack-workshop.jpg",
-            description: "Leading technical workshops and mentoring sessions for ColorStack members, sharing knowledge and building community.",
-            category: [
-                {
-                    categoryName: "Education"
-                },
-                {
-                    categoryName: "Mentorship"
-                },
-                {
-                    categoryName: "Technology"
-                }
-            ]
+            ]   
         }
     ],
     projects: [
