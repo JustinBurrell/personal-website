@@ -54,7 +54,11 @@ const Gallery = () => {
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     pauseOnHover: true,
-    adaptiveHeight: true
+    adaptiveHeight: true,
+    cssEase: 'ease-in-out',
+    fade: true,
+    swipeToSlide: true,
+    waitForAnimate: true
   };
 
   return (
@@ -102,17 +106,17 @@ const Gallery = () => {
                           initial={{ opacity: 0 }}
                           whileInView={{ opacity: 1 }}
                           viewport={{ margin: "-20px" }}
-                          transition={{ duration: 0.5 }}
+                          transition={{ duration: 0.3 }}
                         >
                           <div className="relative w-full flex justify-center bg-white">
                             <motion.img
                               src={item.imageUrl}
                               alt={item.title}
                               className="max-h-[600px] w-auto object-contain rounded-t-lg"
-                              initial={{ scale: 1.1 }}
-                              whileInView={{ scale: 1 }}
-                              viewport={{ margin: "-20px" }}
-                              transition={{ duration: 0.8 }}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.3 }}
                             />
                           </div>
                           <motion.div 
