@@ -329,9 +329,19 @@ const portfolioData: PortfolioData = {
                     categoryName: "Community Building"
                 }
             ]   
+        },
+        {
+            title: "",
+            imageUrl: "",
+            description: "",
+            category: [
+                {
+                    categoryName: ""
+                }
+            ]
         }
     ],
-    projects: [
+    projects: [ 
         {
             title: "Project Name",
             description: "Project description",

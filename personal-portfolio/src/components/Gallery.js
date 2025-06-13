@@ -112,7 +112,7 @@ const Gallery = () => {
                             <motion.img
                               src={item.imageUrl}
                               alt={item.title}
-                              className="max-h-[600px] w-auto object-contain rounded-t-lg"
+                              className="max-h-[600px] w-auto object-contain rounded-lg"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               exit={{ opacity: 0 }}
