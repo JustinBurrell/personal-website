@@ -104,11 +104,11 @@ const Gallery = () => {
                           viewport={{ margin: "-20px" }}
                           transition={{ duration: 0.5 }}
                         >
-                          <div className="relative">
+                          <div className="relative w-full flex justify-center bg-white">
                             <motion.img
                               src={item.imageUrl}
                               alt={item.title}
-                              className="w-full h-[400px] object-cover rounded-t-lg"
+                              className="max-h-[600px] w-auto object-contain rounded-t-lg"
                               initial={{ scale: 1.1 }}
                               whileInView={{ scale: 1 }}
                               viewport={{ margin: "-20px" }}
