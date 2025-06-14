@@ -29,10 +29,14 @@ interface AboutSection {
 }
 
 interface AwardItem {
-    title: string;
-    organization: string;
-    date: string;
+    awardImageUrl: string;
     description: string;
+    award: Array<{
+        title: string;
+        organization: string;
+        date: string;
+        description: string;
+    }>;
 }
 
 interface EducationItem {
@@ -204,16 +208,22 @@ const portfolioData: PortfolioData = {
     },
     awards: [
         {
-            title: "Award Name",
-            organization: "Organization Name",
-            date: "Month Year",
-            description: "Description of the award and its significance"
-        },
-        {
-            title: "Second Award",
-            organization: "Another Organization",
-            date: "January 2024",
-            description: "Description of your second award and its achievements"
+            awardImageUrl: "/assets/images/awards/About Background.gif",
+            description: "There's no greater feeling than being recognized for your hard work and dedication. Here are some of the awards and recognitions I've received to date.",
+            award: [
+                {
+                    title: "Award Name",
+                    organization: "Organization Name",
+                    date: "Month Year",
+                    description: "Description of the award and its significance."
+                },
+                {
+                    title: "Second Award",
+                    organization: "Another Organization",
+                    date: "January 2024",
+                    description: "Description of your second award and its achievements."
+                }
+            ]
         }
     ],
     education: [
@@ -319,7 +329,6 @@ const portfolioData: PortfolioData = {
                             "Implemented CI/CD pipelines, Docker containerization, and Kubernetes orchestration to automate deployments and improve system scalability and reliability."
                         ],
                         skills: ["ASP.Net", "Docker", "C#", "SQL", "Flutter", "Dart", "Kubernetes", "Docker", "xUnit", "CI/CD", "Data Analysis", "Agile Project Management", "Firebase"],
-                        images: ["", "", ""]
                     },
                     {
                         position: "Business Strategist",
@@ -330,7 +339,6 @@ const portfolioData: PortfolioData = {
                             "Assisted in developing an approach to help universities experience the product through trial programs and tailored onboarding, with the goal of converting them into paying clients."
                         ],
                         skills: ["B2B Strategy", "Business Development", "Microsoft Office", "Cilent-Relationships"],
-                        images: ["", "", ""]
                     }
                 ]
             },
@@ -353,7 +361,7 @@ const portfolioData: PortfolioData = {
                             "Updated content on the firm's front-end SAP site and participated in sessions with industry leaders to deepen understanding of SAP best practices and enterprise integration."
                         ],
                         skills: ["Python", "SQL", "AWS", "Microsoft Office", "SAP", "Entreprise Software", "Cilent Relations", "Data Analysis"],
-                        images: ["", "", ""]
+                        images: ["/assets/images/experiences/professional/ey/ey 1.jpg", "/assets/images/experiences/professional/ey/ey 2.jpg", "/assets/images/experiences/professional/ey/ey 3.jpg", "/assets/images/experiences/professional/ey/ey 4.jpg"]
                     }
                 ]
             },
@@ -592,20 +600,21 @@ const portfolioData: PortfolioData = {
     ],
     projects: [{
         projectImageUrl: "/assets/images/projects/Projects About Background.jpg",
-        description: "Projects are an opportunity to sharpen my technical skills and showcase my creativity. They also are unique ways to collaborate with others to achieve a common goal.Here is a collection of my technical projects to date. For further details, please visit my GitHub page.",
+        description: "Projects are an opportunity to sharpen my technical skills and showcase my creativity. They also are unique ways to collaborate with others to achieve a common goal. Here is a collection of my technical projects to date. For further details, please visit my GitHub page.",
         project: [
             {
-                title: "Personal Portfolio Website",
+                title: "My Personal Portfolio",
                 date: "June 2025",
-                description: "A modern, responsive portfolio website built with React and TypeScript to showcase my professional journey and projects.",
-                technologies: ["React", "TypeScript", "Tailwind CSS", "Vite"],
+                description: "A modern, responsive portfolio website built in React, Tailwind CSS, and TypeScript to showcase my professional journey and projects. This website is a work in progress; I will be updating it as I continue to learn and grow.",
+                technologies: ["React", "TypeScript", "Tailwind CSS", "Framer Motion", "Google Cloud", "Vercel"],
                 githubUrl: "https://github.com/JustinBurrell/personal-portfolio",
-                liveUrl: "https://justinburrell.com",
+                liveUrl: "https://thejustinburrell.com",
                 imageUrl: "/assets/images/projects/Personal Website Cover.png",
                 highlights: [
-                    "Implemented responsive design for optimal viewing across all devices",
-                    "Built with modern React practices and TypeScript for type safety",
-                    "Integrated dynamic content management through TypeScript interfaces"
+                    "Fully responsive design ensures seamless viewing and interaction across all devices, from mobile to desktop.",
+                    "Built with modern React, TypeScript, and Tailwind CSS for a fast, maintainable, and visually appealing user experience.",
+                    "Dynamic content management powered by TypeScript interfaces allows for easy updates and scalability as my portfolio grows.",
+                    "Integrated Google Cloud Translate API enables users to translate the entire website into 10 different languages, making the site accessible to a global audience."
                 ]
             },
             // {

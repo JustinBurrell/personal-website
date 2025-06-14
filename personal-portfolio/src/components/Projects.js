@@ -120,7 +120,15 @@ const Timeline = ({ projects }) => {
                       <span className="text-sm text-gray-500 font-normal">- {project.date}</span>
                     )}
                   </div>
-                  <p className="text-gray-600 mb-4">{project.description}</p>
+                  <motion.p
+                    className="text-gray-600 mb-4"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-20px' }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                  >
+                    {project.description}
+                  </motion.p>
 
                   {/* Highlights */}
                   {project.highlights && project.highlights.length > 0 && (
