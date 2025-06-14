@@ -11,6 +11,17 @@ const Timeline = ({ projects }) => {
   const scrollContainerRef = useRef(null);
   const [activeIndex, setActiveIndex] = React.useState(0);
 
+  // Sort projects by date (most recent first)
+  const sortedProjects = [...projects].sort((a, b) => {
+    // Parse date as YYYY/MM/DD for comparison, fallback to 0 if invalid
+    const parseDate = (dateStr) => {
+      if (!dateStr) return 0;
+      const d = new Date(dateStr);
+      return isNaN(d) ? 0 : d.getTime();
+    };
+    return parseDate(b.date) - parseDate(a.date);
+  });
+
   // Center the first card on mount
   useEffect(() => {
     if (scrollContainerRef.current) {
@@ -76,7 +87,7 @@ const Timeline = ({ projects }) => {
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         onScroll={handleScroll}
       >
-        {projects.map((project, index) => (
+        {sortedProjects.map((project, index) => (
           <motion.div
             key={project.title}
             className="flex-none w-full snap-center"
@@ -90,18 +101,25 @@ const Timeline = ({ projects }) => {
               <div className="flex flex-col h-full">
                 {/* Project Image */}
                 {project.imageUrl && (
-                  <div className="relative h-48 overflow-hidden rounded-t-lg">
+                  <div className="relative h-96 flex items-center justify-center bg-white rounded-t-lg">
                     <img
                       src={project.imageUrl}
                       alt={project.title}
-                      className="w-full h-full object-cover"
+                      className="max-h-96 w-full object-contain"
                     />
                   </div>
                 )}
 
                 {/* Project Content */}
                 <div className="p-6 flex-grow">
-                  <h3 className="text-2xl font-bold text-gray-800 mb-2">{project.title}</h3>
+                  <div className="flex items-baseline gap-2 mb-2 flex-wrap">
+                    <h3 className="text-2xl font-bold text-gray-800">
+                      {project.title}
+                    </h3>
+                    {project.date && (
+                      <span className="text-sm text-gray-500 font-normal">- {project.date}</span>
+                    )}
+                  </div>
                   <p className="text-gray-600 mb-4">{project.description}</p>
 
                   {/* Highlights */}

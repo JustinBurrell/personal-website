@@ -97,6 +97,7 @@ interface ProjectItem {
     description: string;
     project: Array<{
         title: string;
+        date: string;
         description: string;
         technologies: string[];
         githubUrl?: string;
@@ -595,11 +596,12 @@ const portfolioData: PortfolioData = {
         project: [
             {
                 title: "Personal Portfolio Website",
+                date: "June 2025",
                 description: "A modern, responsive portfolio website built with React and TypeScript to showcase my professional journey and projects.",
                 technologies: ["React", "TypeScript", "Tailwind CSS", "Vite"],
                 githubUrl: "https://github.com/JustinBurrell/personal-portfolio",
                 liveUrl: "https://justinburrell.com",
-                imageUrl: "/assets/images/projects/portfolio.jpg",
+                imageUrl: "/assets/images/projects/Personal Website Cover.png",
                 highlights: [
                     "Implemented responsive design for optimal viewing across all devices",
                     "Built with modern React practices and TypeScript for type safety",
@@ -608,6 +610,7 @@ const portfolioData: PortfolioData = {
             },
             {
                 title: "Frood Mobile App",
+                date: "June 2025",
                 description: "A cross-platform mobile application for university dining services, helping students find and share food options on campus.",
                 technologies: ["Flutter", "Dart", "Firebase", "Google Cloud"],
                 githubUrl: "https://github.com/JustinBurrell/frood-mobile",
