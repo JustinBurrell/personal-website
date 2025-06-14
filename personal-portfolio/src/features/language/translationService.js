@@ -47,6 +47,8 @@ const TRANSLATABLE_FIELDS = new Set([
   'location',
   'responsibilities',
   'technologies',
+  'view_timeline',
+  'view_resume',
   
   // Projects section
   'description',
