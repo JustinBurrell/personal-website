@@ -28,6 +28,9 @@ const Navbar = () => {
   const menuText = useTranslateText("Open main menu");
   const professionalExperienceText = useTranslateText("Professional Experience");
   const leadershipExperienceText = useTranslateText("Leadership Experience");
+  const schoolingText = useTranslateText("Schooling");
+  const certificationsText = useTranslateText("Certifications");
+  const programsText = useTranslateText("Programs");
 
   // Initialize scroll spy
   useEffect(() => {
@@ -94,7 +97,15 @@ const Navbar = () => {
         { name: contactText, to: 'contact' }
       ]
     },
-    { name: educationText, to: '/education' },
+    {
+      name: educationText,
+      to: '/education',
+      subItems: [
+        { name: schoolingText, to: 'schooling-section' },
+        { name: certificationsText, to: 'certifications-section' },
+        { name: programsText, to: 'programs-section' }
+      ]
+    },
     {
       name: experienceText,
       to: '/experience',
@@ -134,6 +145,10 @@ const Navbar = () => {
       }
       // If clicking experience while on experience, scroll to top
       else if (item.to === '/experience') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      // If clicking education while on education, scroll to top
+      else if (item.to === '/education') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     } else {

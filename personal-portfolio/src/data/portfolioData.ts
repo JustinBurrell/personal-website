@@ -40,20 +40,26 @@ interface AwardItem {
 }
 
 interface EducationItem {
-    name: string;
-    nameUrl?: string;
-    education_type: string;
-    major?: string;
-    completionDate: string;
-    gpa?: string;
-    relevantCourses?: Array<{
-        course: string;
-        courseUrl: string;
-    }>;
-    organizationInvolvement?: Array<{
-        organization: string;
-        role: string;
-    }>;
+    educationImageUrl: string;
+    description: string;
+    education: Array<{
+        name: string;
+        nameUrl?: string;
+        education_type: string;
+        school_type?: string;
+        major?: string;
+        completionDate: string;
+        description?: string;
+        gpa?: string;
+        relevantCourses?: Array<{
+            course: string;
+            courseUrl: string;
+        }>;
+        organizationInvolvement?: Array<{
+            organization: string;
+            role: string;
+        }>;
+    }>
 }
 
 interface ExperienceItem {
@@ -212,99 +218,81 @@ const portfolioData: PortfolioData = {
             description: "There's no greater feeling than being recognized for your hard work and dedication. Here are some of the awards and recognitions I've received to date.",
             award: [
                 {
-                    title: "Award Name",
-                    organization: "Organization Name",
-                    date: "Month Year",
-                    description: "Description of the award and its significance."
+                    title: "George Eastman Young Leaders Award",
+                    organization: "The University of Rochester",
+                    date: "June 2021",
+                    description: "This award was presented to me by The Horace Mann School. Each year, a student in the junior class is given this award. Here are the following criteria for the award: strong leadership experience at school and in the community, high grades and challenging courses, and extensive involvement in extracurricular activities."
                 },
-                {
-                    title: "Second Award",
-                    organization: "Another Organization",
-                    date: "January 2024",
-                    description: "Description of your second award and its achievements."
-                }
+                // {
+                //     title: "Second Award",
+                //     organization: "Another Organization",
+                //     date: "January 2024",
+                //     description: "Description of your second award and its achievements."
+                // }
             ]
         }
     ],
     education: [
         {
-            name: "Lehigh University",
-            nameUrl: "https://www.lehigh.edu/",
-            education_type: "Bachelor's of Science",
-            major: "Computer Science and Engineering",
-            completionDate: "May 2026",
-            relevantCourses: [
+            educationImageUrl: "/assets/images/education/education-banner.jpg",
+            description: "My academic journey and the organizations that shaped my growth.",
+            education: [
                 {
-                    course: "CSE 007",
-                    courseUrl: "https://www.lehigh.edu/academics/courses/cse-007"
-                },
-                
-                {
-                    course: "CSE 017",
-                    courseUrl: "https://www.lehigh.edu/academics/courses/cse-017"
-                },
-                
-                {
-                    course: "CSE 140",
-                    courseUrl: "https://www.lehigh.edu/academics/courses/cse-140"
-                },
-                {
-                    course: "CSE 216",
-                    courseUrl: "https://www.lehigh.edu/academics/courses/cse-216"
-                },
-                {
-                    course: "CSE 280",
-                    courseUrl: "https://www.lehigh.edu/academics/courses/cse-280"
-                }
-            ],
-            organizationInvolvement: [
-                {
-                    organization: "Kappa Alpha Psi Fraternity, Inc.",
-                    role: "Polemarch and MTA Chairman"
+                    name: "Lehigh University",
+                    nameUrl: "https://www.lehigh.edu/",
+                    education_type: "School",
+                    school_type: "Bachelor's of Science",
+                    major: "Computer Science and Engineering",
+                    completionDate: "May 2026",
+                    relevantCourses: [
+                        { course: "CSE 007", courseUrl: "https://www.lehigh.edu/academics/courses/cse-007" },
+                        { course: "CSE 017", courseUrl: "https://www.lehigh.edu/academics/courses/cse-017" },
+                        { course: "CSE 140", courseUrl: "https://www.lehigh.edu/academics/courses/cse-140" },
+                        { course: "CSE 216", courseUrl: "https://www.lehigh.edu/academics/courses/cse-216" },
+                        { course: "CSE 280", courseUrl: "https://www.lehigh.edu/academics/courses/cse-280" }
+                    ],
+                    organizationInvolvement: [
+                        { organization: "Kappa Alpha Psi Fraternity, Inc.", role: "Polemarch and MTA Chairman" },
+                        { organization: "Lehigh University Black Student Union", role: "President" },
+                        { organization: "ColorStack", role: "Co-Founder and Secretary" },
+                        { organization: "Men of Color Alliance", role: "Former President" },
+                        { organization: "Student Senate", role: "Assistant Vice President of Finance" },
+                        { organization: "Lamberton Hall Building Supervisor", role: "Great and Game Room Supervisor" }
+                    ]
                 },
                 {
-                    organization: "Lehigh University Black Student Union",
-                    role: "President"
+                    name: "Horace Mann School",
+                    nameUrl: "https://www.horacemann.org/",
+                    education_type: "School",
+                    school_type: "High School Diploma",
+                    completionDate: "June 2022",
+                    organizationInvolvement: [
+                        { organization: "Varsity Track and Field", role: "Captain" },
+                        { organization: "Varsity Cross Country", role: "Captain" },
+                        { organization: "Office of Admissions", role: "Ambassador" },
+                        { organization: "Blex (Black Excellence)", role: "President" }
+                    ]
                 },
                 {
-                    organization: "ColorStack",
-                    role: "Co-Founder and Secretary"
+                    name: "Prep for Prep",
+                    nameUrl: "https://www.prepforprep.org/",
+                    education_type: "Program",
+                    completionDate: "August 2017",
+                    description: "Prep for Prep is a highly selective leadership development program that prepares students for placement in leading independent schools and continues to work closely with the students through high school graduation and beyond."
                 },
                 {
-                    organization: "Men of Color Alliance",
-                    role: "Former President"
+                    name: "All Star Code",
+                    nameUrl: "https://www.allstarcode.org/",
+                    education_type: "Program",
+                    completionDate: "August 2020",
+                    description: "All-Star Code empowers youth from underserved communities through their flagship Summer Intensive program. This six-week experience immerses students in computer science, web development, and emerging technologies while providing mentorship from industry professionals. Beyond the technical training, participants gain invaluable networking opportunities with high school, college, and postgrad professionals, fostering connections that open doors for future success in tech."
                 },
                 {
-                    organization: "Student Senate",
-                    role: "Assistant Vice President of Finance"
-                },
-                {
-                    organization: "Lamberton Hall Building Supervisor",
-                    role: "Great and Game Room Supervisor"
-                }
-            ]
-        },
-        {
-            name: "Horace Mann School",
-            nameUrl: "https://www.horacemann.org/",
-            education_type: "High School Diploma",
-            completionDate: "June 2022",
-            organizationInvolvement: [
-                {
-                    organization: "Varsity Track and Field",
-                    role: "Captain"
-                },
-                {
-                    organization: "Varsity Cross Country",
-                    role: "Captain"
-                },
-                {
-                    organization: "Office of Admissions",
-                    role: "Ambassador"
-                },
-                {
-                    organization: "Blex (Black Excellence)",
-                    role: "President"
+                    name: "IBM Data Foundations with Capstone",
+                    nameUrl: "https://www.ibm.com/training/data-foundations",
+                    education_type: "Certificate",
+                    completionDate: "August 2020",
+                    description: "Learn the concepts and methods of data science and how its discoveries change the world. Then get hands-on practice cleaning, refining, and visualizing data, in a series of simulations, using IBM Watson Studio with the data refinery tool. Finish by gathering tips and resources that can help you launch a great career in data science."
                 }
             ]
         }
