@@ -6,12 +6,16 @@ import { useTranslateText } from '../features/language/useTranslateText';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { scroller } from 'react-scroll';
+import portfolioData from '../data/portfolioData.ts';
 
 const Education = () => {
-  const { translatedData } = useLanguage();
-  const { education } = translatedData;
-  const educationGroup = education[0];
-  const educationList = educationGroup.education;
+  const { translatedData, currentLanguage } = useLanguage();
+  const { education: translatedEducation } = translatedData;
+  const educationGroup = translatedEducation[0];
+  
+  // Use original data for filtering
+  const originalEducation = portfolioData.education[0];
+  const educationList = originalEducation.education;
 
   const location = useLocation();
 
@@ -31,9 +35,54 @@ const Education = () => {
       return dateB - dateA;
     });
 
+  // Filter using original data
   const schooling = sortByDateDesc(educationList.filter(e => e.education_type === 'School'));
   const certifications = sortByDateDesc(educationList.filter(e => e.education_type === 'Certificate'));
   const programs = sortByDateDesc(educationList.filter(e => e.education_type === 'Program'));
+
+  // Get translated versions of the filtered items
+  const getTranslatedItem = (originalItem) => {
+    if (currentLanguage === 'en') return originalItem;
+    
+    // Find the translated item by matching the original item's index in the array
+    const originalIndex = educationList.findIndex(item => 
+      item.name === originalItem.name && 
+      item.education_type === originalItem.education_type
+    );
+    
+    if (originalIndex === -1) {
+      console.warn('Could not find original item in education list:', originalItem);
+      return originalItem;
+    }
+
+    const translatedItem = translatedEducation[0].education[originalIndex];
+    if (!translatedItem) {
+      console.warn('Could not find translated item at index:', originalIndex);
+      return originalItem;
+    }
+
+    return translatedItem;
+  };
+
+  // Get translated course
+  const getTranslatedCourse = (originalCourse, translatedEdu) => {
+    if (currentLanguage === 'en') return originalCourse;
+    if (!translatedEdu.relevantCourses) return originalCourse;
+
+    const translatedCourse = translatedEdu.relevantCourses.find(c => c.courseUrl === originalCourse.courseUrl);
+    return translatedCourse || originalCourse;
+  };
+
+  // Get translated organization
+  const getTranslatedOrg = (originalOrg, translatedEdu) => {
+    if (currentLanguage === 'en') return originalOrg;
+    if (!translatedEdu.organizationInvolvement) return originalOrg;
+
+    const translatedOrg = translatedEdu.organizationInvolvement.find(o => 
+      o.organization === originalOrg.organization && o.role === originalOrg.role
+    );
+    return translatedOrg || originalOrg;
+  };
 
   React.useEffect(() => {
     if (location.state && location.state.scrollTo) {
@@ -124,77 +173,86 @@ const Education = () => {
               {schoolingText}
             </motion.h3>
             <div className="grid gap-8">
-              {schooling.map((edu, index) => (
-                <motion.div
-                  key={edu.name + index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -30 }}
-                  viewport={{ once: false, margin: '-20px' }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <Card className="bg-white rounded-lg shadow-lg p-6">
-                    <h3 className="text-2xl font-semibold mb-2">
-                      {edu.nameUrl ? (
-                        <a
-                          href={edu.nameUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-gray-900 hover:text-indigo-600 transition-colors duration-200"
-                        >
-                          {edu.name}
-                        </a>
-                      ) : (
-                        edu.name
+              {schooling.map((edu, index) => {
+                const translatedEdu = getTranslatedItem(edu);
+                return (
+                  <motion.div
+                    key={edu.name + index}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -30 }}
+                    viewport={{ once: false, margin: '-20px' }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
+                    <Card className="bg-white rounded-lg shadow-lg p-6">
+                      <h3 className="text-2xl font-semibold mb-2">
+                        {edu.nameUrl ? (
+                          <a
+                            href={edu.nameUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-900 hover:text-indigo-600 transition-colors duration-200"
+                          >
+                            {translatedEdu.name}
+                          </a>
+                        ) : (
+                          translatedEdu.name
+                        )}
+                      </h3>
+                      <p className="text-gray-600 mb-2">
+                        {translatedEdu.school_type}
+                        {translatedEdu.major && ` in ${translatedEdu.major}`}
+                      </p>
+                      <p className="text-gray-600 mb-4">Graduation: {edu.completionDate}</p>
+                      {edu.gpa && (
+                        <p className="text-gray-600 mb-4">GPA: {edu.gpa}</p>
                       )}
-                    </h3>
-                    <p className="text-gray-600 mb-2">
-                      {edu.school_type}
-                      {edu.major && ` in ${edu.major}`}
-                    </p>
-                    <p className="text-gray-600 mb-4">Graduation: {edu.completionDate}</p>
-                    {edu.gpa && (
-                      <p className="text-gray-600 mb-4">GPA: {edu.gpa}</p>
-                    )}
-                    {/* Relevant Courses Section */}
-                    {edu.relevantCourses && edu.relevantCourses.length > 0 && (
-                      <div className="mb-6">
-                        <h4 className="text-lg font-semibold mb-4">{relevantCoursesText}</h4>
-                        <div className="flex flex-wrap gap-3">
-                          {edu.relevantCourses.map((course, idx) => (
-                            <a
-                              key={idx}
-                              href={course.courseUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-full hover:bg-indigo-200 transition-colors duration-200 ease-in-out flex items-center justify-center font-semibold text-sm"
-                            >
-                              {course.course}
-                            </a>
-                          ))}
+                      {/* Relevant Courses Section */}
+                      {edu.relevantCourses && edu.relevantCourses.length > 0 && (
+                        <div className="mb-6">
+                          <h4 className="text-lg font-semibold mb-4">{relevantCoursesText}</h4>
+                          <div className="flex flex-wrap gap-3">
+                            {edu.relevantCourses.map((course, idx) => {
+                              const translatedCourse = getTranslatedCourse(course, translatedEdu);
+                              return (
+                                <a
+                                  key={idx}
+                                  href={course.courseUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-full hover:bg-indigo-200 transition-colors duration-200 ease-in-out flex items-center justify-center font-semibold text-sm"
+                                >
+                                  {translatedCourse.course}
+                                </a>
+                              );
+                            })}
+                          </div>
                         </div>
-                      </div>
-                    )}
-                    {/* Organization Involvement Section */}
-                    {edu.organizationInvolvement && edu.organizationInvolvement.length > 0 && (
-                      <div>
-                        <h4 className="text-lg font-semibold mb-4">{organizationInvolvementText}</h4>
-                        <div className="flex flex-wrap gap-3">
-                          {edu.organizationInvolvement.map((org, idx) => (
-                            <div
-                              key={idx}
-                              className="bg-rose-100 text-rose-700 px-4 py-2 rounded-full flex flex-col items-center text-center font-semibold text-sm"
-                            >
-                              <span className="font-medium">{org.organization}</span>
-                              <span className="text-xs">{org.role}</span>
-                            </div>
-                          ))}
+                      )}
+                      {/* Organization Involvement Section */}
+                      {edu.organizationInvolvement && edu.organizationInvolvement.length > 0 && (
+                        <div>
+                          <h4 className="text-lg font-semibold mb-4">{organizationInvolvementText}</h4>
+                          <div className="flex flex-wrap gap-3">
+                            {edu.organizationInvolvement.map((org, idx) => {
+                              const translatedOrg = getTranslatedOrg(org, translatedEdu);
+                              return (
+                                <div
+                                  key={idx}
+                                  className="bg-rose-100 text-rose-700 px-4 py-2 rounded-full flex flex-col items-center text-center font-semibold text-sm"
+                                >
+                                  <span className="font-medium">{translatedOrg.organization}</span>
+                                  <span className="text-xs">{translatedOrg.role}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </Card>
-                </motion.div>
-              ))}
+                      )}
+                    </Card>
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
 
@@ -218,35 +276,38 @@ const Education = () => {
               {certificationsText}
             </motion.h3>
             <div className="grid gap-8">
-              {certifications.map((cert, index) => (
-                <motion.div
-                  key={cert.name + index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -30 }}
-                  viewport={{ once: false, margin: '-20px' }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <Card className="bg-white rounded-lg shadow-lg p-6">
-                    <h3 className="text-2xl font-semibold mb-2">
-                      {cert.nameUrl ? (
-                        <a
-                          href={cert.nameUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-gray-900 hover:text-indigo-600 transition-colors duration-200"
-                        >
-                          {cert.name}
-                        </a>
-                      ) : (
-                        cert.name
-                      )}
-                    </h3>
-                    <p className="text-gray-600 mb-2">{cert.completionDate}</p>
-                    {cert.description && <p className="text-gray-700 mt-2">{cert.description}</p>}
-                  </Card>
-                </motion.div>
-              ))}
+              {certifications.map((cert, index) => {
+                const translatedCert = getTranslatedItem(cert);
+                return (
+                  <motion.div
+                    key={cert.name + index}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -30 }}
+                    viewport={{ once: false, margin: '-20px' }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
+                    <Card className="bg-white rounded-lg shadow-lg p-6">
+                      <h3 className="text-2xl font-semibold mb-2">
+                        {cert.nameUrl ? (
+                          <a
+                            href={cert.nameUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-900 hover:text-indigo-600 transition-colors duration-200"
+                          >
+                            {translatedCert.name}
+                          </a>
+                        ) : (
+                          translatedCert.name
+                        )}
+                      </h3>
+                      <p className="text-gray-600 mb-2">{cert.completionDate}</p>
+                      {translatedCert.description && <p className="text-gray-700 mt-2">{translatedCert.description}</p>}
+                    </Card>
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
 
@@ -270,35 +331,38 @@ const Education = () => {
               {programsText}
             </motion.h3>
             <div className="grid gap-8">
-              {programs.map((prog, index) => (
-                <motion.div
-                  key={prog.name + index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -30 }}
-                  viewport={{ once: false, margin: '-20px' }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <Card className="bg-white rounded-lg shadow-lg p-6">
-                    <h3 className="text-2xl font-semibold mb-2">
-                      {prog.nameUrl ? (
-                        <a
-                          href={prog.nameUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-gray-900 hover:text-indigo-600 transition-colors duration-200"
-                        >
-                          {prog.name}
-                        </a>
-                      ) : (
-                        prog.name
-                      )}
-                    </h3>
-                    <p className="text-gray-600 mb-2">{prog.completionDate}</p>
-                    {prog.description && <p className="text-gray-700 mt-2">{prog.description}</p>}
-                  </Card>
-                </motion.div>
-              ))}
+              {programs.map((prog, index) => {
+                const translatedProg = getTranslatedItem(prog);
+                return (
+                  <motion.div
+                    key={prog.name + index}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -30 }}
+                    viewport={{ once: false, margin: '-20px' }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
+                    <Card className="bg-white rounded-lg shadow-lg p-6">
+                      <h3 className="text-2xl font-semibold mb-2">
+                        {prog.nameUrl ? (
+                          <a
+                            href={prog.nameUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-gray-900 hover:text-indigo-600 transition-colors duration-200"
+                          >
+                            {translatedProg.name}
+                          </a>
+                        ) : (
+                          translatedProg.name
+                        )}
+                      </h3>
+                      <p className="text-gray-600 mb-2">{prog.completionDate}</p>
+                      {translatedProg.description && <p className="text-gray-700 mt-2">{translatedProg.description}</p>}
+                    </Card>
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
         </div>

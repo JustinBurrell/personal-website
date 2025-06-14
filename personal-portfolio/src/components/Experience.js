@@ -191,6 +191,8 @@ const Experience = () => {
   const leadershipText = useTranslateText("Leadership Experience");
   const viewTimelineText = useTranslateText("View Timeline Mode");
   const viewResumeText = useTranslateText("View Resume Mode");
+  const skillsText = useTranslateText("Skills");
+  const technologiesText = useTranslateText("Technologies");
 
   // Helper to render grouped experience cards (for both professional and leadership)
   const renderGroupedExperience = (companies) => (
@@ -269,7 +271,7 @@ const Experience = () => {
                 viewport={{ once: true, margin: '-20px' }}
                 transition={{ duration: 0.4, delay: 0.4 }}
               >
-                <span className="font-semibold text-sm text-gray-700 mr-2">Skills:</span>
+                <span className="font-semibold text-sm text-gray-700 mr-2">{skillsText}:</span>
                 {pos.skills.map((skill, i) => (
                   <span key={i} className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-xs">
                     {skill}
@@ -284,7 +286,7 @@ const Experience = () => {
                   viewport={{ once: true, margin: '-20px' }}
                   transition={{ duration: 0.4, delay: 0.45 }}
                 >
-                  <span className="font-semibold text-sm text-gray-700 mr-2">Technologies:</span>
+                  <span className="font-semibold text-sm text-gray-700 mr-2">{technologiesText}:</span>
                   {pos.technologies.map((tech, i) => (
                     <span key={i} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs">
                       {tech}

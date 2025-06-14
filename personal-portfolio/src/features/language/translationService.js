@@ -37,7 +37,7 @@ const TRANSLATABLE_FIELDS = new Set([
   // About section
   'introduction',
   'journey_title',
-  'skills_title', // Only translate the title "Skills", not the actual skills
+  'skills_title',
   'interests_title',
   'interests',
   
@@ -49,6 +49,9 @@ const TRANSLATABLE_FIELDS = new Set([
   'technologies',
   'view_timeline',
   'view_resume',
+  'skills',
+  'Skills',
+  'Technologies',
   
   // Projects section
   'description',
@@ -64,10 +67,22 @@ const TRANSLATABLE_FIELDS = new Set([
   // Education section
   'name',
   'education_type',
+  'school_type',
   'major',
+  'description',
   'course',
   'organization',
   'role',
+  'Schooling',
+  'Certifications',
+  'Programs',
+  'Relevant Courses',
+  'Organization Involvement',
+  'Graduation',
+  'GPA',
+  'education',
+  'relevantCourses',
+  'organizationInvolvement',
   
   // Gallery section
   'title',
@@ -246,20 +261,24 @@ const translateObject = async (obj, targetLang) => {
     } else if (Array.isArray(value)) {
       // For arrays, translate each item if it's a string and the key is translatable
       console.log('Processing array for key:', key);
-      result[key] = await Promise.all(
-        value.map(item => 
-          typeof item === 'string' && TRANSLATABLE_FIELDS.has(key)
-            ? translateText(item, targetLang)
-            : translateObject(item, targetLang)
-        )
-      );
-    } else if (value && typeof value === 'object') {
+      if (key === 'education' || key === 'relevantCourses' || key === 'organizationInvolvement') {
+        // Special handling for education-related arrays
+        result[key] = await Promise.all(
+          value.map(item => translateObject(item, targetLang))
+        );
+      } else {
+        result[key] = await Promise.all(
+          value.map(item => 
+            typeof item === 'string' && TRANSLATABLE_FIELDS.has(key)
+              ? translateText(item, targetLang)
+              : translateObject(item, targetLang)
+          )
+        );
+      }
+    } else if (typeof value === 'object' && value !== null) {
       // Recursively translate nested objects
-      console.log('Processing nested object for key:', key);
       result[key] = await translateObject(value, targetLang);
     } else {
-      // Keep non-translatable values as is
-      console.log('Keeping original value for key:', key);
       result[key] = value;
     }
   }
