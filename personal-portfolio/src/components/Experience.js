@@ -131,7 +131,7 @@ const Timeline = ({ experiences, type }) => {
               {/* Skills */}
               {exp.skills && exp.skills.length > 0 && (
                 <motion.div
-                  className="flex flex-wrap gap-2 mb-2 items-center"
+                  className="flex flex-wrap gap-2 mt-16"
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-20px' }}
@@ -139,7 +139,7 @@ const Timeline = ({ experiences, type }) => {
                 >
                   <span className="font-semibold text-sm text-gray-700 mr-2">Skills:</span>
                   {exp.skills.map((skill, i) => (
-                    <span key={i} className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-xs">
+                    <span key={i} className="inline-block bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-xs font-semibold">
                       {skill}
                     </span>
                   ))}

@@ -314,7 +314,8 @@ const portfolioData: PortfolioData = {
                             "Redesigned web and mobile apps using ASP.NET, Flutter, and Dart as part of a company-wide rebrand, improving UI consistency and user experience.",
                             "Implemented CI/CD pipelines, Docker containerization, and Kubernetes orchestration to automate deployments and improve system scalability and reliability."
                         ],
-                        skills: [".Net", "Docker"],
+                        skills: ["ASP.Net", "Docker", "C#", "SQL", "Flutter", "Dart", "Kubernetes", "Docker", "xUnit", "CI/CD", "Data Analysis", "Agile Project Management", "Firebase"],
+                        images: ["", "", ""]
                     },
                     {
                         position: "Business Strategist",
@@ -324,7 +325,7 @@ const portfolioData: PortfolioData = {
                             "Contributed to social media and marketing strategies to increase brand reach, engage users, and support campaigns for two new product use cases.",
                             "Assisted in developing an approach to help universities experience the product through trial programs and tailored onboarding, with the goal of converting them into paying clients."
                         ],
-                        skills: [],
+                        skills: ["B2B Strategy", "Business Development", "Microsoft Office", "Cilent-Relationships"],
                         images: ["", "", ""]
                     }
                 ]
@@ -347,7 +348,7 @@ const portfolioData: PortfolioData = {
                             "Managed and organized over 300 process documentation files using SAP Signavio to support workflow automation, compliance, and operational efficiency.",
                             "Updated content on the firm's front-end SAP site and participated in sessions with industry leaders to deepen understanding of SAP best practices and enterprise integration."
                         ],
-                        skills: [],
+                        skills: ["Python", "SQL", "AWS", "Microsoft Office", "SAP", "Entreprise Software", "Cilent Relations", "Data Analysis"],
                         images: ["", "", ""]
                     }
                 ]
@@ -365,7 +366,7 @@ const portfolioData: PortfolioData = {
                             "Mentored and guided 30 students of color transitioning to independent schools, fostering academic growth and life skills development through advisory discussions.",
                             "Generated detailed reports on academic and social progress for future independent school placements."
                         ],
-                        skills: [],
+                        skills: ["Child Development", "Education", "Creative Problem Solving", "Communication"],
                         images: ["", "", ""]
                     }
                 ]
@@ -383,7 +384,7 @@ const portfolioData: PortfolioData = {
                             "Analyzed health data with Python to predict customer trends.",
                             "Created and presented a report to Colgate's R&D department chairs to show how Colgate can use diabetes and dental health data to improve their products."
                         ],
-                        skills: [],
+                        skills: ["Python", "Pandas", "Data Analysis", "Microsoft Office", "Public Speaking"],
                         images: ["", "", ""]
                     }
                 ]
@@ -392,7 +393,7 @@ const portfolioData: PortfolioData = {
         leadershipexperience: [
             {
                 company: "Lehigh University Chapter of ColorStack",
-                companyUrl: "https://colorstack.org/",
+                companyUrl: "https://www.instagram.com/colorstacklu/",
                 location: "Lehigh University, Bethlehem, PA",
                 positions: [
                     {
@@ -404,14 +405,14 @@ const portfolioData: PortfolioData = {
                             "Managed communications with the general body and other chapters via email and social media.",
                             "Organized and maintained a shared Google Drive with meeting notes, event plans, and essential chapter resources."
                         ],
-                        skills: [],
+                        skills: ["Event Planning", "Creative Problem Solving", "Mentoring", "Relationship Building"],
                         images: ["", "", ""]
                     }
                 ]
             },
             {
                 company: "Omicron Kappa of Kappa Alpha Psi Fraternity Inc.",
-                companyUrl: "https://www.kappaalphapsi1911.com/",
+                companyUrl: "https://www.instagram.com/oknupes/",
                 location: "Lehigh University, Bethlehem, PA",
                 positions: [
                     {
@@ -423,14 +424,14 @@ const portfolioData: PortfolioData = {
                             "Collaborated with alumni, chapter members, and partner organizations to plan and host an average of seven professional, social, and service events per semester, while facilitating chapter meetings to drive execution.",
                             "Acted as the official liaison between Lehigh University and Kappa's international headquarters, reporting chapter operations in monthly president meetings and biannual national conferences."
                         ],
-                        skills: [],
+                        skills: ["Project Management", "Delegate Management", "Stakeholder Management", "Community Development", "Event Planning", "Membership Training"],
                         images: ["", "", ""]
                     }
                 ]
             },
             {
                 company: "Black Student Union",
-                companyUrl: "",
+                companyUrl: "https://www.instagram.com/lehighbsu/",
                 location: "Lehigh University, Bethlehem, PA",
                 positions: [
                     {
@@ -442,14 +443,14 @@ const portfolioData: PortfolioData = {
                             "Designed and implemented a member recruitment and retention strategy, expanding the organization to 500 active members for the 2024–25 academic year.",
                             "Lead executive board meetings and oversee all operations, ensuring smooth event logistics, strategic planning, and regional collaboration with other Black Student Unions."
                         ],
-                        skills: [],
+                        skills: ["Event Planning", "Event Management", "Budget Management", "Project Management", "Brand Building", "Relationship Building"],
                         images: ["", "", ""]
                     }
                 ]
             },
             {
                 company: "Men of Color Alliance",
-                companyUrl: "",
+                companyUrl: "https://www.instagram.com/lehighmoca/",
                 location: "Lehigh University, Bethlehem, PA",
                 positions: [
                     {
@@ -461,14 +462,14 @@ const portfolioData: PortfolioData = {
                             "Recruited and mentored eight new executive board members, and led meetings with faculty, staff, and administrators to support sustainable club operations.",
                             "Secured official recognition from the Student Senate based on organizational growth and impact, and introduced the first annual Men of Color Symposium, bringing together students from six universities for a regional conference."
                         ],
-                        skills: [],
+                        skills: ["Community Outreach", "Membership Growth", "Creative Problem Solving", "Brand Management"],
                         images: ["", "", ""]
                     }
                 ]
             },
             {
                 company: "Student Senate",
-                companyUrl: "",
+                companyUrl: "https://www.instagram.com/lehighsenate/",
                 location: "Lehigh University, Bethlehem, PA",
                 positions: [
                     {
@@ -480,14 +481,14 @@ const portfolioData: PortfolioData = {
                             "Collaborated with club leaders to evaluate the impact and relevance of proposed initiatives, prioritizing funding that reflects the diverse needs and interests of the student body.",
                             "Strategically allocated funding to support a wide range of student-led events and initiatives on campus, promoting cultural, academic, and social engagement across communities."
                         ],
-                        skills: [],
+                        skills: ["Data Analysis", "Budgeting", "Stakeholder Management", "Presentation Skills", "Microsoft Office", "Financing"],
                         images: ["", "", ""]
                     }
                 ]
             },
             {
                 company: "Office of Admissions",
-                companyUrl: "",
+                companyUrl: "https://www2.lehigh.edu/admissions",
                 location: "Lehigh University, Bethlehem, PA",
                 positions: [
                     {
@@ -498,7 +499,7 @@ const portfolioData: PortfolioData = {
                             "Designed and delivered training programs for Admission Ambassadors, improving campus tour quality and ensuring seamless execution of Open Houses.",
                             "Planned and supported events during Yield season, represented Lehigh University at college fairs, and actively contributed to team initiatives through weekly meetings."
                         ],
-                        skills: [],
+                        skills: ["Convincing People", "DEI", "Team Building", "Public Speaking"],
                         images: ["", "", ""]
                     }
                 ]
