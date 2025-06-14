@@ -308,7 +308,7 @@ const portfolioData: PortfolioData = {
     ],
     experience: [{
         experienceImageUrl: "/assets/images/home/NLT Headshot.jpg",
-        description: "We are shaped by our experiences. From a young age, I’ve been driven to get involved, whether through professional opportunities or leadership roles. Along the way, I’ve gained valuable memories, soft skills, and technical expertise that have helped shape me into an emerging leader with a passion for impact and growth.",
+        description: "We are shaped by our experiences. From a young age, I've been driven to get involved, whether through professional opportunities or leadership roles. Along the way, I've gained valuable memories, soft skills, and technical expertise that have helped shape me into an emerging leader with a passion for impact and growth.",
         professionalexperience: [
             {
                 company: "Frood",
@@ -562,7 +562,7 @@ const portfolioData: PortfolioData = {
         },
         {
             title: "New Member Education leads to High Scores",
-            imageUrl: "/assets/images/gallery/kappa/provincecouncil spr25 2.JPG",
+            imageUrl: "/assets/images/gallery/kappa/provincecouncil spr25 2.jpg",
             description: "As MTA Chairman of the Omicron Kappa chapter of Kappa Alpha Psi, I taught three new members the values of Kappa. As MTA Chairman, I prepared them to take the National MTA Exam, where they had an average of 96%, the highest scores in the Northeastern Province.",
             category: [
                 {
