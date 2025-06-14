@@ -234,8 +234,8 @@ const portfolioData: PortfolioData = {
     ],
     education: [
         {
-            educationImageUrl: "/assets/images/education/education-banner.jpg",
-            description: "My academic journey and the organizations that shaped my growth.",
+            educationImageUrl: "/assets/images/education/Education Background Photo.jpg",
+            description: "My love for learning began in the classroom, where challenging courses helped me build a solid foundation in computer science. I’ve pursued professional certificates to strengthen that knowledge and gain industry-recognized skills across different areas of tech. Through academic and professional programs, I continue to grow and develop the tools I need to lead effectively in the tech industry.",
             education: [
                 {
                     name: "Lehigh University",

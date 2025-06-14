@@ -68,15 +68,35 @@ const Education = () => {
                 <div className="md:col-span-3 flex flex-col justify-center p-6">
                   <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-4">{educationTitle}</h1>
                   <p className="text-xl md:text-2xl text-gray-600 leading-relaxed">{educationGroup.description}</p>
+                  <div className="flex gap-2 mt-6 items-center whitespace-nowrap">
+                    <button
+                      className="px-2 py-1 rounded-full font-semibold border bg-gray-100 text-blue-700 border-blue-700 text-xs shrink-0"
+                      onClick={() => scroller.scrollTo('schooling-section', { duration: 600, smooth: 'easeInOutQuart', offset: -80 })}
+                    >
+                      {schoolingText}
+                    </button>
+                    <button
+                      className="px-2 py-1 rounded-full font-semibold border bg-gray-100 text-blue-700 border-blue-700 text-xs shrink-0"
+                      onClick={() => scroller.scrollTo('certifications-section', { duration: 600, smooth: 'easeInOutQuart', offset: -80 })}
+                    >
+                      {certificationsText}
+                    </button>
+                    <button
+                      className="px-2 py-1 rounded-full font-semibold border bg-gray-100 text-blue-700 border-blue-700 text-xs shrink-0"
+                      onClick={() => scroller.scrollTo('programs-section', { duration: 600, smooth: 'easeInOutQuart', offset: -80 })}
+                    >
+                      {programsText}
+                    </button>
+                  </div>
                 </div>
                 {/* Right: Education Image */}
                 {educationGroup.educationImageUrl && (
-                  <div className="md:col-span-2 flex justify-center items-stretch p-4">
+                  <div className="md:col-span-2 flex justify-center items-stretch p-4 h-[500px]">
                     <img
                       src={educationGroup.educationImageUrl}
                       alt="Education"
-                      className="h-full w-auto max-h-[400px] object-contain rounded-lg"
-                      style={{ minHeight: '200px', maxHeight: '100%' }}
+                      className="h-full w-auto max-h-[500px] object-contain rounded-lg"
+                      style={{ minHeight: '300px', maxHeight: '100%' }}
                     />
                   </div>
                 )}
@@ -86,6 +106,7 @@ const Education = () => {
 
           {/* Schooling Section */}
           <motion.div
+            id="schooling-section"
             className="max-w-4xl mx-auto mt-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -179,6 +200,7 @@ const Education = () => {
 
           {/* Certifications Section */}
           <motion.div
+            id="certifications-section"
             className="max-w-4xl mx-auto mt-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -230,6 +252,7 @@ const Education = () => {
 
           {/* Programs Section */}
           <motion.div
+            id="programs-section"
             className="max-w-4xl mx-auto mt-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
