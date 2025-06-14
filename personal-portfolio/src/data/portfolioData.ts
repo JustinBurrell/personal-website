@@ -65,7 +65,6 @@ interface ExperienceItem {
             endDate: string;
             responsibilities: string[];
             skills: string[];
-            technologies?: string[];
             images?: string[];
         }>;
     }>,
@@ -79,7 +78,6 @@ interface ExperienceItem {
             endDate: string;
             responsibilities: string[];
             skills: string[];
-            technologies?: string[];
             images?: string[];
         }>;
     }>,
@@ -92,15 +90,6 @@ interface GalleryItem {
     category?: Array<{
         categoryName: string;
     }>;
-}
-
-interface OrganizationItem {
-    name: string;
-    role: string;
-    startDate: string;
-    endDate: string;
-    description: string;
-    achievements?: string[];
 }
 
 interface ProjectItem {
@@ -325,8 +314,7 @@ const portfolioData: PortfolioData = {
                             "Redesigned web and mobile apps using ASP.NET, Flutter, and Dart as part of a company-wide rebrand, improving UI consistency and user experience.",
                             "Implemented CI/CD pipelines, Docker containerization, and Kubernetes orchestration to automate deployments and improve system scalability and reliability."
                         ],
-                        skills: [],
-                        technologies: [],
+                        skills: [".Net", "Docker"],
                     },
                     {
                         position: "Business Strategist",
@@ -337,7 +325,6 @@ const portfolioData: PortfolioData = {
                             "Assisted in developing an approach to help universities experience the product through trial programs and tailored onboarding, with the goal of converting them into paying clients."
                         ],
                         skills: [],
-                        technologies: [],
                         images: ["", "", ""]
                     }
                 ]
@@ -361,7 +348,6 @@ const portfolioData: PortfolioData = {
                             "Updated content on the firm's front-end SAP site and participated in sessions with industry leaders to deepen understanding of SAP best practices and enterprise integration."
                         ],
                         skills: [],
-                        technologies: [],
                         images: ["", "", ""]
                     }
                 ]
@@ -380,7 +366,6 @@ const portfolioData: PortfolioData = {
                             "Generated detailed reports on academic and social progress for future independent school placements."
                         ],
                         skills: [],
-                        technologies: [],
                         images: ["", "", ""]
                     }
                 ]
@@ -399,7 +384,6 @@ const portfolioData: PortfolioData = {
                             "Created and presented a report to Colgate's R&D department chairs to show how Colgate can use diabetes and dental health data to improve their products."
                         ],
                         skills: [],
-                        technologies: [],
                         images: ["", "", ""]
                     }
                 ]
@@ -421,7 +405,6 @@ const portfolioData: PortfolioData = {
                             "Organized and maintained a shared Google Drive with meeting notes, event plans, and essential chapter resources."
                         ],
                         skills: [],
-                        technologies: [],
                         images: ["", "", ""]
                     }
                 ]
@@ -441,7 +424,6 @@ const portfolioData: PortfolioData = {
                             "Acted as the official liaison between Lehigh University and Kappa's international headquarters, reporting chapter operations in monthly president meetings and biannual national conferences."
                         ],
                         skills: [],
-                        technologies: [],
                         images: ["", "", ""]
                     }
                 ]
@@ -461,7 +443,6 @@ const portfolioData: PortfolioData = {
                             "Lead executive board meetings and oversee all operations, ensuring smooth event logistics, strategic planning, and regional collaboration with other Black Student Unions."
                         ],
                         skills: [],
-                        technologies: [],
                         images: ["", "", ""]
                     }
                 ]
@@ -481,7 +462,6 @@ const portfolioData: PortfolioData = {
                             "Secured official recognition from the Student Senate based on organizational growth and impact, and introduced the first annual Men of Color Symposium, bringing together students from six universities for a regional conference."
                         ],
                         skills: [],
-                        technologies: [],
                         images: ["", "", ""]
                     }
                 ]
@@ -501,7 +481,6 @@ const portfolioData: PortfolioData = {
                             "Strategically allocated funding to support a wide range of student-led events and initiatives on campus, promoting cultural, academic, and social engagement across communities."
                         ],
                         skills: [],
-                        technologies: [],
                         images: ["", "", ""]
                     }
                 ]
@@ -520,7 +499,6 @@ const portfolioData: PortfolioData = {
                             "Planned and supported events during Yield season, represented Lehigh University at college fairs, and actively contributed to team initiatives through weekly meetings."
                         ],
                         skills: [],
-                        technologies: [],
                         images: ["", "", ""]
                     }
                 ]
