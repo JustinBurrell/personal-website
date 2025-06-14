@@ -327,7 +327,6 @@ const portfolioData: PortfolioData = {
                         ],
                         skills: [],
                         technologies: [],
-                        images: ["", "", ""]
                     },
                     {
                         position: "Business Strategist",

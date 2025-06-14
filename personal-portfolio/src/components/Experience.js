@@ -60,18 +60,29 @@ const Experience = () => {
                 <span className="italic text-lg text-gray-800">{pos.position}</span>
                 <span className="text-gray-600 text-right md:ml-4 whitespace-nowrap">{pos.startDate} - {pos.endDate}</span>
               </div>
+              {/* Render responsibilities in order, but style 'Rotation' lines as subheadings */}
               <ul className="list-disc list-inside space-y-2 mb-4 mt-2">
                 {pos.responsibilities.map((resp, i) => (
-                  <motion.li
-                    key={i}
-                    className="text-gray-700"
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: '-20px' }}
-                    transition={{ duration: 0.4, delay: 0.3 + i * 0.05 }}
-                  >
-                    {resp}
-                  </motion.li>
+                  resp.trim().startsWith('Rotation') ? (
+                    <div
+                      key={"rotation-" + i}
+                      className="text-gray-700 text-base font-normal mb-1 mt-2"
+                      style={{ fontStyle: 'italic' }}
+                    >
+                      {resp}
+                    </div>
+                  ) : (
+                    <motion.li
+                      key={i}
+                      className="text-gray-700"
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true, margin: '-20px' }}
+                      transition={{ duration: 0.4, delay: 0.3 + i * 0.05 }}
+                    >
+                      {resp}
+                    </motion.li>
+                  )
                 ))}
               </ul>
               <motion.div
