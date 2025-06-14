@@ -7,15 +7,31 @@ import { scroller } from 'react-scroll';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import { useLanguage } from '../features/language';
 import { useTranslateText } from '../features/language/useTranslateText';
+import { useLocation } from 'react-router-dom';
 
 const Home = () => {
   const { translatedData } = useLanguage();
   const { home } = translatedData;
+  const location = useLocation();
 
   // Use the translation hook for inline text
   const organizationsLabel = useTranslateText("Organizations:");
   const viewResumeText = useTranslateText("View Resume");
   const contactMeText = useTranslateText("Contact Me");
+
+  React.useEffect(() => {
+    if (location.state && location.state.scrollTo) {
+      setTimeout(() => {
+        scroller.scrollTo(location.state.scrollTo, {
+          duration: 600,
+          smooth: 'easeInOutQuart',
+          offset: -80,
+        });
+        // Clear the state so it doesn't scroll again
+        window.history.replaceState({}, document.title);
+      }, 200);
+    }
+  }, [location.state]);
 
   return (
     <AnimationWrapper>

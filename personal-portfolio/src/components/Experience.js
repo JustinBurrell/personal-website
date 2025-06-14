@@ -5,11 +5,13 @@ import { useTranslateText } from '../features/language/useTranslateText';
 import Card from '../assets/ui/Card';
 import { scroller, Link as ScrollLink } from 'react-scroll';
 import { motion } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 
 const Experience = () => {
   const { translatedData } = useLanguage();
   const { experience } = translatedData;
   const expData = experience[0]; // Assuming only one experience object as per new structure
+  const location = useLocation();
 
   // Use translation hook for static text
   const experienceTitle = useTranslateText("Experience");
@@ -76,6 +78,20 @@ const Experience = () => {
     { label: professionalText, to: 'professional-experience-section' },
     { label: leadershipText, to: 'leadership-experience-section' },
   ];
+
+  React.useEffect(() => {
+    if (location.state && location.state.scrollTo) {
+      setTimeout(() => {
+        scroller.scrollTo(location.state.scrollTo, {
+          duration: 600,
+          smooth: 'easeInOutQuart',
+          offset: -80,
+        });
+        // Clear the state so it doesn't scroll again
+        window.history.replaceState({}, document.title);
+      }, 200);
+    }
+  }, [location.state]);
 
   return (
     <AnimationWrapper>

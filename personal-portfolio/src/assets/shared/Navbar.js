@@ -127,10 +127,13 @@ const Navbar = () => {
   const handleNavItemClick = (item) => {
     setIsOpen(false);
     setActiveSubmenu(null);
-    
     if (location.pathname === item.to) {
       // If clicking home while on home, scroll to top
       if (item.to === '/') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      // If clicking experience while on experience, scroll to top
+      else if (item.to === '/experience') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     } else {
@@ -140,13 +143,13 @@ const Navbar = () => {
 
   const handleSubItemClick = (subItem, parentItem) => {
     if (location.pathname === parentItem.to) {
-      // Already on /experience, scroll to section
+      // Already on target page, scroll to section
       return (
         <ScrollLink
           to={subItem.to}
           spy={true}
           smooth={true}
-          offset={-80}
+          offset={-20}
           duration={500}
           activeClass="text-indigo-600"
           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-indigo-600 cursor-pointer"
@@ -159,7 +162,7 @@ const Navbar = () => {
         </ScrollLink>
       );
     } else {
-      // Navigate to /experience, then scroll
+      // Navigate to target page, then scroll
       return (
         <Link
           to={parentItem.to}
@@ -168,10 +171,8 @@ const Navbar = () => {
             setActiveSubmenu(null);
             setIsOpen(false);
             e.preventDefault();
-            navigate(parentItem.to);
-            setTimeout(() => {
-              scroller.scrollTo(subItem.to, { duration: 500, smooth: 'easeInOutQuart', offset: -80 });
-            }, 300);
+            // Pass scroll target in state
+            navigate(parentItem.to, { state: { scrollTo: subItem.to } });
           }}
         >
           {subItem.name}
