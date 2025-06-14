@@ -1,3 +1,5 @@
+import { SrvRecord } from "dns";
+
 // Type definitions for portfolio sections
 interface HomeSection {
     imageUrl: string;
@@ -51,14 +53,30 @@ interface EducationItem {
 }
 
 interface ExperienceItem {
-    company: string;
-    position: string;
-    startDate: string;
-    endDate: string;
-    location: string;
-    responsibilities: string[];
-    skills: string[];
-    technologies?: string[];
+    experienceImageUrl: string;
+    description: string;
+    professionalexperience: Array<{
+        company: string;
+        companyUrl: string;
+        position: string;
+        startDate: string;
+        endDate: string;
+        location: string;
+        responsibilities: string[];
+        skills: string[];
+        technologies?: string[];
+    }>,
+    leadershipexperience: Array<{
+        company: string;
+        companyUrl: string;
+        position: string;
+        startDate: string;
+        endDate: string;
+        location: string;
+        responsibilities: string[];
+        skills: string[];
+        technologies?: string[];
+    }>,
 }
 
 interface GalleryItem {
@@ -282,21 +300,43 @@ const portfolioData: PortfolioData = {
             ]
         }
     ],
-    experience: [
-        {
-            company: "Company Name",
-            position: "Position Title",
-            startDate: "Month Year",
-            endDate: "Month Year",
-            location: "City, State",
-            responsibilities: [
-                "Key responsibility 1",
-                "Key responsibility 2"
-            ],
-            skills: ["Skill 1", "Skill 2"],
-            technologies: ["Tech 1", "Tech 2"]
-        }
-    ],
+    experience: [{
+        experienceImageUrl: "/assets/images/home/NLT Headshot.jpg",
+        description: "mock description",
+        professionalexperience: [
+            {
+                company: "EY",
+                companyUrl: "",
+                position: "Launch Tech Consulting Intern",
+                startDate: "June 2024",
+                endDate: "August 2024",
+                location: "New York, NY",
+                responsibilities: [
+                    "Key responsibility 1",
+                    "Key responsibility 2"
+                ],
+                skills: ["Consulting", "Problem Solving", "Client Communication"],
+                technologies: ["Tech 1", "Tech 2"]
+            }
+        ],
+        leadershipexperience: [
+            {
+                company: "Lehigh University Black Student Union",
+                companyUrl: "",
+                position: "President",
+                startDate: "April 2024",
+                endDate: "Present",
+                location: "Bethlehem, PA",
+                responsibilities: [
+                    "Lead executive board of 10+ members",
+                    "Manage organization's budget and resources",
+                    "Plan and execute events for 500+ members"
+                ],
+                skills: ["Leadership", "Event Planning", "Budget Management", "Team Management"],
+                technologies: ["Microsoft Office", "Google Workspace"]
+            }
+        ]
+    }],
     gallery: [
         {
             title: "Men of Color Symposium",
@@ -317,7 +357,7 @@ const portfolioData: PortfolioData = {
         {
             title: "Founded ColorStack Chapter at Lehigh",
             imageUrl: "assets/images/gallery/colorstack/colorstack exec.jpg",
-            description: "I helped found the ColorStack chapter at Lehigh University. In the Spring 2025 semester, our exec has been dedicated to bridging the gap in the tech industry for Black and Latinx students. After earning Student Senate recognition as an official student organization at Lehigh University, I’m confident in our ability to make a lasting impact. I’m looking forward to what’s ahead for the chapter!",
+            description: "I helped found the ColorStack chapter at Lehigh University. In the Spring 2025 semester, our exec has been dedicated to bridging the gap in the tech industry for Black and Latinx students. After earning Student Senate recognition as an official student organization at Lehigh University, I'm confident in our ability to make a lasting impact. I'm looking forward to what's ahead for the chapter!",
             category: [
                 {
                     categoryName: "ColorStack"
@@ -331,12 +371,48 @@ const portfolioData: PortfolioData = {
             ]   
         },
         {
-            title: "",
-            imageUrl: "",
-            description: "",
+            title: "New Member Education leads to High Scores",
+            imageUrl: "/assets/images/gallery/kappa/provincecouncil spr25 2.JPG",
+            description: "As MTA Chairman of the Omicron Kappa chapter of Kappa Alpha Psi, I taught three new members the values of Kappa. As MTA Chairman, I prepared them to take the National MTA Exam, where they had an average of 96%, the highest scores in the Northeastern Province.",
             category: [
                 {
-                    categoryName: ""
+                    categoryName: "Kappa Alpha Psi"
+                },
+                {
+                    categoryName: "Education"
+                },
+                {
+                    categoryName: "Leadership Development"
+                }
+            ]
+        },
+        {
+            title: "Tech Week 2025 NYC",
+            imageUrl: "/assets/images/gallery/misc/tech week nyc 2025.jpg",
+            description: "In early June, I engaged in a16z's Tech Week 2025. I had the opportunity to meet Black professionals, AI founders, and expand my network.",
+            category: [
+                {
+                    categoryName: "Networking",
+                },
+                {
+                    categoryName: "Events"
+                }
+            ]
+
+        },
+        {
+            title: "Incoming Black Student Union President",
+            imageUrl: "/assets/images/gallery/bsu/bsu new exec election.jpg",
+            description: "Last spring, I was elected as President of Lehigh's Black Student Union. As event planner for the past two years, I have grown BSU's member base to 500 students, through engaging social and professional events that united the Black community.",
+            category: [
+                {
+                    categoryName: "Black Student Union"
+                },
+                {
+                    categoryName: "People Management"
+                },
+                {
+                    categoryName: "Leadership"
                 }
             ]
         }

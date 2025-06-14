@@ -26,6 +26,8 @@ const Navbar = () => {
   const projectsText = useTranslateText("Projects");
   const awardsText = useTranslateText("Awards");
   const menuText = useTranslateText("Open main menu");
+  const professionalExperienceText = useTranslateText("Professional Experience");
+  const leadershipExperienceText = useTranslateText("Leadership Experience");
 
   // Initialize scroll spy
   useEffect(() => {
@@ -93,7 +95,14 @@ const Navbar = () => {
       ]
     },
     { name: educationText, to: '/education' },
-    { name: experienceText, to: '/experience' },
+    {
+      name: experienceText,
+      to: '/experience',
+      subItems: [
+        { name: professionalExperienceText, to: 'professional-experience-section' },
+        { name: leadershipExperienceText, to: 'leadership-experience-section' }
+      ]
+    },
     { name: projectsText, to: '/projects' },
     { name: awardsText, to: '/awards' },
   ];
@@ -129,14 +138,15 @@ const Navbar = () => {
     }
   };
 
-  const handleSubItemClick = (subItem) => {
-    if (location.pathname === '/') {
+  const handleSubItemClick = (subItem, parentItem) => {
+    if (location.pathname === parentItem.to) {
+      // Already on /experience, scroll to section
       return (
         <ScrollLink
           to={subItem.to}
           spy={true}
           smooth={true}
-          offset={-25}
+          offset={-80}
           duration={500}
           activeClass="text-indigo-600"
           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-indigo-600 cursor-pointer"
@@ -149,13 +159,19 @@ const Navbar = () => {
         </ScrollLink>
       );
     } else {
+      // Navigate to /experience, then scroll
       return (
         <Link
-          to={`/#${subItem.to}`}
+          to={parentItem.to}
           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-indigo-600"
-          onClick={() => {
+          onClick={async (e) => {
             setActiveSubmenu(null);
             setIsOpen(false);
+            e.preventDefault();
+            navigate(parentItem.to);
+            setTimeout(() => {
+              scroller.scrollTo(subItem.to, { duration: 500, smooth: 'easeInOutQuart', offset: -80 });
+            }, 300);
           }}
         >
           {subItem.name}
@@ -212,7 +228,7 @@ const Navbar = () => {
                       <div className="py-1" role="menu">
                         {item.subItems.map((subItem) => (
                           <div key={subItem.name} className="hover:bg-gray-50">
-                            {handleSubItemClick(subItem)}
+                            {handleSubItemClick(subItem, item)}
                           </div>
                         ))}
                       </div>
@@ -306,34 +322,7 @@ const Navbar = () => {
                   <div className="pl-4 mt-2 space-y-1">
                     {item.subItems.map((subItem) => (
                       <div key={subItem.name}>
-                        {location.pathname === '/' ? (
-                          <ScrollLink
-                            to={subItem.to}
-                            spy={true}
-                            smooth={true}
-                            offset={-25}
-                            duration={500}
-                            activeClass="text-indigo-600"
-                            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                            onClick={() => {
-                              setIsOpen(false);
-                              setActiveSubmenu(null);
-                            }}
-                          >
-                            {subItem.name}
-                          </ScrollLink>
-                        ) : (
-                          <Link
-                            to={`/#${subItem.to}`}
-                            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
-                            onClick={() => {
-                              setIsOpen(false);
-                              setActiveSubmenu(null);
-                            }}
-                          >
-                            {subItem.name}
-                          </Link>
-                        )}
+                        {handleSubItemClick(subItem, item)}
                       </div>
                     ))}
                   </div>
