@@ -93,14 +93,17 @@ interface GalleryItem {
 }
 
 interface ProjectItem {
-    title: string;
+    projectImageUrl: string;
     description: string;
-    technologies: string[];
-    skills: string[];
-    githubUrl?: string;
-    liveUrl?: string;
-    imageUrl?: string;
-    highlights: string[];
+    project: Array<{
+        title: string;
+        description: string;
+        technologies: string[];
+        githubUrl?: string;
+        liveUrl?: string;
+        imageUrl?: string;
+        highlights: string[];
+    }>
 }
 
 interface PortfolioData {
@@ -586,28 +589,38 @@ const portfolioData: PortfolioData = {
             ]
         }
     ],
-    projects: [ 
-        {
-            title: "Project Name",
-            description: "Project description",
-            technologies: ["Tech 1", "Tech 2", "Tech 3"],
-            skills: ["Skill 1", "Skill 2"],
-            githubUrl: "https://github.com/username/project",
-            liveUrl: "https://project-demo.com",
-            imageUrl: "/path/to/project-image.jpg",
-            highlights: [
-                "Key feature 1",
-                "Key feature 2"
-            ]
-        },
-        {
-            title: "Minimal Project",
-            description: "This is a minimal project entry",
-            technologies: ["React"],
-            skills: ["Skill 1", "Skill 2"],
-            highlights: ["Main feature"]
-        }
-    ]
+    projects: [{
+        projectImageUrl: "/assets/images/projects/Projects About Background.jpg",
+        description: "Projects are an opportunity to sharpen my technical skills and showcase my creativity. They also are unique ways to collaborate with others to achieve a common goal.Here is a collection of my technical projects to date. For further details, please visit my GitHub page.",
+        project: [
+            {
+                title: "Personal Portfolio Website",
+                description: "A modern, responsive portfolio website built with React and TypeScript to showcase my professional journey and projects.",
+                technologies: ["React", "TypeScript", "Tailwind CSS", "Vite"],
+                githubUrl: "https://github.com/JustinBurrell/personal-portfolio",
+                liveUrl: "https://justinburrell.com",
+                imageUrl: "/assets/images/projects/portfolio.jpg",
+                highlights: [
+                    "Implemented responsive design for optimal viewing across all devices",
+                    "Built with modern React practices and TypeScript for type safety",
+                    "Integrated dynamic content management through TypeScript interfaces"
+                ]
+            },
+            {
+                title: "Frood Mobile App",
+                description: "A cross-platform mobile application for university dining services, helping students find and share food options on campus.",
+                technologies: ["Flutter", "Dart", "Firebase", "Google Cloud"],
+                githubUrl: "https://github.com/JustinBurrell/frood-mobile",
+                liveUrl: "https://frood.app",
+                imageUrl: "/assets/images/projects/frood.jpg",
+                highlights: [
+                    "Developed real-time food availability tracking system",
+                    "Implemented user authentication and profile management",
+                    "Created an intuitive UI for seamless user experience"
+                ]
+            }
+        ]
+    }]
 };
 
 export default portfolioData; 
