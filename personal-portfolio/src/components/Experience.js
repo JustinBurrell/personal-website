@@ -27,14 +27,16 @@ const Experience = () => {
           className="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-20px' }}
+          exit={{ opacity: 0, y: -40 }}
+          viewport={{ once: false, margin: '-20px' }}
           transition={{ duration: 0.6, delay: cidx * 0.1, type: 'spring', stiffness: 100, damping: 18 }}
         >
           <motion.div
             className="border-b-2 border-gray-300 pb-2 mb-4"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-20px' }}
+            exit={{ opacity: 0, x: 30 }}
+            viewport={{ once: false, margin: '-20px' }}
             transition={{ duration: 0.5, delay: 0.1 + cidx * 0.1 }}
           >
             <a
@@ -53,7 +55,8 @@ const Experience = () => {
               className="mb-6"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-20px' }}
+              exit={{ opacity: 0, y: -20 }}
+              viewport={{ once: false, margin: '-20px' }}
               transition={{ duration: 0.5, delay: 0.2 + pidx * 0.1 }}
             >
               <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-1">
@@ -150,11 +153,12 @@ const Experience = () => {
         <div className="container mx-auto px-4">
           {/* Top Card: Experience Title/Description/Image */}
           <motion.div
-            className="max-w-4xl mx-auto mb-8"
-            initial={{ opacity: 0, y: -30 }}
+            className="max-w-4xl mx-auto mb-2 pt-16"
+            initial={{ opacity: 0, y: -40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-20px' }}
-            transition={{ duration: 0.5 }}
+            exit={{ opacity: 0, y: -40 }}
+            viewport={{ once: false, margin: '-20px' }}
+            transition={{ duration: 0.7, type: 'spring', stiffness: 100, damping: 18 }}
           >
             <Card variant="transparent" className="p-0">
               <div className="grid md:grid-cols-5 gap-6 items-center">
@@ -179,11 +183,12 @@ const Experience = () => {
                 </div>
                 {/* Right: Experience Image */}
                 {expData.experienceImageUrl && (
-                  <div className="md:col-span-2 flex justify-center items-center p-4">
+                  <div className="md:col-span-2 flex justify-center items-stretch p-4">
                     <img
                       src={expData.experienceImageUrl}
                       alt="Experience"
-                      className="w-full h-full object-cover rounded-lg max-h-72"
+                      className="h-full w-auto max-h-[400px] object-contain rounded-lg"
+                      style={{ minHeight: '200px', maxHeight: '100%' }}
                     />
                   </div>
                 )}
@@ -198,13 +203,14 @@ const Experience = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-20px' }}
             transition={{ duration: 0.5 }}
-            className="mb-16"
+            className="mb-16 mt-20"
           >
             <motion.h3
               className="text-2xl font-bold text-center mb-6"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-20px' }}
+              exit={{ opacity: 0, y: -20 }}
+              viewport={{ once: false, margin: '-20px' }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
               {professionalText}
@@ -219,12 +225,14 @@ const Experience = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-20px' }}
             transition={{ duration: 0.5, delay: 0.1 }}
+            className="mt-20"
           >
             <motion.h3
               className="text-2xl font-bold text-center mb-6"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-20px' }}
+              exit={{ opacity: 0, y: -20 }}
+              viewport={{ once: false, margin: '-20px' }}
               transition={{ duration: 0.5, delay: 0.15 }}
             >
               {leadershipText}

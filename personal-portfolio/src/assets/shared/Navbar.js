@@ -149,7 +149,7 @@ const Navbar = () => {
           to={subItem.to}
           spy={true}
           smooth={true}
-          offset={-20}
+          offset={-80}
           duration={500}
           activeClass="text-indigo-600"
           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-indigo-600 cursor-pointer"

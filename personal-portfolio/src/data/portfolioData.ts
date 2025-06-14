@@ -308,7 +308,7 @@ const portfolioData: PortfolioData = {
     ],
     experience: [{
         experienceImageUrl: "/assets/images/home/NLT Headshot.jpg",
-        description: "mock description",
+        description: "We are shaped by our experiences. From a young age, I’ve been driven to get involved, whether through professional opportunities or leadership roles. Along the way, I’ve gained valuable memories, soft skills, and technical expertise that have helped shape me into an emerging leader with a passion for impact and growth.",
         professionalexperience: [
             {
                 company: "Frood",
@@ -427,7 +427,7 @@ const portfolioData: PortfolioData = {
                 ]
             },
             {
-                company: "Omicron Kappa of Kappa Alpha Psi Fraternity Incorporated",
+                company: "Omicron Kappa of Kappa Alpha Psi Fraternity Inc.",
                 companyUrl: "https://www.kappaalphapsi1911.com/",
                 location: "Lehigh University, Bethlehem, PA",
                 positions: [
