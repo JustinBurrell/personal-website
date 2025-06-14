@@ -113,9 +113,15 @@ const Timeline = ({ projects }) => {
                 {/* Project Content */}
                 <div className="p-6 flex-grow">
                   <div className="flex items-baseline gap-2 mb-2 flex-wrap">
-                    <h3 className="text-2xl font-bold text-gray-800">
+                    <motion.h3
+                      className="text-2xl font-bold text-gray-800"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: '-20px' }}
+                      transition={{ duration: 0.5 }}
+                    >
                       {project.title}
-                    </h3>
+                    </motion.h3>
                     {project.date && (
                       <span className="text-sm text-gray-500 font-normal">- {project.date}</span>
                     )}

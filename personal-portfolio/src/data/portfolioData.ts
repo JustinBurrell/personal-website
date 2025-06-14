@@ -603,7 +603,7 @@ const portfolioData: PortfolioData = {
         description: "Projects are an opportunity to sharpen my technical skills and showcase my creativity. They also are unique ways to collaborate with others to achieve a common goal. Here is a collection of my technical projects to date. For further details, please visit my GitHub page.",
         project: [
             {
-                title: "My Personal Portfolio",
+                title: "My Personal Portfolio (This!)",
                 date: "June 2025",
                 description: "A modern, responsive portfolio website built in React, Tailwind CSS, and TypeScript to showcase my professional journey and projects. This website is a work in progress; I will be updating it as I continue to learn and grow.",
                 technologies: ["React", "TypeScript", "Tailwind CSS", "Framer Motion", "Google Cloud", "Vercel"],
@@ -617,6 +617,20 @@ const portfolioData: PortfolioData = {
                     "Integrated Google Cloud Translate API enables users to translate the entire website into 10 different languages, making the site accessible to a global audience."
                 ]
             },
+            {
+                title: "KiNECT MVP",
+                date: "August 2021",
+                description: "KiNECT is a mobile app that allows users to connect with others in their community. It is a platform for users to find and share events, activities, and resources in their area. I created an MVP to present to professionals from Mediata as a part of the All Star Code Summer Intensive.",
+                technologies: ["HTML", "JavaScript", "CSS"],
+                githubUrl: "https://github.com/JustinBurrell/demoDayProject",
+                liveUrl: "https://asc-demo-day-project.vercel.app/index.html",
+                imageUrl: "/assets/images/projects/KiNECT Website Cover.png",
+                highlights: [
+                    "Opportunities filter lets users sort by organization categories like Health, Injustice Relief, and Education", 
+                    "Clean and intuitive layout for easy browsing", 
+                    "Deployed as a functional MVP to demonstrate core features and validate the concept"
+                ]
+            }
             // {
             //     title: "Frood Mobile App",
             //     date: "June 2025",
