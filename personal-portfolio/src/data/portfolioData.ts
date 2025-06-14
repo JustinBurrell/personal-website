@@ -608,20 +608,20 @@ const portfolioData: PortfolioData = {
                     "Integrated dynamic content management through TypeScript interfaces"
                 ]
             },
-            {
-                title: "Frood Mobile App",
-                date: "June 2025",
-                description: "A cross-platform mobile application for university dining services, helping students find and share food options on campus.",
-                technologies: ["Flutter", "Dart", "Firebase", "Google Cloud"],
-                githubUrl: "https://github.com/JustinBurrell/frood-mobile",
-                liveUrl: "https://frood.app",
-                imageUrl: "/assets/images/projects/frood.jpg",
-                highlights: [
-                    "Developed real-time food availability tracking system",
-                    "Implemented user authentication and profile management",
-                    "Created an intuitive UI for seamless user experience"
-                ]
-            }
+            // {
+            //     title: "Frood Mobile App",
+            //     date: "June 2025",
+            //     description: "A cross-platform mobile application for university dining services, helping students find and share food options on campus.",
+            //     technologies: ["Flutter", "Dart", "Firebase", "Google Cloud"],
+            //     githubUrl: "https://github.com/JustinBurrell/frood-mobile",
+            //     liveUrl: "https://frood.app",
+            //     imageUrl: "/assets/images/projects/frood.jpg",
+            //     highlights: [
+            //         "Developed real-time food availability tracking system",
+            //         "Implemented user authentication and profile management",
+            //         "Created an intuitive UI for seamless user experience"
+            //     ]
+            // }
         ]
     }]
 };
