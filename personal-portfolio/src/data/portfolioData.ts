@@ -65,6 +65,7 @@ interface ExperienceItem {
         responsibilities: string[];
         skills: string[];
         technologies?: string[];
+        images?: string[];
     }>,
     leadershipexperience: Array<{
         company: string;
@@ -76,6 +77,7 @@ interface ExperienceItem {
         responsibilities: string[];
         skills: string[];
         technologies?: string[];
+        images?: string[];
     }>,
 }
 
@@ -316,7 +318,11 @@ const portfolioData: PortfolioData = {
                     "Key responsibility 2"
                 ],
                 skills: ["Consulting", "Problem Solving", "Client Communication"],
-                technologies: ["Tech 1", "Tech 2"]
+                technologies: ["Tech 1", "Tech 2"],
+                images: [
+                    "/assets/images/gallery/sample1.jpg",
+                    "/assets/images/gallery/sample2.jpg"
+                ]
             }
         ],
         leadershipexperience: [
@@ -333,7 +339,10 @@ const portfolioData: PortfolioData = {
                     "Plan and execute events for 500+ members"
                 ],
                 skills: ["Leadership", "Event Planning", "Budget Management", "Team Management"],
-                technologies: ["Microsoft Office", "Google Workspace"]
+                technologies: ["Microsoft Office", "Google Workspace"],
+                images: [
+                    "/assets/images/gallery/sample3.jpg"
+                ]
             }
         ]
     }],

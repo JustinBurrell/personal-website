@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import { useLanguage } from '../features/language';
 import { useTranslateText } from '../features/language/useTranslateText';
@@ -68,6 +68,8 @@ const Experience = () => {
               ))}
             </div>
           )}
+          {/* Gallery at the bottom of the card if images exist */}
+          {exp.images && exp.images.length > 0 && <ExperienceGallery images={exp.images} />}
         </motion.div>
       ))}
     </div>
@@ -167,6 +169,54 @@ const Experience = () => {
         </div>
       </section>
     </AnimationWrapper>
+  );
+};
+
+// Simple modal for image lightbox
+const ImageModal = ({ isOpen, onClose, imageUrl }) => {
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70" onClick={onClose}>
+      <img src={imageUrl} alt="Experience Full" className="max-h-[90vh] max-w-[90vw] rounded-lg shadow-lg" onClick={e => e.stopPropagation()} />
+      <button className="absolute top-4 right-4 text-white text-3xl font-bold" onClick={onClose}>&times;</button>
+    </div>
+  );
+};
+
+// Small gallery for experience images
+const ExperienceGallery = ({ images }) => {
+  const [selected, setSelected] = useState(0);
+  const [modalOpen, setModalOpen] = useState(false);
+  if (!images || images.length === 0) return null;
+  return (
+    <div className="flex flex-col items-center my-2">
+      <div className="flex gap-2">
+        <button
+          className="px-2 py-1 bg-gray-200 rounded-full"
+          onClick={() => setSelected((selected - 1 + images.length) % images.length)}
+          aria-label="Previous image"
+        >
+          &#8592;
+        </button>
+        {images.map((img, idx) => (
+          <img
+            key={img}
+            src={img}
+            alt={`Experience ${idx + 1}`}
+            className={`w-12 h-12 object-cover rounded cursor-pointer border-2 ${selected === idx ? 'border-blue-500' : 'border-transparent'}`}
+            onClick={() => { setSelected(idx); setModalOpen(true); }}
+          />
+        ))}
+        <button
+          className="px-2 py-1 bg-gray-200 rounded-full"
+          onClick={() => setSelected((selected + 1) % images.length)}
+          aria-label="Next image"
+        >
+          &#8594;
+        </button>
+      </div>
+      <ImageModal isOpen={modalOpen} onClose={() => setModalOpen(false)} imageUrl={images[selected]} />
+    </div>
   );
 };
 
