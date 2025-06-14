@@ -18,58 +18,96 @@ const Experience = () => {
   const professionalText = useTranslateText("Professional Experience");
   const leadershipText = useTranslateText("Leadership Experience");
 
-  // Helper to render experience cards
-  const renderExperienceList = (list) => (
-    <div className="space-y-8">
-      {list.map((exp, idx) => (
+  // Helper to render grouped experience cards (for both professional and leadership)
+  const renderGroupedExperience = (companies) => (
+    <div className="space-y-12">
+      {companies.map((company, cidx) => (
         <motion.div
-          key={idx}
+          key={company.company + cidx}
           className="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto"
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-20px' }}
-          transition={{ duration: 0.5, delay: idx * 0.1 }}
+          transition={{ duration: 0.6, delay: cidx * 0.1, type: 'spring', stiffness: 100, damping: 18 }}
         >
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-1">
+          <motion.div
+            className="border-b-2 border-gray-300 pb-2 mb-4"
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-20px' }}
+            transition={{ duration: 0.5, delay: 0.1 + cidx * 0.1 }}
+          >
             <a
-              href={exp.companyUrl}
+              href={company.companyUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-2xl font-semibold text-blue-700 hover:underline"
+              className="text-2xl font-bold text-blue-700 hover:underline"
             >
-              {exp.company}
+              {company.company}
             </a>
-            <span className="text-gray-600 text-right md:ml-4 whitespace-nowrap">{exp.startDate} - {exp.endDate}</span>
-          </div>
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-1">
-            <span className="italic text-lg text-gray-800">{exp.position}</span>
-            <span className="text-gray-500 text-sm md:ml-4">{exp.location}</span>
-          </div>
-          <ul className="list-disc list-inside space-y-2 mb-4 mt-2">
-            {exp.responsibilities.map((resp, i) => (
-              <li key={i} className="text-gray-700">{resp}</li>
-            ))}
-          </ul>
-          <div className="flex flex-wrap gap-2 mb-2 items-center">
-            <span className="font-semibold text-sm text-gray-700 mr-2">Skills:</span>
-            {exp.skills.map((skill, i) => (
-              <span key={i} className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-xs">
-                {skill}
-              </span>
-            ))}
-          </div>
-          {exp.technologies && exp.technologies.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-1 items-center">
-              <span className="font-semibold text-sm text-gray-700 mr-2">Technologies:</span>
-              {exp.technologies.map((tech, i) => (
-                <span key={i} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs">
-                  {tech}
-                </span>
-              ))}
-            </div>
-          )}
-          {/* Gallery at the bottom of the card if images exist */}
-          {exp.images && exp.images.length > 0 && <ExperienceGallery images={exp.images} />}
+            <span className="text-lg text-gray-700 ml-2">{company.location}</span>
+          </motion.div>
+          {company.positions.map((pos, pidx) => (
+            <motion.div
+              key={pos.position + pidx}
+              className="mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ duration: 0.5, delay: 0.2 + pidx * 0.1 }}
+            >
+              <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-1">
+                <span className="italic text-lg text-gray-800">{pos.position}</span>
+                <span className="text-gray-600 text-right md:ml-4 whitespace-nowrap">{pos.startDate} - {pos.endDate}</span>
+              </div>
+              <ul className="list-disc list-inside space-y-2 mb-4 mt-2">
+                {pos.responsibilities.map((resp, i) => (
+                  <motion.li
+                    key={i}
+                    className="text-gray-700"
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: '-20px' }}
+                    transition={{ duration: 0.4, delay: 0.3 + i * 0.05 }}
+                  >
+                    {resp}
+                  </motion.li>
+                ))}
+              </ul>
+              <motion.div
+                className="flex flex-wrap gap-2 mb-2 items-center"
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-20px' }}
+                transition={{ duration: 0.4, delay: 0.4 }}
+              >
+                <span className="font-semibold text-sm text-gray-700 mr-2">Skills:</span>
+                {pos.skills.map((skill, i) => (
+                  <span key={i} className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-xs">
+                    {skill}
+                  </span>
+                ))}
+              </motion.div>
+              {pos.technologies && pos.technologies.length > 0 && (
+                <motion.div
+                  className="flex flex-wrap gap-2 mt-1 items-center"
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-20px' }}
+                  transition={{ duration: 0.4, delay: 0.45 }}
+                >
+                  <span className="font-semibold text-sm text-gray-700 mr-2">Technologies:</span>
+                  {pos.technologies.map((tech, i) => (
+                    <span key={i} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs">
+                      {tech}
+                    </span>
+                  ))}
+                </motion.div>
+              )}
+              {/* Gallery at the bottom of the card if images exist */}
+              {pos.images && pos.images.length > 0 && <ExperienceGallery images={pos.images} />}
+            </motion.div>
+          ))}
         </motion.div>
       ))}
     </div>
@@ -151,8 +189,16 @@ const Experience = () => {
             transition={{ duration: 0.5 }}
             className="mb-16"
           >
-            <h3 className="text-2xl font-bold text-center mb-6">{professionalText}</h3>
-            {renderExperienceList(expData.professionalexperience)}
+            <motion.h3
+              className="text-2xl font-bold text-center mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              {professionalText}
+            </motion.h3>
+            {renderGroupedExperience(expData.professionalexperience)}
           </motion.div>
 
           {/* Leadership Experience Section */}
@@ -163,8 +209,16 @@ const Experience = () => {
             viewport={{ once: true, margin: '-20px' }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <h3 className="text-2xl font-bold text-center mb-6">{leadershipText}</h3>
-            {renderExperienceList(expData.leadershipexperience)}
+            <motion.h3
+              className="text-2xl font-bold text-center mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+            >
+              {leadershipText}
+            </motion.h3>
+            {renderGroupedExperience(expData.leadershipexperience)}
           </motion.div>
         </div>
       </section>

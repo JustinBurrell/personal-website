@@ -58,26 +58,30 @@ interface ExperienceItem {
     professionalexperience: Array<{
         company: string;
         companyUrl: string;
-        position: string;
-        startDate: string;
-        endDate: string;
         location: string;
-        responsibilities: string[];
-        skills: string[];
-        technologies?: string[];
-        images?: string[];
+        positions: Array<{
+            position: string;
+            startDate: string;
+            endDate: string;
+            responsibilities: string[];
+            skills: string[];
+            technologies?: string[];
+            images?: string[];
+        }>;
     }>,
     leadershipexperience: Array<{
         company: string;
         companyUrl: string;
-        position: string;
-        startDate: string;
-        endDate: string;
         location: string;
-        responsibilities: string[];
-        skills: string[];
-        technologies?: string[];
-        images?: string[];
+        positions: Array<{
+            position: string;
+            startDate: string;
+            endDate: string;
+            responsibilities: string[];
+            skills: string[];
+            technologies?: string[];
+            images?: string[];
+        }>;
     }>,
 }
 
@@ -307,41 +311,219 @@ const portfolioData: PortfolioData = {
         description: "mock description",
         professionalexperience: [
             {
-                company: "EY",
-                companyUrl: "",
-                position: "Launch Tech Consulting Intern",
-                startDate: "June 2024",
-                endDate: "August 2024",
+                company: "Frood",
+                companyUrl: "https://frood.app/",
+                location: "Bethlehem, PA",
+                positions: [
+                    {
+                        position: "Full Stack Engineer",
+                        startDate: "January 2025",
+                        endDate: "Present",
+                        responsibilities: [
+                            "Developed and deployed four analytics metrics to track user engagement across the web platform, providing actionable insights to improve retention and usability.",
+                            "Refactored backend services and redesigned the database using ASP.NET Core, C#, and SQL to ensure scalability for onboarding new universities and expanding use cases.",
+                            "Redesigned web and mobile apps using ASP.NET, Flutter, and Dart as part of a company-wide rebrand, improving UI consistency and user experience.",
+                            "Implemented CI/CD pipelines, Docker containerization, and Kubernetes orchestration to automate deployments and improve system scalability and reliability."
+                        ],
+                        skills: [],
+                        technologies: [],
+                        images: ["", "", ""]
+                    },
+                    {
+                        position: "Business Strategist",
+                        startDate: "June 2025",
+                        endDate: "Present",
+                        responsibilities: [
+                            "Contributed to social media and marketing strategies to increase brand reach, engage users, and support campaigns for two new product use cases.",
+                            "Assisted in developing an approach to help universities experience the product through trial programs and tailored onboarding, with the goal of converting them into paying clients."
+                        ],
+                        skills: [],
+                        technologies: [],
+                        images: ["", "", ""]
+                    }
+                ]
+            },
+            {
+                company: "EY US",
+                companyUrl: "https://www.ey.com/en_us",
                 location: "New York, NY",
-                responsibilities: [
-                    "Key responsibility 1",
-                    "Key responsibility 2"
-                ],
-                skills: ["Consulting", "Problem Solving", "Client Communication"],
-                technologies: ["Tech 1", "Tech 2"],
-                images: [
-                    "/assets/images/gallery/sample1.jpg",
-                    "/assets/images/gallery/sample2.jpg"
+                positions: [
+                    {
+                        position: "Launch Technology Consulting Intern",
+                        startDate: "June 2024",
+                        endDate: "August 2024",
+                        responsibilities: [
+                            "Rotation One: Artificial Intelligence and Data Automation (AI&D)",
+                            "Created client-ready presentation materials using Microsoft Office to explain the team's data testing processes, the role of manual and automated testing in AI applications, and the value of a proposed data framework.",
+                            "Collaborated with offshore data engineers and analysts to debug and optimize data frameworks using SQL, Python, and AWS, improving performance and reliability.",
+                            "Researched methods to enhance the efficiency of the data processing pipeline and proposed a new solution that was successfully adopted by the team.",
+                            "Rotation Two: Systems, Applications & Products in Data Processing (SAP)",
+                            "Managed and organized over 300 process documentation files using SAP Signavio to support workflow automation, compliance, and operational efficiency.",
+                            "Updated content on the firm's front-end SAP site and participated in sessions with industry leaders to deepen understanding of SAP best practices and enterprise integration."
+                        ],
+                        skills: [],
+                        technologies: [],
+                        images: ["", "", ""]
+                    }
+                ]
+            },
+            {
+                company: "Prep for Prep",
+                companyUrl: "https://www.prepforprep.org/",
+                location: "New York, NY",
+                positions: [
+                    {
+                        position: "Summer Advisory System Advisor",
+                        startDate: "June 2022",
+                        endDate: "August 2023",
+                        responsibilities: [
+                            "Mentored and guided 30 students of color transitioning to independent schools, fostering academic growth and life skills development through advisory discussions.",
+                            "Generated detailed reports on academic and social progress for future independent school placements."
+                        ],
+                        skills: [],
+                        technologies: [],
+                        images: ["", "", ""]
+                    }
+                ]
+            },
+            {
+                company: "Colgate-Palmolive",
+                companyUrl: "https://www.colgatepalmolive.com/",
+                location: "New York, NY",
+                positions: [
+                    {
+                        position: "Predictive Innovation Team Intern",
+                        startDate: "June 2021",
+                        endDate: "August 2021",
+                        responsibilities: [
+                            "Analyzed health data with Python to predict customer trends.",
+                            "Created and presented a report to Colgate's R&D department chairs to show how Colgate can use diabetes and dental health data to improve their products."
+                        ],
+                        skills: [],
+                        technologies: [],
+                        images: ["", "", ""]
+                    }
                 ]
             }
         ],
         leadershipexperience: [
             {
-                company: "Lehigh University Black Student Union",
+                company: "Lehigh University Chapter of ColorStack",
+                companyUrl: "https://colorstack.org/",
+                location: "Lehigh University, Bethlehem, PA",
+                positions: [
+                    {
+                        position: "Founding Chapter Member and Secretary",
+                        startDate: "March 2025",
+                        endDate: "Present",
+                        responsibilities: [
+                            "Contributed to establishing the chapter and securing student organization recognition by the Student Senate.",
+                            "Managed communications with the general body and other chapters via email and social media.",
+                            "Organized and maintained a shared Google Drive with meeting notes, event plans, and essential chapter resources."
+                        ],
+                        skills: [],
+                        technologies: [],
+                        images: ["", "", ""]
+                    }
+                ]
+            },
+            {
+                company: "Omicron Kappa of Kappa Alpha Psi Fraternity Incorporated",
+                companyUrl: "https://www.kappaalphapsi1911.com/",
+                location: "Lehigh University, Bethlehem, PA",
+                positions: [
+                    {
+                        position: "Polemarch and MTA Chairman",
+                        startDate: "November 2023",
+                        endDate: "Present",
+                        responsibilities: [
+                            "Led new member education by teaching Kappa Kore classes to three initiates, resulting in the highest initiation exam scores in the region.",
+                            "Collaborated with alumni, chapter members, and partner organizations to plan and host an average of seven professional, social, and service events per semester, while facilitating chapter meetings to drive execution.",
+                            "Acted as the official liaison between Lehigh University and Kappa's international headquarters, reporting chapter operations in monthly president meetings and biannual national conferences."
+                        ],
+                        skills: [],
+                        technologies: [],
+                        images: ["", "", ""]
+                    }
+                ]
+            },
+            {
+                company: "Black Student Union",
                 companyUrl: "",
-                position: "President",
-                startDate: "April 2024",
-                endDate: "Present",
-                location: "Bethlehem, PA",
-                responsibilities: [
-                    "Lead executive board of 10+ members",
-                    "Manage organization's budget and resources",
-                    "Plan and execute events for 500+ members"
-                ],
-                skills: ["Leadership", "Event Planning", "Budget Management", "Team Management"],
-                technologies: ["Microsoft Office", "Google Workspace"],
-                images: [
-                    "/assets/images/gallery/sample3.jpg"
+                location: "Lehigh University, Bethlehem, PA",
+                positions: [
+                    {
+                        position: "President",
+                        startDate: "August 2023",
+                        endDate: "Present",
+                        responsibilities: [
+                            "Serve as the primary liaison between the Black student community and Lehigh University, collaborating with the Alumni Office, Office of Multicultural Affairs, and school administration to host 35 culturally relevant and inclusive events.",
+                            "Designed and implemented a member recruitment and retention strategy, expanding the organization to 500 active members for the 2024–25 academic year.",
+                            "Lead executive board meetings and oversee all operations, ensuring smooth event logistics, strategic planning, and regional collaboration with other Black Student Unions."
+                        ],
+                        skills: [],
+                        technologies: [],
+                        images: ["", "", ""]
+                    }
+                ]
+            },
+            {
+                company: "Men of Color Alliance",
+                companyUrl: "",
+                location: "Lehigh University, Bethlehem, PA",
+                positions: [
+                    {
+                        position: "President and Student Advisor",
+                        startDate: "March 2023",
+                        endDate: "Present",
+                        responsibilities: [
+                            "Revived the organization by launching 22 events focused on professional development, academic preparation, and community building for men of color at Lehigh, growing membership to over 100 students.",
+                            "Recruited and mentored eight new executive board members, and led meetings with faculty, staff, and administrators to support sustainable club operations.",
+                            "Secured official recognition from the Student Senate based on organizational growth and impact, and introduced the first annual Men of Color Symposium, bringing together students from six universities for a regional conference."
+                        ],
+                        skills: [],
+                        technologies: [],
+                        images: ["", "", ""]
+                    }
+                ]
+            },
+            {
+                company: "Student Senate",
+                companyUrl: "",
+                location: "Lehigh University, Bethlehem, PA",
+                positions: [
+                    {
+                        position: "Assistant Vice President of Finance",
+                        startDate: "January 2023",
+                        endDate: "Present",
+                        responsibilities: [
+                            "Conducted financial reviews of student-run organizations by analyzing budget proposals, expenditures, and historical spending to ensure responsible stewardship of the $450,000 Senate budget.",
+                            "Collaborated with club leaders to evaluate the impact and relevance of proposed initiatives, prioritizing funding that reflects the diverse needs and interests of the student body.",
+                            "Strategically allocated funding to support a wide range of student-led events and initiatives on campus, promoting cultural, academic, and social engagement across communities."
+                        ],
+                        skills: [],
+                        technologies: [],
+                        images: ["", "", ""]
+                    }
+                ]
+            },
+            {
+                company: "Office of Admissions",
+                companyUrl: "",
+                location: "Lehigh University, Bethlehem, PA",
+                positions: [
+                    {
+                        position: "Diversity Recruitment Intern",
+                        startDate: "August 2023",
+                        endDate: "June 2024",
+                        responsibilities: [
+                            "Designed and delivered training programs for Admission Ambassadors, improving campus tour quality and ensuring seamless execution of Open Houses.",
+                            "Planned and supported events during Yield season, represented Lehigh University at college fairs, and actively contributed to team initiatives through weekly meetings."
+                        ],
+                        skills: [],
+                        technologies: [],
+                        images: ["", "", ""]
+                    }
                 ]
             }
         ]
