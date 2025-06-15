@@ -8,6 +8,7 @@ import { useTranslateText } from '../features/language/useTranslateText';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { Element } from 'react-scroll';
 
 const Gallery = () => {
   const { translatedData } = useLanguage();

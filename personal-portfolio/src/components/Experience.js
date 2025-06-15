@@ -3,7 +3,7 @@ import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import { useLanguage } from '../features/language';
 import { useTranslateText } from '../features/language/useTranslateText';
 import Card from '../assets/ui/Card';
-import { scroller, Link as ScrollLink } from 'react-scroll';
+import { scroller, Link as ScrollLink, Element } from 'react-scroll';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { FaList, FaClock, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
@@ -399,56 +399,58 @@ const Experience = () => {
           </motion.div>
 
           {/* Professional Experience Section */}
-          <motion.div
-            id="professional-experience-section"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-20px' }}
-            transition={{ duration: 0.5 }}
-            className={viewMode === 'timeline' ? 'mb-6 mt-10' : 'mb-16 mt-20'}
-          >
-            <motion.h3
-              className="text-2xl font-bold text-center mb-6"
-              initial={{ opacity: 0, y: 20 }}
+          <Element name="professional-experience-section">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              viewport={{ once: false, margin: '-20px' }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ duration: 0.5 }}
+              className={viewMode === 'timeline' ? 'mb-6 mt-10' : 'mb-16 mt-20'}
             >
-              {professionalText}
-            </motion.h3>
-            {viewMode === 'resume' ? (
-              renderGroupedExperience(expData.professionalexperience)
-            ) : (
-              <Timeline experiences={expData.professionalexperience} type="professional" />
-            )}
-          </motion.div>
+              <motion.h3
+                className="text-2xl font-bold text-center mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                viewport={{ once: false, margin: '-20px' }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                {professionalText}
+              </motion.h3>
+              {viewMode === 'resume' ? (
+                renderGroupedExperience(expData.professionalexperience)
+              ) : (
+                <Timeline experiences={expData.professionalexperience} type="professional" />
+              )}
+            </motion.div>
+          </Element>
 
           {/* Leadership Experience Section */}
-          <motion.div
-            id="leadership-experience-section"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-20px' }}
-            transition={{ duration: 0.5 }}
-            className={viewMode === 'timeline' ? 'mb-6 mt-10' : 'mb-16 mt-20'}
-          >
-            <motion.h3
-              className="text-2xl font-bold text-center mb-6"
-              initial={{ opacity: 0, y: 20 }}
+          <Element name="leadership-experience-section">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              viewport={{ once: false, margin: '-20px' }}
-              transition={{ duration: 0.5, delay: 0.15 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ duration: 0.5 }}
+              className={viewMode === 'timeline' ? 'mb-6 mt-10' : 'mb-16 mt-20'}
             >
-              {leadershipText}
-            </motion.h3>
-            {viewMode === 'resume' ? (
-              renderGroupedExperience(expData.leadershipexperience)
-            ) : (
-              <Timeline experiences={expData.leadershipexperience} type="leadership" />
-            )}
-          </motion.div>
+              <motion.h3
+                className="text-2xl font-bold text-center mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                viewport={{ once: false, margin: '-20px' }}
+                transition={{ duration: 0.5, delay: 0.15 }}
+              >
+                {leadershipText}
+              </motion.h3>
+              {viewMode === 'resume' ? (
+                renderGroupedExperience(expData.leadershipexperience)
+              ) : (
+                <Timeline experiences={expData.leadershipexperience} type="leadership" />
+              )}
+            </motion.div>
+          </Element>
         </div>
       </section>
     </AnimationWrapper>

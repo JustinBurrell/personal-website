@@ -9,6 +9,7 @@ import { useLanguage } from '../features/language';
 import { useTranslateText } from '../features/language/useTranslateText';
 import { useLocation } from 'react-router-dom';
 import { scrollSpy } from 'react-scroll';
+import { Element } from 'react-scroll';
 
 const Home = () => {
   const { translatedData } = useLanguage();

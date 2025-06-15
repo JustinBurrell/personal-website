@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 import { scroller } from 'react-scroll';
 import { scrollSpy } from 'react-scroll';
 import portfolioData from '../data/portfolioData.ts';
+import { Element } from 'react-scroll';
 
 const Education = () => {
   const { translatedData, currentLanguage } = useLanguage();
@@ -183,269 +184,272 @@ const Education = () => {
           </motion.div>
 
           {/* Schooling Section */}
-          <motion.div
-            id="schooling-section"
-            className="max-w-4xl mx-auto mt-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-20px' }}
-            transition={{ duration: 0.5 }}
-          >
-            <motion.h3
-              className="text-2xl font-bold text-center mb-6 mt-8"
-              initial={{ opacity: 0, y: 20 }}
+          <Element name="schooling-section">
+            <motion.div
+              className="max-w-4xl mx-auto mt-16"
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              viewport={{ once: false, margin: '-20px' }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ duration: 0.5 }}
             >
-              {schoolingText}
-            </motion.h3>
-            <div className="grid gap-8">
-              {schooling.map((edu, index) => {
-                const translatedEdu = getTranslatedItem(edu);
-                return (
-                  <motion.div
-                    key={edu.name + index}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -30 }}
-                    viewport={{ once: false, margin: '-20px' }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <Card className="bg-white rounded-lg shadow-lg p-6">
-                      <div className="grid md:grid-cols-5 gap-6 items-stretch">
-                        {/* Left: Education Details */}
-                        <motion.div className="md:col-span-3 overflow-y-auto max-h-80 pr-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={{ duration: 0.4 }}>
-                          <h3 className="text-2xl font-semibold mb-2">
-                            {edu.nameUrl ? (
-                              <a
-                                href={edu.nameUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-900 hover:text-indigo-600 transition-colors duration-200"
-                              >
-                                {translatedEdu.name}
-                              </a>
-                            ) : (
-                              translatedEdu.name
+              <motion.h3
+                className="text-2xl font-bold text-center mb-6 mt-8"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                viewport={{ once: false, margin: '-20px' }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                {schoolingText}
+              </motion.h3>
+              <div className="grid gap-8">
+                {schooling.map((edu, index) => {
+                  const translatedEdu = getTranslatedItem(edu);
+                  return (
+                    <motion.div
+                      key={edu.name + index}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -30 }}
+                      viewport={{ once: false, margin: '-20px' }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                    >
+                      <Card className="bg-white rounded-lg shadow-lg p-6">
+                        <div className="grid md:grid-cols-5 gap-6 items-stretch">
+                          {/* Left: Education Details */}
+                          <motion.div className="md:col-span-3 overflow-y-auto max-h-80 pr-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={{ duration: 0.4 }}>
+                            <h3 className="text-2xl font-semibold mb-2">
+                              {edu.nameUrl ? (
+                                <a
+                                  href={edu.nameUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-gray-900 hover:text-indigo-600 transition-colors duration-200"
+                                >
+                                  {translatedEdu.name}
+                                </a>
+                              ) : (
+                                translatedEdu.name
+                              )}
+                            </h3>
+                            <p className="text-gray-600 mb-2">
+                              {translatedEdu.school_type}
+                              {translatedEdu.major && ` in ${translatedEdu.major}`}
+                            </p>
+                            <p className="text-gray-600 mb-4">Graduation: {edu.completionDate}</p>
+                            {edu.gpa && (
+                              <p className="text-gray-600 mb-4">GPA: {edu.gpa}</p>
                             )}
-                          </h3>
-                          <p className="text-gray-600 mb-2">
-                            {translatedEdu.school_type}
-                            {translatedEdu.major && ` in ${translatedEdu.major}`}
-                          </p>
-                          <p className="text-gray-600 mb-4">Graduation: {edu.completionDate}</p>
-                          {edu.gpa && (
-                            <p className="text-gray-600 mb-4">GPA: {edu.gpa}</p>
-                          )}
-                          {/* Relevant Courses Section */}
-                          {edu.relevantCourses && edu.relevantCourses.length > 0 && (
-                            <div className="mb-4">
-                              <h4 className="text-sm font-semibold mb-2">{relevantCoursesText}</h4>
-                              <div className="flex flex-col gap-1">
-                                {edu.relevantCourses.map((course, idx) => {
-                                  const translatedCourse = getTranslatedCourse(course, translatedEdu);
-                                  return (
-                                    <a
-                                      key={idx}
-                                      href={course.courseUrl}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-indigo-700 hover:underline text-sm transition-colors duration-200"
-                                    >
-                                      {translatedCourse.course}
-                                    </a>
-                                  );
-                                })}
+                            {/* Relevant Courses Section */}
+                            {edu.relevantCourses && edu.relevantCourses.length > 0 && (
+                              <div className="mb-4">
+                                <h4 className="text-sm font-semibold mb-2">{relevantCoursesText}</h4>
+                                <div className="flex flex-col gap-1">
+                                  {edu.relevantCourses.map((course, idx) => {
+                                    const translatedCourse = getTranslatedCourse(course, translatedEdu);
+                                    return (
+                                      <a
+                                        key={idx}
+                                        href={course.courseUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-indigo-700 hover:underline text-sm transition-colors duration-200"
+                                      >
+                                        {translatedCourse.course}
+                                      </a>
+                                    );
+                                  })}
+                                </div>
                               </div>
+                            )}
+                            {/* Organization Involvement Section */}
+                            {edu.organizationInvolvement && edu.organizationInvolvement.length > 0 && (
+                              <div>
+                                <h4 className="text-sm font-semibold mb-2">{organizationInvolvementText}</h4>
+                                <div className="flex flex-col gap-1">
+                                  {edu.organizationInvolvement.map((org, idx) => {
+                                    const translatedOrg = getTranslatedOrg(org, translatedEdu);
+                                    return (
+                                      <div key={idx} className="text-rose-700 text-sm">
+                                        <span className="font-semibold">{translatedOrg.organization}</span>
+                                        <span className="font-normal"> – {translatedOrg.role}</span>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
+                          </motion.div>
+                          {/* Right: Education Image */}
+                          {edu.educationImageUrl && (
+                            <div className="md:col-span-2 flex justify-center items-center">
+                              <img
+                                src={edu.educationImageUrl}
+                                alt={`${translatedEdu.name} education`}
+                                className="h-48 w-auto max-w-full object-contain rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105 mx-auto"
+                                style={{ maxHeight: '12rem', minHeight: '8rem' }}
+                                onClick={() => setModalImage({ src: edu.educationImageUrl, alt: `${translatedEdu.name} education` })}
+                              />
                             </div>
                           )}
-                          {/* Organization Involvement Section */}
-                          {edu.organizationInvolvement && edu.organizationInvolvement.length > 0 && (
-                            <div>
-                              <h4 className="text-sm font-semibold mb-2">{organizationInvolvementText}</h4>
-                              <div className="flex flex-col gap-1">
-                                {edu.organizationInvolvement.map((org, idx) => {
-                                  const translatedOrg = getTranslatedOrg(org, translatedEdu);
-                                  return (
-                                    <div key={idx} className="text-rose-700 text-sm">
-                                      <span className="font-semibold">{translatedOrg.organization}</span>
-                                      <span className="font-normal"> – {translatedOrg.role}</span>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          )}
-                        </motion.div>
-                        {/* Right: Education Image */}
-                        {edu.educationImageUrl && (
-                          <div className="md:col-span-2 flex justify-center items-center">
-                            <img
-                              src={edu.educationImageUrl}
-                              alt={`${translatedEdu.name} education`}
-                              className="h-48 w-auto max-w-full object-contain rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105 mx-auto"
-                              style={{ maxHeight: '12rem', minHeight: '8rem' }}
-                              onClick={() => setModalImage({ src: edu.educationImageUrl, alt: `${translatedEdu.name} education` })}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </Card>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </motion.div>
+                        </div>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </Element>
 
           {/* Certifications Section */}
-          <motion.div
-            id="certifications-section"
-            className="max-w-4xl mx-auto mt-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-20px' }}
-            transition={{ duration: 0.5 }}
-          >
-            <motion.h3
-              className="text-2xl font-bold text-center mb-6"
-              initial={{ opacity: 0, y: 20 }}
+          <Element name="certifications-section">
+            <motion.div
+              className="max-w-4xl mx-auto mt-16"
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              viewport={{ once: false, margin: '-20px' }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ duration: 0.5 }}
             >
-              {certificationsText}
-            </motion.h3>
-            <div className="grid gap-8">
-              {certifications.map((cert, index) => {
-                const translatedCert = getTranslatedItem(cert);
-                return (
-                  <motion.div
-                    key={cert.name + index}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -30 }}
-                    viewport={{ once: false, margin: '-20px' }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <Card className="bg-white rounded-lg shadow-lg p-6">
-                      <div className="grid md:grid-cols-5 gap-6 items-stretch">
-                        {/* Left: Certification Details */}
-                        <motion.div className="md:col-span-3 overflow-y-auto max-h-80 pr-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={{ duration: 0.4 }}>
-                          <h3 className="text-2xl font-semibold mb-2">
-                            {cert.nameUrl ? (
-                              <a
-                                href={cert.nameUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-900 hover:text-indigo-600 transition-colors duration-200"
-                              >
-                                {translatedCert.name}
-                              </a>
-                            ) : (
-                              translatedCert.name
+              <motion.h3
+                className="text-2xl font-bold text-center mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                viewport={{ once: false, margin: '-20px' }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                {certificationsText}
+              </motion.h3>
+              <div className="grid gap-8">
+                {certifications.map((cert, index) => {
+                  const translatedCert = getTranslatedItem(cert);
+                  return (
+                    <motion.div
+                      key={cert.name + index}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -30 }}
+                      viewport={{ once: false, margin: '-20px' }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                    >
+                      <Card className="bg-white rounded-lg shadow-lg p-6">
+                        <div className="grid md:grid-cols-5 gap-6 items-stretch">
+                          {/* Left: Certification Details */}
+                          <motion.div className="md:col-span-3 overflow-y-auto max-h-80 pr-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={{ duration: 0.4 }}>
+                            <h3 className="text-2xl font-semibold mb-2">
+                              {cert.nameUrl ? (
+                                <a
+                                  href={cert.nameUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-gray-900 hover:text-indigo-600 transition-colors duration-200"
+                                >
+                                  {translatedCert.name}
+                                </a>
+                              ) : (
+                                translatedCert.name
+                              )}
+                            </h3>
+                            <p className="text-gray-600 mb-4">Completion: {cert.completionDate}</p>
+                            {cert.description && (
+                              <p className="text-gray-600 mb-4">{translatedCert.description}</p>
                             )}
-                          </h3>
-                          <p className="text-gray-600 mb-4">Completion: {cert.completionDate}</p>
-                          {cert.description && (
-                            <p className="text-gray-600 mb-4">{translatedCert.description}</p>
+                          </motion.div>
+                          {/* Right: Certification Image */}
+                          {cert.educationImageUrl && (
+                            <div className="md:col-span-2 flex justify-center items-center">
+                              <img
+                                src={cert.educationImageUrl}
+                                alt={`${translatedCert.name} certification`}
+                                className="h-48 w-auto max-w-full object-contain rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105 mx-auto"
+                                style={{ maxHeight: '12rem', minHeight: '8rem' }}
+                                onClick={() => setModalImage({ src: cert.educationImageUrl, alt: `${translatedCert.name} certification` })}
+                              />
+                            </div>
                           )}
-                        </motion.div>
-                        {/* Right: Certification Image */}
-                        {cert.educationImageUrl && (
-                          <div className="md:col-span-2 flex justify-center items-center">
-                            <img
-                              src={cert.educationImageUrl}
-                              alt={`${translatedCert.name} certification`}
-                              className="h-48 w-auto max-w-full object-contain rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105 mx-auto"
-                              style={{ maxHeight: '12rem', minHeight: '8rem' }}
-                              onClick={() => setModalImage({ src: cert.educationImageUrl, alt: `${translatedCert.name} certification` })}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </Card>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </motion.div>
+                        </div>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </Element>
 
           {/* Programs Section */}
-          <motion.div
-            id="programs-section"
-            className="max-w-4xl mx-auto mt-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-20px' }}
-            transition={{ duration: 0.5 }}
-          >
-            <motion.h3
-              className="text-2xl font-bold text-center mb-6"
-              initial={{ opacity: 0, y: 20 }}
+          <Element name="programs-section">
+            <motion.div
+              className="max-w-4xl mx-auto mt-16"
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              viewport={{ once: false, margin: '-20px' }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true, margin: '-20px' }}
+              transition={{ duration: 0.5 }}
             >
-              {programsText}
-            </motion.h3>
-            <div className="grid gap-8">
-              {programs.map((prog, index) => {
-                const translatedProg = getTranslatedItem(prog);
-                return (
-                  <motion.div
-                    key={prog.name + index}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -30 }}
-                    viewport={{ once: false, margin: '-20px' }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <Card className="bg-white rounded-lg shadow-lg p-6">
-                      <div className="grid md:grid-cols-5 gap-6 items-stretch">
-                        {/* Left: Program Details */}
-                        <motion.div className="md:col-span-3 overflow-y-auto max-h-80 pr-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={{ duration: 0.4 }}>
-                          <h3 className="text-2xl font-semibold mb-2">
-                            {prog.nameUrl ? (
-                              <a
-                                href={prog.nameUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-900 hover:text-indigo-600 transition-colors duration-200"
-                              >
-                                {translatedProg.name}
-                              </a>
-                            ) : (
-                              translatedProg.name
+              <motion.h3
+                className="text-2xl font-bold text-center mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                viewport={{ once: false, margin: '-20px' }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                {programsText}
+              </motion.h3>
+              <div className="grid gap-8">
+                {programs.map((prog, index) => {
+                  const translatedProg = getTranslatedItem(prog);
+                  return (
+                    <motion.div
+                      key={prog.name + index}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -30 }}
+                      viewport={{ once: false, margin: '-20px' }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                    >
+                      <Card className="bg-white rounded-lg shadow-lg p-6">
+                        <div className="grid md:grid-cols-5 gap-6 items-stretch">
+                          {/* Left: Program Details */}
+                          <motion.div className="md:col-span-3 overflow-y-auto max-h-80 pr-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={{ duration: 0.4 }}>
+                            <h3 className="text-2xl font-semibold mb-2">
+                              {prog.nameUrl ? (
+                                <a
+                                  href={prog.nameUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-gray-900 hover:text-indigo-600 transition-colors duration-200"
+                                >
+                                  {translatedProg.name}
+                                </a>
+                              ) : (
+                                translatedProg.name
+                              )}
+                            </h3>
+                            <p className="text-gray-600 mb-4">Completion: {prog.completionDate}</p>
+                            {prog.description && (
+                              <p className="text-gray-600 mb-4">{translatedProg.description}</p>
                             )}
-                          </h3>
-                          <p className="text-gray-600 mb-4">Completion: {prog.completionDate}</p>
-                          {prog.description && (
-                            <p className="text-gray-600 mb-4">{translatedProg.description}</p>
+                          </motion.div>
+                          {/* Right: Program Image */}
+                          {prog.educationImageUrl && (
+                            <div className="md:col-span-2 flex justify-center items-center">
+                              <img
+                                src={prog.educationImageUrl}
+                                alt={`${translatedProg.name} program`}
+                                className="h-48 w-auto max-w-full object-contain rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105 mx-auto"
+                                style={{ maxHeight: '12rem', minHeight: '8rem' }}
+                                onClick={() => setModalImage({ src: prog.educationImageUrl, alt: `${translatedProg.name} program` })}
+                              />
+                            </div>
                           )}
-                        </motion.div>
-                        {/* Right: Program Image */}
-                        {prog.educationImageUrl && (
-                          <div className="md:col-span-2 flex justify-center items-center">
-                            <img
-                              src={prog.educationImageUrl}
-                              alt={`${translatedProg.name} program`}
-                              className="h-48 w-auto max-w-full object-contain rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105 mx-auto"
-                              style={{ maxHeight: '12rem', minHeight: '8rem' }}
-                              onClick={() => setModalImage({ src: prog.educationImageUrl, alt: `${translatedProg.name} program` })}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </Card>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </motion.div>
+                        </div>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </Element>
         </div>
       </section>
     </AnimationWrapper>

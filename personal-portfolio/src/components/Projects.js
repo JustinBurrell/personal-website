@@ -5,6 +5,7 @@ import { useTranslateText } from '../features/language/useTranslateText';
 import Card from '../assets/ui/Card';
 import { motion } from 'framer-motion';
 import { FaChevronLeft, FaChevronRight, FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
+import { Element } from 'react-scroll';
 
 // Timeline component for projects
 const Timeline = ({ projects }) => {
@@ -277,7 +278,9 @@ const Projects = () => {
             viewport={{ once: true, margin: '-20px' }}
             transition={{ duration: 0.5 }}
           >
-            <Timeline projects={projectData.project} />
+            <Element name="projects-section">
+              <Timeline projects={projectData.project} />
+            </Element>
           </motion.div>
         </div>
       </section>
