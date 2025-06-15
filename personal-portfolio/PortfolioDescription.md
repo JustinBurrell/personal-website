@@ -5,21 +5,21 @@ A modern, responsive personal portfolio website built with React, showcasing my 
 
 ## Technology Stack
 
-| Category    | Technology          | Purpose                                                  |
+| Category    | Technology         | Purpose                                                 |
 |-------------|--------------------|---------------------------------------------------------|
-| Frontend    | React.js           | Component-based UI library for building the interface    |
-| Styling     | Tailwind CSS      | Utility-first CSS framework for responsive design        |
-| Routing     | React Router      | Client-side routing and navigation management            |
-| Animation   | Framer Motion     | Page transitions and UI animation effects                |
-| Forms       | EmailJS           | Serverless email handling for contact form               |
-| Icons       | React Icons       | Comprehensive icon library for UI elements               |
+| Frontend    | React.js           | Component-based UI library for building the interface   |
+| Styling     | Tailwind CSS       | Utility-first CSS framework for responsive design       |
+| Routing     | React Router       | Client-side routing and navigation management           |
+| Animation   | Framer Motion      | Page transitions and UI animation effects               |
+| Forms       | EmailJS            | Serverless email handling for contact form              |
+| Icons       | React Icons        | Comprehensive icon library for UI elements              |
 | SEO         | React Helmet Async | Managing document head and meta tags                    |
-| Carousel    | React Slick       | Image slider for gallery and testimonials               |
-| Deployment  | Vercel            | Production hosting with automatic deployments            |
-| Type Safety | TypeScript        | Static typing for improved code reliability             |
-| Build Tool  | Create React App  | Project scaffolding and build configuration             |
-| Package Mgmt| npm               | Dependency management and script running                 |
-| Translation | Google Cloud      | Translation API for multilingual support                |
+| Carousel    | React Slick        | Image slider for gallery and testimonials               |
+| Deployment  | Vercel             | Production hosting with automatic deployments           |
+| Type Safety | TypeScript         | Static typing for improved code reliability             |
+| Build Tool  | Create React App   | Project scaffolding and build configuration             |
+| Package Mgmt| npm                | Dependency management and script running                |
+| Translation | Google Cloud       | Translation API for multilingual support                |
 
 ## Key Features
 

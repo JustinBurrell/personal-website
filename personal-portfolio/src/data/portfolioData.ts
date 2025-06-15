@@ -51,6 +51,7 @@ interface EducationItem {
         completionDate: string;
         description?: string;
         gpa?: string;
+        educationImageUrl: string;
         relevantCourses?: Array<{
             course: string;
             courseUrl: string;
@@ -235,7 +236,7 @@ const portfolioData: PortfolioData = {
     education: [
         {
             educationImageUrl: "/assets/images/education/Education Background Photo.jpg",
-            description: "My love for learning began in the classroom, where challenging courses helped me build a solid foundation in computer science. I’ve pursued professional certificates to strengthen that knowledge and gain industry-recognized skills across different areas of tech. Through academic and professional programs, I continue to grow and develop the tools I need to lead effectively in the tech industry.",
+            description: "My love for learning began in the classroom, where challenging courses helped me build a solid foundation in computer science. I've pursued professional certificates to strengthen that knowledge and gain industry-recognized skills across different areas of tech. Through academic and professional programs, I continue to grow and develop the tools I need to lead effectively in the tech industry.",
             education: [
                 {
                     name: "Lehigh University",
@@ -244,14 +245,20 @@ const portfolioData: PortfolioData = {
                     school_type: "Bachelor's of Science",
                     major: "Computer Science and Engineering",
                     completionDate: "May 2026",
+                    educationImageUrl: "/assets/images/education/lehigh logo.png",
                     relevantCourses: [
-                        { course: "CSE 007", courseUrl: "https://www.lehigh.edu/academics/courses/cse-007" },
-                        { course: "CSE 017", courseUrl: "https://www.lehigh.edu/academics/courses/cse-017" },
-                        { course: "CSE 140", courseUrl: "https://www.lehigh.edu/academics/courses/cse-140" },
-                        { course: "CSE 216", courseUrl: "https://www.lehigh.edu/academics/courses/cse-216" },
-                        { course: "CSE 280", courseUrl: "https://www.lehigh.edu/academics/courses/cse-280" }
+                        { course: "Introduction to Programming", courseUrl: "https://engineering.lehigh.edu/cse/cse-007-introduction-programming-4" },
+                        { course: "Programming and Data Structures", courseUrl: "https://engineering.lehigh.edu/cse/academics/course-index/cse-17-programming-and-data-structures-3" },
+                        { course: "Foundations of Discrete Structures and Algorithms", courseUrl: "https://engineering.lehigh.edu/cse/academics/course-index/cse-140-foundations-discrete-structures-and-algorithms-3" },
+                        { course: "Software Engineering", courseUrl: "https://engineering.lehigh.edu/cse/academics/course-index/cse-216-software-engineering-3" },
+                        { course: "Computer Science Capstone", courseUrl: "https://engineering.lehigh.edu/cse/academics/course-index/cse-280-capstone-project-i-3" },
+                        { course: "Design and Analysis of Algorithms", courseUrl: "https://engineering.lehigh.edu/cse/academics/course-index/cse-340-design-and-analysis-algorithms-3" }
                     ],
                     organizationInvolvement: [
+                        {
+                            organization: "Black Student Union",
+                            role: "Member"
+                        },
                         { organization: "Kappa Alpha Psi Fraternity, Inc.", role: "Polemarch and MTA Chairman" },
                         { organization: "Lehigh University Black Student Union", role: "President" },
                         { organization: "ColorStack", role: "Co-Founder and Secretary" },
@@ -266,7 +273,12 @@ const portfolioData: PortfolioData = {
                     education_type: "School",
                     school_type: "High School Diploma",
                     completionDate: "June 2022",
+                    educationImageUrl: "/assets/images/education/horace mann logo.jpg",
                     organizationInvolvement: [
+                        {
+                            organization: "Prep for Prep",
+                            role: "Graduate"
+                        },
                         { organization: "Varsity Track and Field", role: "Captain" },
                         { organization: "Varsity Cross Country", role: "Captain" },
                         { organization: "Office of Admissions", role: "Ambassador" },
@@ -274,26 +286,29 @@ const portfolioData: PortfolioData = {
                     ]
                 },
                 {
-                    name: "Prep for Prep",
-                    nameUrl: "https://www.prepforprep.org/",
-                    education_type: "Program",
-                    completionDate: "August 2017",
-                    description: "Prep for Prep is a highly selective leadership development program that prepares students for placement in leading independent schools and continues to work closely with the students through high school graduation and beyond."
+                    name: "IBM Data Foundations with Capstone",
+                    nameUrl: "https://www.ibm.com/training/data-foundations",
+                    education_type: "Certificate",
+                    completionDate: "June 2025",
+                    description: "Learn the concepts and methods of data science and how its discoveries change the world. Then get hands-on practice cleaning, refining, and visualizing data, in a series of simulations, using IBM Watson Studio with the data refinery tool. Finish by gathering tips and resources that can help you launch a great career in data science.",
+                    educationImageUrl: "/assets/images/education/ibm logo.png"
                 },
                 {
                     name: "All Star Code",
                     nameUrl: "https://www.allstarcode.org/",
                     education_type: "Program",
                     completionDate: "August 2020",
-                    description: "All-Star Code empowers youth from underserved communities through their flagship Summer Intensive program. This six-week experience immerses students in computer science, web development, and emerging technologies while providing mentorship from industry professionals. Beyond the technical training, participants gain invaluable networking opportunities with high school, college, and postgrad professionals, fostering connections that open doors for future success in tech."
+                    description: "Intensive summer program focused on computer science and entrepreneurship.",
+                    educationImageUrl: "/assets/images/education/all star code logo.webp"
                 },
                 {
-                    name: "IBM Data Foundations with Capstone",
-                    nameUrl: "https://www.ibm.com/training/data-foundations",
-                    education_type: "Certificate",
-                    completionDate: "August 2020",
-                    description: "Learn the concepts and methods of data science and how its discoveries change the world. Then get hands-on practice cleaning, refining, and visualizing data, in a series of simulations, using IBM Watson Studio with the data refinery tool. Finish by gathering tips and resources that can help you launch a great career in data science."
-                }
+                    name: "Prep for Prep",
+                    nameUrl: "https://www.prepforprep.org/",
+                    education_type: "Program",
+                    completionDate: "August 2017",
+                    description: "Prep for Prep is a highly selective leadership development program that prepares students for placement in leading independent schools and continues to work closely with the students through high school graduation and beyond.",
+                    educationImageUrl: "/assets/images/education/prep for prep logo.png"
+                },
             ]
         }
     ],
