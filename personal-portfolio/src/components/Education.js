@@ -28,6 +28,8 @@ const Education = () => {
   const schoolingText = useTranslateText("Schooling");
   const certificationsText = useTranslateText("Certifications");
   const programsText = useTranslateText("Programs");
+  const graduationText = useTranslateText("Graduation:");
+  const completionText = useTranslateText("Completion:");
 
   // Helper to sort by most recent completion date
   const sortByDateDesc = (arr) =>
@@ -76,14 +78,24 @@ const Education = () => {
   };
 
   // Get translated organization
-  const getTranslatedOrg = (originalOrg, translatedEdu) => {
+  const getTranslatedOrg = (originalOrg, translatedEdu, edu) => {
     if (currentLanguage === 'en') return originalOrg;
     if (!translatedEdu.organizationInvolvement) return originalOrg;
-
-    const translatedOrg = translatedEdu.organizationInvolvement.find(o => 
+    // Try to find by index if direct match fails
+    let translatedOrg = translatedEdu.organizationInvolvement.find(o =>
       o.organization === originalOrg.organization && o.role === originalOrg.role
     );
-    return translatedOrg || originalOrg;
+    if (!translatedOrg) {
+      const idx = edu.organizationInvolvement?.findIndex(o => o.organization === originalOrg.organization && o.role === originalOrg.role);
+      if (idx !== undefined && idx > -1 && translatedEdu.organizationInvolvement[idx]) {
+        translatedOrg = translatedEdu.organizationInvolvement[idx];
+      }
+    }
+    if (!translatedOrg) {
+      console.warn('Could not find translated org for:', originalOrg, 'in', translatedEdu.organizationInvolvement);
+      return originalOrg;
+    }
+    return translatedOrg;
   };
 
   const [modalImage, setModalImage] = useState(null);
@@ -236,7 +248,7 @@ const Education = () => {
                               {translatedEdu.school_type}
                               {translatedEdu.major && ` in ${translatedEdu.major}`}
                             </p>
-                            <p className="text-gray-600 mb-4">Graduation: {edu.completionDate}</p>
+                            <p className="text-gray-600 mb-4">{graduationText} {translatedEdu.completionDate || edu.completionDate}</p>
                             {edu.gpa && (
                               <p className="text-gray-600 mb-4">GPA: {edu.gpa}</p>
                             )}
@@ -268,7 +280,7 @@ const Education = () => {
                                 <h4 className="text-sm font-semibold mb-2">{organizationInvolvementText}</h4>
                                 <div className="flex flex-col gap-1">
                                   {edu.organizationInvolvement.map((org, idx) => {
-                                    const translatedOrg = getTranslatedOrg(org, translatedEdu);
+                                    const translatedOrg = getTranslatedOrg(org, translatedEdu, edu);
                                     return (
                                       <div key={idx} className="text-rose-700 text-sm">
                                         <span className="font-semibold">{translatedOrg.organization}</span>
@@ -350,7 +362,7 @@ const Education = () => {
                                 translatedCert.name
                               )}
                             </h3>
-                            <p className="text-gray-600 mb-4">Completion: {cert.completionDate}</p>
+                            <p className="text-gray-600 mb-4">{completionText} {translatedCert.completionDate || cert.completionDate}</p>
                             {cert.description && (
                               <p className="text-gray-600 mb-4">{translatedCert.description}</p>
                             )}
@@ -425,7 +437,7 @@ const Education = () => {
                                 translatedProg.name
                               )}
                             </h3>
-                            <p className="text-gray-600 mb-4">Completion: {prog.completionDate}</p>
+                            <p className="text-gray-600 mb-4">{graduationText} {translatedProg.completionDate || prog.completionDate}</p>
                             {prog.description && (
                               <p className="text-gray-600 mb-4">{translatedProg.description}</p>
                             )}

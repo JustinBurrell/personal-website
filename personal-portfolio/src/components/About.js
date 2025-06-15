@@ -195,7 +195,7 @@ const About = () => {
                               <motion.div
                                 key={index}
                                 className="group relative cursor-pointer"
-                                title={`Click to visit ${skill} website`}
+                                title={skill}
                                 initial={{ opacity: 0, scale: 0.5 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 viewport={{ margin: "-20px" }}
@@ -218,10 +218,10 @@ const About = () => {
                                     className="text-4xl transition-transform" 
                                     style={{ color: skillIconColors[skill] }}
                                   />
+                                  <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 shadow-lg">
+                                    {skill}
+                                  </div>
                                 </a>
-                                <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                  {skill}
-                                </div>
                               </motion.div>
                             ) : null;
                           })}

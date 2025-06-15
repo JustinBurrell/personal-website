@@ -49,7 +49,6 @@ const TRANSLATABLE_FIELDS = new Set([
   'technologies',
   'view_timeline',
   'view_resume',
-  'skills',
   'Skills',
   'Technologies',
   
