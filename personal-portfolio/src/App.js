@@ -6,7 +6,8 @@ import Navbar from './assets/shared/Navbar';
 import Footer from './assets/shared/Footer';
 import PageTransition from './assets/shared/PageTransition';
 import CustomCursor from './assets/shared/CustomCursor';
-import { LanguageProvider } from './features/language';
+import ContentLoader from './assets/shared/ContentLoader';
+import { LanguageProvider, useLanguage } from './features/language';
 import './App.css';
 
 // Lazy load components
@@ -26,8 +27,21 @@ const LoadingFallback = () => (
   </div>
 );
 
+// Wrapper component for routes that need content loading
+const RouteWithContentLoader = ({ component: Component, data, routeKey }) => {
+  const { translatedData } = useLanguage();
+  const routeData = data ? translatedData[data] : translatedData;
+
+  return (
+    <ContentLoader data={routeData} routeKey={routeKey}>
+      <Component />
+    </ContentLoader>
+  );
+};
+
 function HomePage() {
   const { hash } = useLocation();
+  const { translatedData } = useLanguage();
 
   useEffect(() => {
     if (hash) {
@@ -41,7 +55,7 @@ function HomePage() {
   }, [hash]);
 
   return (
-    <>
+    <ContentLoader data={translatedData} routeKey="home">
       <Suspense fallback={<LoadingFallback />}>
         <Home />
         <About />
@@ -49,7 +63,7 @@ function HomePage() {
         <Contact />
       </Suspense>
       <Footer />
-    </>
+    </ContentLoader>
   );
 }
 
@@ -80,7 +94,11 @@ function App() {
             <Route path="/education" element={
               <PageTransition>
                 <Suspense fallback={<LoadingFallback />}>
-                  <Education />
+                  <RouteWithContentLoader 
+                    component={Education} 
+                    data="education" 
+                    routeKey="education" 
+                  />
                   <Footer />
                 </Suspense>
               </PageTransition>
@@ -88,7 +106,11 @@ function App() {
             <Route path="/experience" element={
               <PageTransition>
                 <Suspense fallback={<LoadingFallback />}>
-                  <Experience />
+                  <RouteWithContentLoader 
+                    component={Experience} 
+                    data="experience" 
+                    routeKey="experience" 
+                  />
                   <Footer />
                 </Suspense>
               </PageTransition>
@@ -96,7 +118,11 @@ function App() {
             <Route path="/projects" element={
               <PageTransition>
                 <Suspense fallback={<LoadingFallback />}>
-                  <Projects />
+                  <RouteWithContentLoader 
+                    component={Projects} 
+                    data="projects" 
+                    routeKey="projects" 
+                  />
                   <Footer />
                 </Suspense>
               </PageTransition>
@@ -104,7 +130,11 @@ function App() {
             <Route path="/awards" element={
               <PageTransition>
                 <Suspense fallback={<LoadingFallback />}>
-                  <Awards />
+                  <RouteWithContentLoader 
+                    component={Awards} 
+                    data="awards" 
+                    routeKey="awards" 
+                  />
                   <Footer />
                 </Suspense>
               </PageTransition>
