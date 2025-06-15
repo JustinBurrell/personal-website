@@ -7,6 +7,7 @@ import { scroller, Link as ScrollLink } from 'react-scroll';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { FaList, FaClock, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { scrollSpy } from 'react-scroll';
 
 // Timeline component (moved inside Experience.js)
 const Timeline = ({ experiences, type }) => {
@@ -328,6 +329,10 @@ const Experience = () => {
     }
   }, [location.state]);
 
+  React.useEffect(() => {
+    scrollSpy.update();
+  }, []);
+
   return (
     <AnimationWrapper>
       <section id="experience" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
@@ -543,12 +548,15 @@ const ExperienceGallery = ({ images }) => {
           &#8592;
         </button>
         {images.map((img, idx) => (
-          <img
+          <motion.img
             key={img}
             src={img}
             alt={`Experience ${idx + 1}`}
             className={`w-20 h-20 object-cover rounded cursor-pointer border-2 ${selected === idx ? 'border-blue-500' : 'border-transparent'}`}
             onClick={() => { setSelected(idx); setModalOpen(true); }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: idx * 0.08 }}
           />
         ))}
         <button

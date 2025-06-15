@@ -6,6 +6,7 @@ import { useTranslateText } from '../features/language/useTranslateText';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { scroller } from 'react-scroll';
+import { scrollSpy } from 'react-scroll';
 import portfolioData from '../data/portfolioData.ts';
 
 const Education = () => {
@@ -99,6 +100,10 @@ const Education = () => {
       }, 200);
     }
   }, [location.state]);
+
+  React.useEffect(() => {
+    scrollSpy.update();
+  }, []);
 
   // Modal component
   const ImageModal = ({ src, alt, onClose }) => (
