@@ -29,6 +29,7 @@ A modern, responsive personal portfolio website built with React, showcasing my 
 - Page transitions with fade animations
 - Fixed navigation bar for easy access
 - Proper scroll position management between routes
+- Consistent footer across all pages, with social media links (LinkedIn, GitHub), animated react logo, and copyright info
 
 ### Multilingual Support
 - Dynamic language switching with i18next integration
