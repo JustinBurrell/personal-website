@@ -606,6 +606,23 @@ const portfolioData: PortfolioData = {
         description: "Projects are an opportunity to sharpen my technical skills and showcase my creativity. They also are unique ways to collaborate with others to achieve a common goal. Here is a collection of my technical projects to date. For further details, please visit my GitHub page.",
         project: [
             {
+                title: "AI/ML Student Score Predictor",
+                date: "June 2025",
+                description: "Using the power of artificial intelligence and machine learning, this project predicts student test scores based on their academic history and demographic data. The dataset was cleaned, transformed, and analyzed to uncover key performance trends.",
+                technologies: ["React.js", "JavaScript", "Framer", "Vercel", "Python", "Flask", "Scikit", "Render", "Pandas", "NumPy", "Matplotlib"],
+                githubUrl: "https://github.com/JustinBurrell/student-score-predictor",
+                liveUrl: "https://student-score-predictorml.vercel.app/",
+                imageUrl: "/assets/images/projects/Student Score Predictor Cover.png",
+                highlights: [
+                    "Successfully trained and deployed a machine learning model with 85%+ accuracy",
+                    "Created a seamless user experience with smooth page transitions and scroll-triggered animations",
+                    "Implemented comprehensive data analysis pipeline with automated cleaning and feature engineering",
+                    "Built responsive design that works across all device sizes",
+                    "Established proper API architecture with error handling and data validation",
+                    "Demonstrated end-to-end ML project workflow from data exploration to production deployment"
+                ]
+            },
+            {
                 title: "My Personal Portfolio (This!)",
                 date: "June 2025",
                 description: "A modern, responsive portfolio website built in React, Tailwind CSS, and TypeScript to showcase my professional journey and projects. This website is a work in progress; I will be updating it as I continue to learn and grow.",
