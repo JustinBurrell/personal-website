@@ -101,13 +101,8 @@ A modern, responsive personal portfolio website built with React, showcasing my 
 
 ## Project Structure
 ```
-personal-portfolio/
+frontend/
 ├── public/
-│   ├── assets/
-│   ├── favicon.ico
-│   ├── manifest.json
-│   └── index.html
-├── src/
 │   ├── assets/
 │   │   ├── ui/
 │   │   │   ├── Button.js

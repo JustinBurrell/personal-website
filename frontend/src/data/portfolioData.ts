@@ -627,7 +627,7 @@ const portfolioData: PortfolioData = {
                 date: "June 2025",
                 description: "A modern, responsive portfolio website built in React, Tailwind CSS, and TypeScript to showcase my professional journey and projects. This website is a work in progress; I will be updating it as I continue to learn and grow.",
                 technologies: ["React", "TypeScript", "Tailwind CSS", "Framer Motion", "Google Cloud", "Vercel"],
-                githubUrl: "https://github.com/JustinBurrell/personal-portfolio",
+                githubUrl: "https://github.com/JustinBurrell/frontend",
                 liveUrl: "https://thejustinburrell.com",
                 imageUrl: "/assets/images/projects/Personal Website Cover.png",
                 highlights: [
