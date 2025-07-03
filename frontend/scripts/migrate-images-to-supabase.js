@@ -76,10 +76,12 @@ async function migrateImages() {
       
       const uploadedPath = await uploadFile(file, storagePath);
       if (uploadedPath) {
+        // Remove leading 'assets/' or 'assets\\' from relativePath for the public URL
+        const cleanPath = relativePath.replace(/^assets[\\/]/, '');
         uploadedFiles.push({
           originalPath: relativePath,
           storagePath: uploadedPath,
-          publicUrl: `${supabaseUrl}/storage/v1/object/public/assets/${relativePath}`
+          publicUrl: `${supabaseUrl}/storage/v1/object/public/assets/assets/${cleanPath}`
         });
       }
     }

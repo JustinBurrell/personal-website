@@ -40,6 +40,7 @@ async function updateImageUrls() {
 
     // Update all section tables with image URLs
     const tablesToUpdate = ['home', 'about', 'awards', 'education', 'experience', 'gallery', 'projects'];
+    let totalUpdates = 0;
     
     for (const tableName of tablesToUpdate) {
       console.log(`📝 Updating ${tableName}...`);
@@ -52,6 +53,7 @@ async function updateImageUrls() {
         continue;
       }
 
+      let tableUpdates = 0;
       for (const record of records) {
         const updatedRecord = updateJsonContent(record, urlMapping);
         
@@ -64,15 +66,58 @@ async function updateImageUrls() {
           if (updateError) {
             console.error(`❌ Error updating ${tableName} record ${record.id}:`, updateError);
           } else {
-            console.log(`✅ Updated ${tableName} record: ${record.id}`);
+            tableUpdates++;
+            totalUpdates++;
           }
         }
       }
+      console.log(`   Updated ${tableUpdates} records in ${tableName}`);
+    }
+
+    // Update related tables that contain image URLs
+    const relatedTables = [
+      { table: 'education_items', fields: ['educationImageUrl'] },
+      { table: 'project_items', fields: ['imageUrl'] },
+      { table: 'experience_professional_positions', fields: ['images'] },
+      { table: 'experience_leadership_positions', fields: ['images'] }
+    ];
+
+    for (const { table, fields } of relatedTables) {
+      console.log(`📝 Updating ${table}...`);
+      const { data: records, error } = await supabase
+        .from(table)
+        .select('*');
+
+      if (error) {
+        console.error(`❌ Error fetching ${table}:`, error);
+        continue;
+      }
+
+      let tableUpdates = 0;
+      for (const record of records) {
+        const updatedRecord = updateJsonContent(record, urlMapping);
+        
+        if (JSON.stringify(updatedRecord) !== JSON.stringify(record)) {
+          const { error: updateError } = await supabase
+            .from(table)
+            .update(updatedRecord)
+            .eq('id', record.id);
+
+          if (updateError) {
+            console.error(`❌ Error updating ${table} record ${record.id}:`, updateError);
+          } else {
+            tableUpdates++;
+            totalUpdates++;
+          }
+        }
+      }
+      console.log(`   Updated ${tableUpdates} records in ${table}`);
     }
 
 
 
-    console.log('\n🎉 Database update completed successfully!');
+    console.log(`\n🎉 Database update completed successfully!`);
+    console.log(`📈 Total records updated: ${totalUpdates}`);
     console.log('\nNext steps:');
     console.log('1. Test your website to ensure all images load correctly');
     console.log('2. Consider removing images from the public folder to save space');
@@ -95,7 +140,7 @@ function updateJsonContent(content, urlMapping) {
 
   const updated = {};
   for (const [key, value] of Object.entries(content)) {
-    if (typeof value === 'string' && (key.includes('image') || key.includes('url'))) {
+    if (typeof value === 'string' && (key.includes('image') || key.includes('url') || key.includes('Url'))) {
       // Check if this looks like a local path that should be updated
       if (value.startsWith('/assets/') || value.startsWith('assets/')) {
         const normalizedPath = value.startsWith('/') ? value.slice(1) : value;
