@@ -1,5 +1,7 @@
-import { createClient } from '@supabase/supabase-js'
-import portfolioData from '../src/data/portfolioData.js'
+require('dotenv').config({ path: '.env.local' });
+
+const { createClient } = require('@supabase/supabase-js')
+const portfolioData = require('../src/data/portfolioData.js')
 
 // Initialize Supabase client
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL
@@ -15,34 +17,45 @@ async function migrateToSupabase() {
     // 1. Migrate Home section
     console.log('Migrating Home section...')
     await supabase
-      .from('portfolio_sections')
+      .from('home')
       .upsert({
-        section_name: 'home',
         language_code: 'en',
-        content: portfolioData.home,
+        imageUrl: portfolioData.home.imageUrl,
+        title: portfolioData.home.title,
+        description: portfolioData.home.description,
+        resumeUrl: portfolioData.home.resumeUrl,
+        linkedinUrl: portfolioData.home.linkedinUrl,
+        githubUrl: portfolioData.home.githubUrl,
+        email: portfolioData.home.email,
+        organizations: portfolioData.home.organizations,
+        qualities: portfolioData.home.qualities,
         is_active: true
       })
 
     // 2. Migrate About section
     console.log('Migrating About section...')
     await supabase
-      .from('portfolio_sections')
+      .from('about')
       .upsert({
-        section_name: 'about',
         language_code: 'en',
-        content: portfolioData.about,
+        imageUrl: portfolioData.about.imageUrl,
+        introduction: portfolioData.about.introduction,
+        skills: portfolioData.about.skills,
+        interests: portfolioData.about.interests,
         is_active: true
       })
 
     // 3. Migrate Awards
     console.log('Migrating Awards...')
     for (let i = 0; i < portfolioData.awards.length; i++) {
+      const award = portfolioData.awards[i]
       await supabase
-        .from('portfolio_sections')
+        .from('awards')
         .upsert({
-          section_name: 'awards',
           language_code: 'en',
-          content: portfolioData.awards[i],
+          awardImageUrl: award.awardImageUrl,
+          description: award.description,
+          award: award.award,
           is_active: true
         })
     }
@@ -50,12 +63,14 @@ async function migrateToSupabase() {
     // 4. Migrate Education
     console.log('Migrating Education...')
     for (let i = 0; i < portfolioData.education.length; i++) {
+      const education = portfolioData.education[i]
       await supabase
-        .from('portfolio_sections')
+        .from('education')
         .upsert({
-          section_name: 'education',
           language_code: 'en',
-          content: portfolioData.education[i],
+          educationImageUrl: education.educationImageUrl,
+          description: education.description,
+          education: education.education,
           is_active: true
         })
     }
@@ -63,12 +78,15 @@ async function migrateToSupabase() {
     // 5. Migrate Experience
     console.log('Migrating Experience...')
     for (let i = 0; i < portfolioData.experience.length; i++) {
+      const experience = portfolioData.experience[i]
       await supabase
-        .from('portfolio_sections')
+        .from('experience')
         .upsert({
-          section_name: 'experience',
           language_code: 'en',
-          content: portfolioData.experience[i],
+          experienceImageUrl: experience.experienceImageUrl,
+          description: experience.description,
+          professionalexperience: experience.professionalexperience,
+          leadershipexperience: experience.leadershipexperience,
           is_active: true
         })
     }
@@ -78,13 +96,13 @@ async function migrateToSupabase() {
     for (let i = 0; i < portfolioData.gallery.length; i++) {
       const item = portfolioData.gallery[i]
       await supabase
-        .from('gallery_items')
+        .from('gallery')
         .upsert({
-          title: item.title,
-          description: item.description,
-          image_url: item.imageUrl,
-          categories: item.category,
           language_code: 'en',
+          title: item.title,
+          imageUrl: item.imageUrl,
+          description: item.description,
+          category: item.category || [],
           sort_order: i,
           is_active: true
         })
@@ -92,26 +110,17 @@ async function migrateToSupabase() {
 
     // 7. Migrate Projects
     console.log('Migrating Projects...')
-    if (portfolioData.projects.length > 0) {
-      const projects = portfolioData.projects[0].project
-      for (let i = 0; i < projects.length; i++) {
-        const project = projects[i]
-        await supabase
-          .from('projects')
-          .upsert({
-            title: project.title,
-            date: project.date,
-            description: project.description,
-            technologies: project.technologies,
-            github_url: project.githubUrl,
-            live_url: project.liveUrl,
-            image_url: project.imageUrl,
-            highlights: project.highlights,
-            language_code: 'en',
-            sort_order: i,
-            is_active: true
-          })
-      }
+    for (let i = 0; i < portfolioData.projects.length; i++) {
+      const projectSection = portfolioData.projects[i]
+      await supabase
+        .from('projects')
+        .upsert({
+          language_code: 'en',
+          projectImageUrl: projectSection.projectImageUrl,
+          description: projectSection.description,
+          project: projectSection.project,
+          is_active: true
+        })
     }
 
     console.log('Migration completed successfully!')
@@ -125,4 +134,4 @@ if (require.main === module) {
   migrateToSupabase()
 }
 
-export default migrateToSupabase 
+module.exports = { migrateToSupabase } 

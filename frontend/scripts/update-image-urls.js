@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+require('dotenv').config({ path: '.env.local' });
+
 const fs = require('fs');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
@@ -36,89 +38,39 @@ async function updateImageUrls() {
 
     console.log(`📊 Found ${Object.keys(urlMapping).length} files to update\n`);
 
-    // Update portfolio_sections (JSONB content)
-    console.log('📝 Updating portfolio_sections...');
-    const { data: sections, error: sectionsError } = await supabase
-      .from('portfolio_sections')
-      .select('*');
+    // Update all section tables with image URLs
+    const tablesToUpdate = ['home', 'about', 'awards', 'education', 'experience', 'gallery', 'projects'];
+    
+    for (const tableName of tablesToUpdate) {
+      console.log(`📝 Updating ${tableName}...`);
+      const { data: records, error } = await supabase
+        .from(tableName)
+        .select('*');
 
-    if (sectionsError) {
-      console.error('❌ Error fetching sections:', sectionsError);
-      return;
-    }
+      if (error) {
+        console.error(`❌ Error fetching ${tableName}:`, error);
+        continue;
+      }
 
-    for (const section of sections) {
-      const updatedContent = updateJsonContent(section.content, urlMapping);
-      
-      if (JSON.stringify(updatedContent) !== JSON.stringify(section.content)) {
-        const { error } = await supabase
-          .from('portfolio_sections')
-          .update({ content: updatedContent })
-          .eq('id', section.id);
+      for (const record of records) {
+        const updatedRecord = updateJsonContent(record, urlMapping);
+        
+        if (JSON.stringify(updatedRecord) !== JSON.stringify(record)) {
+          const { error: updateError } = await supabase
+            .from(tableName)
+            .update(updatedRecord)
+            .eq('id', record.id);
 
-        if (error) {
-          console.error(`❌ Error updating section ${section.id}:`, error);
-        } else {
-          console.log(`✅ Updated section: ${section.section_name}`);
+          if (updateError) {
+            console.error(`❌ Error updating ${tableName} record ${record.id}:`, updateError);
+          } else {
+            console.log(`✅ Updated ${tableName} record: ${record.id}`);
+          }
         }
       }
     }
 
-    // Update gallery_items
-    console.log('\n📝 Updating gallery_items...');
-    const { data: galleryItems, error: galleryError } = await supabase
-      .from('gallery_items')
-      .select('*');
 
-    if (galleryError) {
-      console.error('❌ Error fetching gallery items:', galleryError);
-      return;
-    }
-
-    for (const item of galleryItems) {
-      const newImageUrl = urlMapping[item.image_url] || item.image_url;
-      
-      if (newImageUrl !== item.image_url) {
-        const { error } = await supabase
-          .from('gallery_items')
-          .update({ image_url: newImageUrl })
-          .eq('id', item.id);
-
-        if (error) {
-          console.error(`❌ Error updating gallery item ${item.id}:`, error);
-        } else {
-          console.log(`✅ Updated gallery item: ${item.title}`);
-        }
-      }
-    }
-
-    // Update projects
-    console.log('\n📝 Updating projects...');
-    const { data: projects, error: projectsError } = await supabase
-      .from('projects')
-      .select('*');
-
-    if (projectsError) {
-      console.error('❌ Error fetching projects:', projectsError);
-      return;
-    }
-
-    for (const project of projects) {
-      const newImageUrl = urlMapping[project.image_url] || project.image_url;
-      
-      if (newImageUrl !== project.image_url) {
-        const { error } = await supabase
-          .from('projects')
-          .update({ image_url: newImageUrl })
-          .eq('id', project.id);
-
-        if (error) {
-          console.error(`❌ Error updating project ${project.id}:`, error);
-        } else {
-          console.log(`✅ Updated project: ${project.title}`);
-        }
-      }
-    }
 
     console.log('\n🎉 Database update completed successfully!');
     console.log('\nNext steps:');

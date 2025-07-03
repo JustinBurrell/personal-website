@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+require('dotenv').config({ path: '.env.local' });
+
 const fs = require('fs');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
@@ -77,7 +79,7 @@ async function migrateImages() {
         uploadedFiles.push({
           originalPath: relativePath,
           storagePath: uploadedPath,
-          publicUrl: `${supabaseUrl}/storage/v1/object/public/assets/${uploadedPath}`
+          publicUrl: `${supabaseUrl}/storage/v1/object/public/assets/${relativePath}`
         });
       }
     }

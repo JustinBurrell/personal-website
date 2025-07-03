@@ -1,7 +1,7 @@
 // Portfolio data structure definitions (JavaScript version)
 
 // Portfolio data
-const portfolioData: PortfolioData = {
+const portfolioData = {
     home: {
         imageUrl: "/assets/images/home/FLOC Headshot.jpeg",
         title: "Hi, I'm Justin Burrell.",
@@ -541,4 +541,4 @@ const portfolioData: PortfolioData = {
     }]
 };
 
-export default portfolioData; 
+module.exports = portfolioData; 
