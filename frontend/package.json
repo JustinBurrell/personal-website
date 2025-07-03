@@ -7,11 +7,16 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "generate-favicon": "node scripts/generate-favicon.js"
+    "generate-favicon": "node scripts/generate-favicon.js",
+    "migrate-to-supabase": "node scripts/migrate-to-supabase.js",
+    "setup-supabase": "node scripts/setup-supabase.js",
+    "migrate-images": "node scripts/migrate-images-to-supabase.js",
+    "update-image-urls": "node scripts/update-image-urls.js"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@heroicons/react": "^2.2.0",
+    "@supabase/supabase-js": "^2.50.3",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",

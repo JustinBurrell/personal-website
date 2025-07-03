@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import portfolioData from '../src/data/portfolioData.ts'
+import portfolioData from '../src/data/portfolioData.js'
 
 // Initialize Supabase client
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL

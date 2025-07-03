@@ -8,6 +8,7 @@ import PageTransition from './assets/shared/PageTransition';
 import CustomCursor from './assets/shared/CustomCursor';
 import ContentLoader from './assets/shared/ContentLoader';
 import { LanguageProvider, useLanguage } from './features/language';
+import { PortfolioDataProvider } from './components/PortfolioDataProvider';
 import './App.css';
 
 // Lazy load components
@@ -151,7 +152,9 @@ const AppWrapper = () => (
   <Router>
     <HelmetProvider>
       <LanguageProvider>
-        <App />
+        <PortfolioDataProvider>
+          <App />
+        </PortfolioDataProvider>
       </LanguageProvider>
     </HelmetProvider>
   </Router>
