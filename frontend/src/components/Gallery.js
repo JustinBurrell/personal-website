@@ -14,8 +14,10 @@ import { Element } from 'react-scroll';
 const LazyImage = ({ src, alt, className }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(false);
+  const imgRef = React.useRef();
 
   useEffect(() => {
+    if (!imgRef.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -25,10 +27,7 @@ const LazyImage = ({ src, alt, className }) => {
       },
       { threshold: 0.1 }
     );
-
-    const imgElement = document.createElement('img');
-    observer.observe(imgElement);
-
+    observer.observe(imgRef.current);
     return () => observer.disconnect();
   }, []);
 
@@ -39,6 +38,7 @@ const LazyImage = ({ src, alt, className }) => {
       )}
       {isInView && (
         <img
+          ref={imgRef}
           src={src}
           alt={alt}
           className={`transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
