@@ -13,39 +13,25 @@ import { Element } from 'react-scroll';
 // Lazy loaded image component
 const LazyImage = ({ src, alt, className }) => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isInView, setIsInView] = useState(false);
-  const imgRef = React.useRef();
 
   useEffect(() => {
-    if (!imgRef.current) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    observer.observe(imgRef.current);
-    return () => observer.disconnect();
-  }, []);
+    if (src) {
+      console.log('Gallery image src:', src);
+    }
+  }, [src]);
 
   return (
     <div className={`relative ${className}`}>
       {!isLoaded && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg"></div>
       )}
-      {isInView && (
-        <img
-          ref={imgRef}
-          src={src}
-          alt={alt}
-          className={`transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-          onLoad={() => setIsLoaded(true)}
-          loading="lazy"
-        />
-      )}
+      <img
+        src={src}
+        alt={alt}
+        className={`transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        onLoad={() => setIsLoaded(true)}
+        loading="lazy"
+      />
     </div>
   );
 };
@@ -133,29 +119,56 @@ const Gallery = () => {
                 <Slider {...settings}>
                   {gallery.map((item, index) => (
                     <div key={index} className="outline-none">
-                      <div className="overflow-hidden">
+                      <motion.div 
+                        className="overflow-hidden"
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ margin: "-20px" }}
+                        transition={{ duration: 0.3 }}
+                      >
                         <div className="relative w-full flex justify-center bg-white">
-                          <LazyImage
+                          <motion.img
                             src={item.imageUrl}
                             alt={item.title}
                             className="max-h-[600px] w-auto object-contain rounded-lg"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.3 }}
                           />
                         </div>
-                        <div className="p-6 bg-white rounded-b-lg">
+                        <motion.div 
+                          className="p-6 bg-white rounded-b-lg"
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ margin: "-20px" }}
+                          transition={{ duration: 0.5, delay: 0.1 }}
+                        >
                           <h3 className="text-2xl font-semibold mb-3">{item.title}</h3>
                           <p className="text-gray-600 mb-4">{item.description}</p>
                           <div className="flex flex-wrap gap-2">
                             {item.category && item.category.map((cat, catIndex) => (
-                              <span
+                              <motion.span
                                 key={catIndex}
                                 className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm"
+                                initial={{ opacity: 0, scale: 0.5 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ margin: "-20px" }}
+                                transition={{ 
+                                  duration: 0.5, 
+                                  delay: 0.2 + (catIndex * 0.1),
+                                  type: "spring",
+                                  stiffness: 100,
+                                  damping: 15
+                                }}
+                                whileHover={{ scale: 1.1 }}
                               >
                                 {cat.categoryName}
-                              </span>
+                              </motion.span>
                             ))}
                           </div>
-                        </div>
-                      </div>
+                        </motion.div>
+                      </motion.div>
                     </div>
                   ))}
                 </Slider>
