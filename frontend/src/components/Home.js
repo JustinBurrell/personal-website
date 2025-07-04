@@ -12,8 +12,7 @@ import { scrollSpy } from 'react-scroll';
 import { Element } from 'react-scroll';
 
 const Home = () => {
-  const { translatedData } = useLanguage();
-  const { home } = translatedData;
+  const { translatedData, isLoading } = useLanguage();
   const location = useLocation();
 
   // Use the translation hook for inline text
@@ -21,6 +20,7 @@ const Home = () => {
   const viewResumeText = useTranslateText("View Resume");
   const contactMeText = useTranslateText("Contact Me");
 
+  // Move all useEffect hooks to the top
   React.useEffect(() => {
     if (location.state && location.state.scrollTo) {
       setTimeout(() => {
@@ -38,6 +38,38 @@ const Home = () => {
   React.useEffect(() => {
     scrollSpy.update();
   }, []);
+
+  // Add loading state and null checks
+  if (isLoading || !translatedData || !translatedData.home) {
+    return (
+      <AnimationWrapper>
+        <section id="home" className="min-h-screen py-2">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col space-y-20 max-w-6xl mx-auto">
+              <div className="grid md:grid-cols-5 gap-6 pt-24">
+                <div className="md:col-span-3">
+                  <Card variant="transparent" className="h-full flex flex-col justify-center p-2">
+                    <div className="space-y-3">
+                      <div className="h-16 bg-gray-200 animate-pulse rounded"></div>
+                      <div className="h-8 bg-gray-200 animate-pulse rounded"></div>
+                      <div className="h-8 bg-gray-200 animate-pulse rounded"></div>
+                    </div>
+                  </Card>
+                </div>
+                <div className="md:col-span-2">
+                  <Card className="h-full">
+                    <div className="w-full h-full bg-gray-200 animate-pulse rounded-lg"></div>
+                  </Card>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </AnimationWrapper>
+    );
+  }
+
+  const { home } = translatedData;
 
   return (
     <AnimationWrapper>

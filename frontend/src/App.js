@@ -1,4 +1,4 @@
-import React, { useEffect, Suspense, lazy } from 'react';
+import React, { useEffect, Suspense, lazy, memo } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
@@ -8,10 +8,32 @@ import PageTransition from './assets/shared/PageTransition';
 import CustomCursor from './assets/shared/CustomCursor';
 import ContentLoader from './assets/shared/ContentLoader';
 import { LanguageProvider, useLanguage } from './features/language';
-import { PortfolioDataProvider } from './components/PortfolioDataProvider';
+
 import './App.css';
 
-// Lazy load components
+// Performance monitoring
+const performanceMonitor = {
+  startTime: Date.now(),
+  routeLoadTimes: {},
+  
+  startRouteLoad(route) {
+    this.routeLoadTimes[route] = Date.now();
+  },
+  
+  endRouteLoad(route) {
+    if (this.routeLoadTimes[route]) {
+      const loadTime = Date.now() - this.routeLoadTimes[route];
+      console.log(`🚀 ${route} loaded in ${loadTime}ms`);
+      
+      // Track slow loads
+      if (loadTime > 2000) {
+        console.warn(`⚠️ Slow load detected: ${route} took ${loadTime}ms`);
+      }
+    }
+  }
+};
+
+// Lazy load components with better chunking and preloading
 const Home = lazy(() => import('./components/Home'));
 const About = lazy(() => import('./components/About'));
 const Education = lazy(() => import('./components/Education'));
@@ -21,30 +43,54 @@ const Awards = lazy(() => import('./components/Awards'));
 const Gallery = lazy(() => import('./components/Gallery'));
 const Contact = lazy(() => import('./components/Contact'));
 
-// Loading fallback component
-const LoadingFallback = () => (
+// Preload critical components
+const preloadComponents = () => {
+  // Preload components after initial load
+  setTimeout(() => {
+    import('./components/About');
+    import('./components/Gallery');
+  }, 1000);
+  
+  // Preload other components after a delay
+  setTimeout(() => {
+    import('./components/Education');
+    import('./components/Experience');
+    import('./components/Projects');
+    import('./components/Awards');
+  }, 2000);
+};
+
+// Optimized loading fallback component
+const LoadingFallback = memo(() => (
   <div className="min-h-screen flex items-center justify-center">
     <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
   </div>
-);
+));
 
-// Wrapper component for routes that need content loading
-const RouteWithContentLoader = ({ component: Component, data, routeKey }) => {
+// Memoized wrapper component for routes that need content loading
+const RouteWithContentLoader = memo(({ component: Component, data, routeKey }) => {
   const { translatedData } = useLanguage();
   const routeData = data ? translatedData[data] : translatedData;
+
+  useEffect(() => {
+    performanceMonitor.endRouteLoad(routeKey);
+  }, [routeKey]);
 
   return (
     <ContentLoader data={routeData} routeKey={routeKey}>
       <Component />
     </ContentLoader>
   );
-};
+});
 
-function HomePage() {
+// Memoized HomePage component
+const HomePage = memo(() => {
   const { hash } = useLocation();
   const { translatedData } = useLanguage();
 
   useEffect(() => {
+    performanceMonitor.startRouteLoad('home');
+    
     if (hash) {
       setTimeout(() => {
         const element = document.querySelector(hash);
@@ -53,6 +99,9 @@ function HomePage() {
         }
       }, 100);
     }
+    
+    // Preload other components
+    preloadComponents();
   }, [hash]);
 
   return (
@@ -66,13 +115,20 @@ function HomePage() {
       <Footer />
     </ContentLoader>
   );
-}
+});
 
-function App() {
+// Memoized App component
+const App = memo(() => {
   const location = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    
+    // Start performance monitoring for route changes
+    if (location.pathname !== '/') {
+      const routeKey = location.pathname.slice(1);
+      performanceMonitor.startRouteLoad(routeKey);
+    }
   }, [location.pathname]);
 
   return (
@@ -82,6 +138,9 @@ function App() {
         <title>Justin Burrell</title>
         <meta name="description" content="With a passion for technology and a knack for problem-solving, I aim to leverage my technical skills, consulting experience, and leadership background to drive innovation and create scalable solutions that make a positive impact." />
         <meta name="keywords" content="Justin Burrell, thejustinburrell.com, Justin Burrell portfolio website, Justin Burrell Lehigh, Justin Burrell Computer Science, Justin Burrell CSE, Lehigh University Computer Science, Lehigh CSE, Lehigh University Class of 2026, Software Engineer, Horace Mann, Prep for Prep, All Star Code, Lehigh University, Consulting, Portfolio, Python, Java, Kappa Alpha Psi, Kappa" />
+        {/* Preload critical resources */}
+        <link rel="preload" href="/assets/images/home/FLOC Headshot.jpeg" as="image" />
+        <link rel="preload" href="/assets/images/about/About Background Photo.jpg" as="image" />
       </Helmet>
       <Navbar />
       <main className="flex-grow pt-16 bg-gray-50">
@@ -146,15 +205,13 @@ function App() {
       </main>
     </div>
   );
-}
+});
 
 const AppWrapper = () => (
   <Router>
     <HelmetProvider>
       <LanguageProvider>
-        <PortfolioDataProvider>
-          <App />
-        </PortfolioDataProvider>
+        <App />
       </LanguageProvider>
     </HelmetProvider>
   </Router>

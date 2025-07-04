@@ -180,9 +180,7 @@ const Timeline = ({ experiences, type }) => {
 };
 
 const Experience = () => {
-  const { translatedData } = useLanguage();
-  const { experience } = translatedData;
-  const expData = experience[0];
+  const { translatedData, isLoading } = useLanguage();
   const location = useLocation();
   const [viewMode, setViewMode] = useState('resume');
 
@@ -194,6 +192,53 @@ const Experience = () => {
   const viewResumeText = useTranslateText("View Resume Mode");
   const skillsText = useTranslateText("Skills");
   const technologiesText = useTranslateText("Technologies");
+
+  // Move all useEffect hooks to the top
+  React.useEffect(() => {
+    if (location.state && location.state.scrollTo) {
+      setTimeout(() => {
+        scroller.scrollTo(location.state.scrollTo, {
+          duration: 600,
+          smooth: 'easeInOutQuart',
+          offset: -80,
+        });
+        // Clear the state so it doesn't scroll again
+        window.history.replaceState({}, document.title);
+      }, 200);
+    }
+  }, [location.state]);
+
+  React.useEffect(() => {
+    scrollSpy.update();
+  }, []);
+
+  // Add loading state and null checks
+  if (isLoading || !translatedData || !translatedData.experience || !translatedData.experience[0]) {
+    return (
+      <AnimationWrapper>
+        <section id="experience" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto mb-2 pt-16">
+              <Card variant="transparent" className="p-0">
+                <div className="grid md:grid-cols-5 gap-6 items-center">
+                  <div className="md:col-span-3 flex flex-col justify-center p-6">
+                    <div className="h-16 bg-gray-200 animate-pulse rounded mb-4"></div>
+                    <div className="h-8 bg-gray-200 animate-pulse rounded"></div>
+                  </div>
+                  <div className="md:col-span-2">
+                    <div className="w-full h-64 bg-gray-200 animate-pulse rounded-lg"></div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </section>
+      </AnimationWrapper>
+    );
+  }
+
+  const { experience } = translatedData;
+  const expData = experience[0];
 
   // Helper to render grouped experience cards (for both professional and leadership)
   const renderGroupedExperience = (companies) => (
@@ -314,24 +359,6 @@ const Experience = () => {
     { label: professionalText, to: 'professional-experience-section' },
     { label: leadershipText, to: 'leadership-experience-section' },
   ];
-
-  React.useEffect(() => {
-    if (location.state && location.state.scrollTo) {
-      setTimeout(() => {
-        scroller.scrollTo(location.state.scrollTo, {
-          duration: 600,
-          smooth: 'easeInOutQuart',
-          offset: -80,
-        });
-        // Clear the state so it doesn't scroll again
-        window.history.replaceState({}, document.title);
-      }, 200);
-    }
-  }, [location.state]);
-
-  React.useEffect(() => {
-    scrollSpy.update();
-  }, []);
 
   return (
     <AnimationWrapper>

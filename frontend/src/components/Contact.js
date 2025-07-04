@@ -7,10 +7,10 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '../features/language';
 import { useTranslateText } from '../features/language/useTranslateText';
 import Button from '../assets/ui/Button';
+import { Element } from 'react-scroll';
 
 const Contact = () => {
-  const { translatedData } = useLanguage();
-  const { home } = translatedData;
+  const { translatedData, isLoading } = useLanguage();
 
   // Use the translation hook for inline text
   const getInTouchText = useTranslateText("Get in Touch");
@@ -178,6 +178,31 @@ const Contact = () => {
       transition: { duration: 0.5 }
     }
   };
+
+  // Add loading state and null checks
+  if (isLoading || !translatedData || !translatedData.home) {
+    return (
+      <AnimationWrapper>
+        <Element name="contact">
+          <section id="contact" className="py-16 bg-gray-50">
+            <div className="container mx-auto px-4">
+              <div className="max-w-4xl mx-auto">
+                <Card className="p-8">
+                  <div className="h-12 bg-gray-200 animate-pulse rounded mb-8"></div>
+                  <div className="space-y-4">
+                    <div className="h-4 bg-gray-200 animate-pulse rounded"></div>
+                    <div className="h-4 bg-gray-200 animate-pulse rounded"></div>
+                  </div>
+                </Card>
+              </div>
+            </div>
+          </section>
+        </Element>
+      </AnimationWrapper>
+    );
+  }
+
+  const { home } = translatedData;
 
   return (
     <AnimationWrapper>

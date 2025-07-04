@@ -217,12 +217,38 @@ const Timeline = ({ projects }) => {
 };
 
 const Projects = () => {
-  const { translatedData } = useLanguage();
-  const { projects } = translatedData;
-  const projectData = projects[0];
+  const { translatedData, isLoading } = useLanguage();
 
   // Use translation hook for static text
   const projectsTitle = useTranslateText("Projects");
+
+  // Add loading state and null checks
+  if (isLoading || !translatedData || !translatedData.projects || !translatedData.projects[0]) {
+    return (
+      <AnimationWrapper>
+        <section id="projects" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto mb-2 pt-16">
+              <Card variant="transparent" className="p-0">
+                <div className="grid md:grid-cols-5 gap-6 items-center">
+                  <div className="md:col-span-3 flex flex-col justify-center p-6">
+                    <div className="h-16 bg-gray-200 animate-pulse rounded mb-4"></div>
+                    <div className="h-8 bg-gray-200 animate-pulse rounded"></div>
+                  </div>
+                  <div className="md:col-span-2">
+                    <div className="w-full h-64 bg-gray-200 animate-pulse rounded-lg"></div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </section>
+      </AnimationWrapper>
+    );
+  }
+
+  const { projects } = translatedData;
+  const projectData = projects[0];
 
   return (
     <AnimationWrapper>

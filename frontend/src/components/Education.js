@@ -7,21 +7,16 @@ import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { scroller } from 'react-scroll';
 import { scrollSpy } from 'react-scroll';
-import portfolioData from '../data/portfolioData.ts';
+import { usePortfolioData } from '../hooks/usePortfolioData';
 import { Element } from 'react-scroll';
 
 const Education = () => {
-  const { translatedData, currentLanguage } = useLanguage();
-  const { education: translatedEducation } = translatedData;
-  const educationGroup = translatedEducation[0];
-  
-  // Use original data for filtering
-  const originalEducation = portfolioData.education[0];
-  const educationList = originalEducation.education;
-
+  const { translatedData, currentLanguage, isLoading } = useLanguage();
+  const { data: portfolioData, loading, error } = usePortfolioData(currentLanguage);
   const location = useLocation();
+  const [modalImage, setModalImage] = useState(null);
 
-  // Use translation hook for static text
+  // Use the translation hook for inline text
   const educationTitle = useTranslateText("Education");
   const relevantCoursesText = useTranslateText("Relevant Courses");
   const organizationInvolvementText = useTranslateText("Organization Involvement");
@@ -30,6 +25,57 @@ const Education = () => {
   const programsText = useTranslateText("Programs");
   const graduationText = useTranslateText("Graduation:");
   const completionText = useTranslateText("Completion:");
+
+  // Move all useEffect hooks to the top
+  React.useEffect(() => {
+    if (location.state && location.state.scrollTo) {
+      setTimeout(() => {
+        scroller.scrollTo(location.state.scrollTo, {
+          duration: 600,
+          smooth: 'easeInOutQuart',
+          offset: -80,
+        });
+        // Clear the state so it doesn't scroll again
+        window.history.replaceState({}, document.title);
+      }, 200);
+    }
+  }, [location.state]);
+
+  React.useEffect(() => {
+    scrollSpy.update();
+  }, []);
+
+  // Add loading state and null checks
+  if (isLoading || !translatedData || !translatedData.education || !translatedData.education[0]) {
+    return (
+      <AnimationWrapper>
+        <section id="education" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto mb-8 pt-24 pb-10">
+              <Card variant="transparent" className="p-0">
+                <div className="grid md:grid-cols-5 gap-6 items-center">
+                  <div className="md:col-span-3 flex flex-col justify-center p-6">
+                    <div className="h-16 bg-gray-200 animate-pulse rounded mb-4"></div>
+                    <div className="h-8 bg-gray-200 animate-pulse rounded"></div>
+                  </div>
+                  <div className="md:col-span-2">
+                    <div className="w-full h-64 bg-gray-200 animate-pulse rounded-lg"></div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </section>
+      </AnimationWrapper>
+    );
+  }
+
+  const { education: translatedEducation } = translatedData;
+  const educationGroup = translatedEducation[0];
+  
+  // Use original data for filtering
+  const originalEducation = portfolioData?.education?.[0];
+  const educationList = originalEducation?.education || [];
 
   // Helper to sort by most recent completion date
   const sortByDateDesc = (arr) =>
@@ -98,26 +144,6 @@ const Education = () => {
     return translatedOrg;
   };
 
-  const [modalImage, setModalImage] = useState(null);
-
-  React.useEffect(() => {
-    if (location.state && location.state.scrollTo) {
-      setTimeout(() => {
-        scroller.scrollTo(location.state.scrollTo, {
-          duration: 600,
-          smooth: 'easeInOutQuart',
-          offset: -80,
-        });
-        // Clear the state so it doesn't scroll again
-        window.history.replaceState({}, document.title);
-      }, 200);
-    }
-  }, [location.state]);
-
-  React.useEffect(() => {
-    scrollSpy.update();
-  }, []);
-
   // Modal component
   const ImageModal = ({ src, alt, onClose }) => (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70" onClick={onClose}>
@@ -135,6 +161,51 @@ const Education = () => {
       </div>
     </div>
   );
+
+  // Show loading state
+  if (loading) {
+    return (
+      <AnimationWrapper>
+        <section id="education" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
+          <div className="container mx-auto px-4">
+            <div className="flex justify-center items-center h-64">
+              <div className="text-xl text-gray-600">Loading education data...</div>
+            </div>
+          </div>
+        </section>
+      </AnimationWrapper>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <AnimationWrapper>
+        <section id="education" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
+          <div className="container mx-auto px-4">
+            <div className="flex justify-center items-center h-64">
+              <div className="text-xl text-red-600">Error loading education data: {error}</div>
+            </div>
+          </div>
+        </section>
+      </AnimationWrapper>
+    );
+  }
+
+  // Show loading state if no data
+  if (!portfolioData || !originalEducation) {
+    return (
+      <AnimationWrapper>
+        <section id="education" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
+          <div className="container mx-auto px-4">
+            <div className="flex justify-center items-center h-64">
+              <div className="text-xl text-gray-600">No education data available</div>
+            </div>
+          </div>
+        </section>
+      </AnimationWrapper>
+    );
+  }
 
   return (
     <AnimationWrapper>

@@ -1,8 +1,9 @@
-// Cache for storing translations to avoid unnecessary API calls
-const CACHE_VERSION = '1.0';
-const MAX_CHARS_PER_REQUEST = 1000; // Limit characters per request
-const MONTHLY_CHAR_LIMIT = 450000; // Set monthly limit (90% of free tier)
+// Optimized translation service with better performance
+const CACHE_VERSION = '1.2';
+const MAX_CHARS_PER_REQUEST = 1500; // Increased for better batching
+const MONTHLY_CHAR_LIMIT = 450000;
 const STORAGE_KEY = 'translation_cache';
+const BATCH_SIZE = 15; // Increased batch size for better performance
 
 // Initialize cache from localStorage
 let translationCache = new Map();
@@ -138,7 +139,6 @@ const loadCache = () => {
         translationCache = new Map(cache);
         monthlyCharCount = charCount;
       } else if (month !== currentMonth) {
-        // Reset monthly count for new month
         monthlyCharCount = 0;
         saveCache();
       }
@@ -166,29 +166,136 @@ const saveCache = () => {
 // Load cache on initialization
 loadCache();
 
-const translateText = async (text, targetLang) => {
-  console.log('Translating text:', text);
+// Optimized batch translation function
+const translateBatch = async (texts, targetLang) => {
+  if (!texts.length) return [];
   
+  const validTexts = texts.filter(text => 
+    text && 
+    typeof text === 'string' && 
+    text.trim().length > 0 &&
+    !text.startsWith('http') && 
+    !text.startsWith('/') &&
+    !/^\d{4}-\d{2}-\d{2}|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d{4}$/i.test(text) &&
+    !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(text) // Skip emails
+  );
+
+  if (!validTexts.length) return texts;
+
+  // Check cache for all texts first
+  const cachedResults = [];
+  const uncachedTexts = [];
+  const uncachedIndices = [];
+
+  validTexts.forEach((text, index) => {
+    const cacheKey = `${text}_${targetLang}`;
+    if (translationCache.has(cacheKey)) {
+      cachedResults[index] = translationCache.get(cacheKey);
+    } else {
+      uncachedTexts.push(text);
+      uncachedIndices.push(index);
+    }
+  });
+
+  // Translate uncached texts in optimized batches
+  if (uncachedTexts.length > 0) {
+    const batches = [];
+    let currentBatch = [];
+    let currentCharCount = 0;
+
+    for (const text of uncachedTexts) {
+      if (currentBatch.length >= BATCH_SIZE || currentCharCount + text.length > MAX_CHARS_PER_REQUEST) {
+        if (currentBatch.length > 0) {
+          batches.push(currentBatch);
+          currentBatch = [];
+          currentCharCount = 0;
+        }
+      }
+      currentBatch.push(text);
+      currentCharCount += text.length;
+    }
+    
+    if (currentBatch.length > 0) {
+      batches.push(currentBatch);
+    }
+
+    // Process batches with better error handling
+    for (const batch of batches) {
+      try {
+        const batchText = batch.join('\n');
+        const response = await fetch(`https://translation.googleapis.com/language/translate/v2?key=${process.env.REACT_APP_GOOGLE_TRANSLATE_API_KEY}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            q: batchText,
+            target: targetLang,
+            source: 'en',
+            format: 'text'
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Translation API error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        
+        if (result.data && result.data.translations) {
+          const translations = result.data.translations[0].translatedText.split('\n');
+          
+          // Cache individual translations
+          batch.forEach((text, index) => {
+            const cacheKey = `${text}_${targetLang}`;
+            const translation = translations[index] || text;
+            translationCache.set(cacheKey, translation);
+            monthlyCharCount += text.length;
+          });
+          
+          // Update results
+          batch.forEach((text, batchIndex) => {
+            const originalIndex = uncachedIndices[uncachedTexts.indexOf(text)];
+            cachedResults[originalIndex] = translations[batchIndex] || text;
+          });
+        }
+      } catch (error) {
+        console.error('Batch translation error:', error);
+        // Fallback: use original text for failed batch
+        batch.forEach((text) => {
+          const originalIndex = uncachedIndices[uncachedTexts.indexOf(text)];
+          cachedResults[originalIndex] = text;
+        });
+      }
+    }
+
+    // Save cache after successful translations
+    if (monthlyCharCount > 0) {
+      saveCache();
+    }
+  }
+
+  return cachedResults;
+};
+
+const translateText = async (text, targetLang) => {
   if (!text) return text;
   if (targetLang === 'en') return text;
   if (typeof text !== 'string') return text;
 
   // Don't translate URLs or file paths
   if (text.startsWith('http') || text.startsWith('/')) {
-    console.log('Skipping URL/path:', text);
     return text;
   }
 
   // Don't translate dates
   if (/^\d{4}-\d{2}-\d{2}|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d{4}$/i.test(text)) {
-    console.log('Skipping date:', text);
     return text;
   }
 
   // Check cache first
   const cacheKey = `${text}_${targetLang}`;
   if (translationCache.has(cacheKey)) {
-    console.log('Cache hit for:', text);
     return translationCache.get(cacheKey);
   }
 
@@ -199,7 +306,6 @@ const translateText = async (text, targetLang) => {
   }
 
   try {
-    console.log('Making API call for:', text);
     const response = await fetch(`https://translation.googleapis.com/language/translate/v2?key=${process.env.REACT_APP_GOOGLE_TRANSLATE_API_KEY}`, {
       method: 'POST',
       headers: {
@@ -218,8 +324,6 @@ const translateText = async (text, targetLang) => {
 
     const data = await response.json();
     const translatedText = data.data.translations[0].translatedText;
-    
-    console.log('Translated:', text, 'to:', translatedText);
     
     // Update character count and cache
     monthlyCharCount += text.length;

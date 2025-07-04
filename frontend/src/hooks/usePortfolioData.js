@@ -11,7 +11,7 @@ export const usePortfolioData = (languageCode = 'en') => {
       try {
         setLoading(true);
         setError(null);
-        const portfolioData = await portfolioService.getPortfolioData(languageCode);
+        const portfolioData = await portfolioService.getPortfolioDataOptimized(languageCode);
         setData(portfolioData);
       } catch (err) {
         console.error('Error fetching portfolio data:', err);

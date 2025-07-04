@@ -1,6 +1,6 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useMemo, useCallback } from 'react';
 import { translateObject } from './translationService';
-import portfolioData from '../../data/portfolioData.ts';
+import { usePortfolioData } from '../../hooks/usePortfolioData';
 
 const LanguageContext = createContext();
 
@@ -17,10 +17,14 @@ const SUPPORTED_LANGUAGES = [
   { code: 'ru', name: 'Русский', countryCode: 'RU' }
 ];
 
+// Translation cache
+const translationCache = new Map();
+
 export const LanguageProvider = ({ children }) => {
   const [currentLanguage, setCurrentLanguage] = useState('en');
-  const [translatedData, setTranslatedData] = useState(portfolioData);
+  const [translatedData, setTranslatedData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { data: portfolioData, loading: dataLoading, error } = usePortfolioData('en'); // Always fetch English
 
   // Detect browser language on mount
   useEffect(() => {
@@ -34,53 +38,60 @@ export const LanguageProvider = ({ children }) => {
     setCurrentLanguage(detectBrowserLanguage());
   }, []);
 
-  // Update translations when language changes
+  // Memoized changeLanguage function
+  const changeLanguage = useCallback((langCode) => {
+    if (SUPPORTED_LANGUAGES.find(lang => lang.code === langCode)) {
+      setCurrentLanguage(langCode);
+    }
+  }, []);
+
+  // Update translations when language changes or data loads
   useEffect(() => {
     const updateTranslations = async () => {
-      console.log('Language changed to:', currentLanguage);
+      if (!portfolioData) return;
+      
+      // Check cache first
+      const cacheKey = `translation_${currentLanguage}`;
+      if (translationCache.has(cacheKey)) {
+        setTranslatedData(translationCache.get(cacheKey));
+        return;
+      }
       
       if (currentLanguage === 'en') {
-        console.log('Setting English data');
         setTranslatedData(portfolioData);
+        translationCache.set(cacheKey, portfolioData);
         return;
       }
 
       setIsLoading(true);
       try {
-        console.log('Starting translation to', currentLanguage);
-        console.log('Original home title:', portfolioData.home.title);
-        
         const translated = await translateObject(portfolioData, currentLanguage);
         
-        console.log('Translation complete');
-        console.log('Translated home title:', translated.home.title);
-        
+        // Cache the result
+        translationCache.set(cacheKey, translated);
         setTranslatedData(translated);
       } catch (error) {
         console.error('Translation error:', error);
         setTranslatedData(portfolioData); // Fallback to English
+        translationCache.set(cacheKey, portfolioData);
       }
       setIsLoading(false);
     };
 
     updateTranslations();
-  }, [currentLanguage]);
+  }, [currentLanguage, portfolioData]);
 
-  const changeLanguage = (langCode) => {
-    console.log('Changing language to:', langCode);
-    if (SUPPORTED_LANGUAGES.find(lang => lang.code === langCode)) {
-      setCurrentLanguage(langCode);
-    }
-  };
+  // Memoized context value to prevent unnecessary re-renders
+  const contextValue = useMemo(() => ({
+    currentLanguage,
+    changeLanguage,
+    translatedData,
+    isLoading,
+    supportedLanguages: SUPPORTED_LANGUAGES
+  }), [currentLanguage, changeLanguage, translatedData, isLoading]);
 
   return (
-    <LanguageContext.Provider value={{ 
-      currentLanguage,
-      changeLanguage,
-      translatedData,
-      isLoading,
-      supportedLanguages: SUPPORTED_LANGUAGES
-    }}>
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );

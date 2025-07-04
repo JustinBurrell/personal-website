@@ -122,13 +122,38 @@ const renderTextWithLinks = (text) => {
 };
 
 const About = () => {
-  const { translatedData } = useLanguage();
-  const { about } = translatedData;
+  const { translatedData, isLoading } = useLanguage();
 
   // Use the translation hook for inline text
   const journeyTitle = useTranslateText("My Journey");
   const skillsTitle = useTranslateText("Skills");
   const interestsTitle = useTranslateText("Interests");
+
+  // Add loading state and null checks
+  if (isLoading || !translatedData || !translatedData.about) {
+    return (
+      <AnimationWrapper>
+        <Element name="about">
+          <section id="about" className="py-16 bg-gray-50">
+            <div className="container mx-auto px-4">
+              <div className="flex flex-col space-y-8 max-w-6xl mx-auto">
+                <Card className="p-8">
+                  <div className="h-12 bg-gray-200 animate-pulse rounded mb-12"></div>
+                  <div className="space-y-4">
+                    <div className="h-4 bg-gray-200 animate-pulse rounded"></div>
+                    <div className="h-4 bg-gray-200 animate-pulse rounded"></div>
+                    <div className="h-4 bg-gray-200 animate-pulse rounded"></div>
+                  </div>
+                </Card>
+              </div>
+            </div>
+          </section>
+        </Element>
+      </AnimationWrapper>
+    );
+  }
+
+  const { about } = translatedData;
 
   return (
     <AnimationWrapper>
