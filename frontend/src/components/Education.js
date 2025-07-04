@@ -76,6 +76,19 @@ const Education = () => {
   // Use original data for filtering
   const originalEducation = portfolioData?.education?.[0];
   const educationList = originalEducation?.education || [];
+  
+  // Debug: Log the data structure
+  console.log('Education Component Debug:', {
+    translatedData: !!translatedData,
+    translatedEducation: !!translatedEducation,
+    educationGroup: !!educationGroup,
+    portfolioData: !!portfolioData,
+    originalEducation: !!originalEducation,
+    educationListLength: educationList.length,
+    educationList: educationList,
+    firstItem: educationList[0],
+    fieldNames: educationList[0] ? Object.keys(educationList[0]) : []
+  });
 
   // Helper to sort by most recent completion date
   const sortByDateDesc = (arr) =>
@@ -85,10 +98,22 @@ const Education = () => {
       return dateB - dateA;
     });
 
-  // Filter using original data
-  const schooling = sortByDateDesc(educationList.filter(e => e.educationType === 'School'));
-  const certifications = sortByDateDesc(educationList.filter(e => e.educationType === 'Certificate'));
-  const programs = sortByDateDesc(educationList.filter(e => e.educationType === 'Program'));
+  // Filter using original data - handle both camelCase and snake_case field names
+  const schooling = sortByDateDesc(educationList.filter(e => (e.educationType || e.education_type) === 'School'));
+  const certifications = sortByDateDesc(educationList.filter(e => (e.educationType || e.education_type) === 'Certificate'));
+  const programs = sortByDateDesc(educationList.filter(e => (e.educationType || e.education_type) === 'Program'));
+  
+  // Debug: Log the filtered results
+  console.log('Education Filtered Results:', {
+    schooling: schooling.length,
+    certifications: certifications.length,
+    programs: programs.length,
+    allItems: educationList.map(e => ({ 
+      name: e.name, 
+      type: e.educationType || e.education_type,
+      hasImage: !!e.educationImageUrl
+    }))
+  });
 
   // Get translated versions of the filtered items
   const getTranslatedItem = (originalItem) => {
@@ -97,7 +122,7 @@ const Education = () => {
     // Find the translated item by matching the original item's index in the array
     const originalIndex = educationList.findIndex(item => 
       item.name === originalItem.name && 
-      item.educationType === originalItem.educationType
+      (item.educationType || item.education_type) === (originalItem.educationType || originalItem.education_type)
     );
     
     if (originalIndex === -1) {
@@ -253,12 +278,12 @@ const Education = () => {
                 </div>
                 {/* Right: Education Image */}
                 {educationGroup.educationImageUrl && (
-                  <div className="md:col-span-2 flex justify-center items-center">
+                  <div className="md:col-span-2 flex justify-center items-stretch p-4">
                     <img
                       src={educationGroup.educationImageUrl}
                       alt="Education"
-                      className="h-48 w-auto max-w-full object-contain rounded-lg"
-                      style={{ maxHeight: '12rem', minHeight: '8rem' }}
+                      className="h-full w-auto max-h-[400px] object-contain rounded-lg"
+                      style={{ minHeight: '200px', maxHeight: '100%' }}
                     />
                   </div>
                 )}
@@ -365,12 +390,12 @@ const Education = () => {
                           </motion.div>
                           {/* Right: Education Image */}
                           {edu.educationImageUrl && (
-                            <div className="md:col-span-2 flex justify-center items-center">
+                            <div className="md:col-span-2 flex justify-center items-stretch p-4">
                               <img
                                 src={edu.educationImageUrl}
                                 alt={`${translatedEdu.name} education`}
-                                className="h-48 w-auto max-w-full object-contain rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105 mx-auto"
-                                style={{ maxHeight: '12rem', minHeight: '8rem' }}
+                                className="h-full w-auto max-h-[300px] object-contain rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105 mx-auto"
+                                style={{ minHeight: '150px', maxHeight: '100%' }}
                                 onClick={() => setModalImage({ src: edu.educationImageUrl, alt: `${translatedEdu.name} education` })}
                               />
                             </div>
@@ -440,12 +465,12 @@ const Education = () => {
                           </motion.div>
                           {/* Right: Certification Image */}
                           {cert.educationImageUrl && (
-                            <div className="md:col-span-2 flex justify-center items-center">
+                            <div className="md:col-span-2 flex justify-center items-stretch p-4">
                               <img
                                 src={cert.educationImageUrl}
                                 alt={`${translatedCert.name} certification`}
-                                className="h-48 w-auto max-w-full object-contain rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105 mx-auto"
-                                style={{ maxHeight: '12rem', minHeight: '8rem' }}
+                                className="h-full w-auto max-h-[300px] object-contain rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105 mx-auto"
+                                style={{ minHeight: '150px', maxHeight: '100%' }}
                                 onClick={() => setModalImage({ src: cert.educationImageUrl, alt: `${translatedCert.name} certification` })}
                               />
                             </div>
@@ -515,12 +540,12 @@ const Education = () => {
                           </motion.div>
                           {/* Right: Program Image */}
                           {prog.educationImageUrl && (
-                            <div className="md:col-span-2 flex justify-center items-center">
+                            <div className="md:col-span-2 flex justify-center items-stretch p-4">
                               <img
                                 src={prog.educationImageUrl}
                                 alt={`${translatedProg.name} program`}
-                                className="h-48 w-auto max-w-full object-contain rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105 mx-auto"
-                                style={{ maxHeight: '12rem', minHeight: '8rem' }}
+                                className="h-full w-auto max-h-[300px] object-contain rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105 mx-auto"
+                                style={{ minHeight: '150px', maxHeight: '100%' }}
                                 onClick={() => setModalImage({ src: prog.educationImageUrl, alt: `${translatedProg.name} program` })}
                               />
                             </div>

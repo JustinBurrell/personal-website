@@ -69,12 +69,28 @@ const LoadingFallback = memo(() => (
 
 // Memoized wrapper component for routes that need content loading
 const RouteWithContentLoader = memo(({ component: Component, data, routeKey }) => {
-  const { translatedData } = useLanguage();
-  const routeData = data ? translatedData[data] : translatedData;
+  const { translatedData, isLoading } = useLanguage();
+  
+  // Add null check for translatedData
+  const routeData = translatedData ? (data ? translatedData[data] : translatedData) : null;
+
+  // Debug logging
+  console.log(`RouteWithContentLoader [${routeKey}]:`, {
+    isLoading,
+    hasTranslatedData: !!translatedData,
+    hasRouteData: !!routeData,
+    dataKeys: translatedData ? Object.keys(translatedData) : [],
+    requestedData: data
+  });
 
   useEffect(() => {
     performanceMonitor.endRouteLoad(routeKey);
   }, [routeKey]);
+
+  // Show loading state if data is not available yet
+  if (isLoading || !translatedData || !routeData) {
+    return <LoadingFallback />;
+  }
 
   return (
     <ContentLoader data={routeData} routeKey={routeKey}>
@@ -86,7 +102,7 @@ const RouteWithContentLoader = memo(({ component: Component, data, routeKey }) =
 // Memoized HomePage component
 const HomePage = memo(() => {
   const { hash } = useLocation();
-  const { translatedData } = useLanguage();
+  const { translatedData, isLoading } = useLanguage();
 
   useEffect(() => {
     performanceMonitor.startRouteLoad('home');
@@ -103,6 +119,11 @@ const HomePage = memo(() => {
     // Preload other components
     preloadComponents();
   }, [hash]);
+
+  // Show loading state if data is not available yet
+  if (isLoading || !translatedData) {
+    return <LoadingFallback />;
+  }
 
   return (
     <ContentLoader data={translatedData} routeKey="home">

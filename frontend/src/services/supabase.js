@@ -114,29 +114,10 @@ export const portfolioService = {
     }
 
     try {
-      // Try materialized view first
-      const { data, error } = await supabase
-        .from('portfolio_data_view')
-        .select('section, content')
-        .eq('languageCode', 'en')
-        .eq('isActive', true)
-
-      if (error || !data || data.length === 0) {
-        // Fallback to original method if materialized view doesn't work
-        console.log('Materialized view not available, using original method')
+      // For now, always use the original method since the materialized view is incomplete
+      // The materialized view doesn't include related data like education_items
+      console.log('Using original method for complete data structure')
         return this.getPortfolioData(languageCode)
-      }
-
-      // Transform data to match expected structure
-      const portfolioData = {}
-      data.forEach(item => {
-        portfolioData[item.section] = camelCaseKeysDeep(item.content)
-      })
-
-      // Cache the result
-      setCache(cacheKey, portfolioData)
-      
-      return portfolioData
     } catch (error) {
       console.error('Error fetching optimized portfolio data:', error)
       // Fallback to original method
@@ -253,13 +234,19 @@ export const portfolioService = {
 
       if (educationError) throw educationError
 
-      return camelCaseKeysDeep(educationData.map(edu => ({
+      // Debug: Log the raw data from Supabase
+      console.log('Raw education data from Supabase:', educationData);
+      if (educationData && educationData[0] && educationData[0].education_items) {
+        console.log('First education item raw data:', educationData[0].education_items[0]);
+      }
+
+      const mappedData = educationData.map(edu => ({
         ...edu,
         education: edu.education_items.map(item => ({
           name: item.name,
           nameUrl: item.nameUrl,
-          education_type: item.education_type,
-          school_type: item.school_type,
+          educationType: item.educationType,
+          schoolType: item.schoolType,
           major: item.major,
           completionDate: item.completionDate,
           description: item.description,
@@ -274,7 +261,13 @@ export const portfolioService = {
             role: org.role
           }))
         }))
-      })))
+      }));
+
+      // Debug: Log the mapped data before camelCase conversion
+      console.log('Mapped education data before camelCase:', mappedData[0]?.education[0]);
+
+      // No need to camelCaseKeysDeep since data is already camelCase
+      return mappedData;
     } catch (error) {
       console.error('Error fetching education data:', error)
       throw error
