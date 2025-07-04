@@ -1,5 +1,26 @@
 import { createClient } from '@supabase/supabase-js'
 
+// Utility: Convert snake_case to camelCase
+function toCamelCase(str) {
+  return str.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
+}
+
+function isObject(obj) {
+  return obj && typeof obj === 'object' && !Array.isArray(obj);
+}
+
+function camelCaseKeysDeep(obj) {
+  if (Array.isArray(obj)) {
+    return obj.map(camelCaseKeysDeep);
+  } else if (isObject(obj)) {
+    return Object.entries(obj).reduce((acc, [key, value]) => {
+      acc[toCamelCase(key)] = camelCaseKeysDeep(value);
+      return acc;
+    }, {});
+  }
+  return obj;
+}
+
 // Initialize Supabase client
 // These will be environment variables
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL
@@ -97,8 +118,8 @@ export const portfolioService = {
       const { data, error } = await supabase
         .from('portfolio_data_view')
         .select('section, content')
-        .eq('language_code', 'en')
-        .eq('is_active', true)
+        .eq('languageCode', 'en')
+        .eq('isActive', true)
 
       if (error || !data || data.length === 0) {
         // Fallback to original method if materialized view doesn't work
@@ -109,7 +130,7 @@ export const portfolioService = {
       // Transform data to match expected structure
       const portfolioData = {}
       data.forEach(item => {
-        portfolioData[item.section] = item.content
+        portfolioData[item.section] = camelCaseKeysDeep(item.content)
       })
 
       // Cache the result
@@ -133,20 +154,14 @@ export const portfolioService = {
           home_organizations(*),
           home_qualities(*)
         `)
-        .eq('language_code', 'en') // Always fetch English data
-        .eq('is_active', true)
+        .eq('languageCode', 'en') // Always fetch English data
+        .eq('isActive', true)
         .single()
 
       if (homeError) throw homeError
 
-      return {
-        imageUrl: homeData.imageUrl,
-        title: homeData.title,
-        description: homeData.description,
-        resumeUrl: homeData.resumeUrl,
-        linkedinUrl: homeData.linkedinUrl,
-        githubUrl: homeData.githubUrl,
-        email: homeData.email,
+      return camelCaseKeysDeep({
+        ...homeData,
         organizations: homeData.home_organizations.map(org => ({
           name: org.name,
           orgUrl: org.orgUrl,
@@ -157,7 +172,7 @@ export const portfolioService = {
           attribute: qual.attribute,
           description: qual.description
         }))
-      }
+      })
     } catch (error) {
       console.error('Error fetching home data:', error)
       throw error
@@ -174,18 +189,17 @@ export const portfolioService = {
           about_skills(*),
           about_interests(*)
         `)
-        .eq('language_code', 'en') // Always fetch English data
-        .eq('is_active', true)
+        .eq('languageCode', 'en') // Always fetch English data
+        .eq('isActive', true)
         .single()
 
       if (aboutError) throw aboutError
 
-      return {
-        imageUrl: aboutData.imageUrl,
-        introduction: aboutData.introduction,
+      return camelCaseKeysDeep({
+        ...aboutData,
         skills: aboutData.about_skills.map(skill => skill.skill),
         interests: aboutData.about_interests.map(interest => interest.interest)
-      }
+      })
     } catch (error) {
       console.error('Error fetching about data:', error)
       throw error
@@ -201,21 +215,20 @@ export const portfolioService = {
           *,
           awards_items(*)
         `)
-        .eq('language_code', 'en') // Always fetch English data
-        .eq('is_active', true)
+        .eq('languageCode', 'en') // Always fetch English data
+        .eq('isActive', true)
 
       if (awardsError) throw awardsError
 
-      return awardsData.map(award => ({
-        awardImageUrl: award.awardImageUrl,
-        description: award.description,
+      return camelCaseKeysDeep(awardsData.map(award => ({
+        ...award,
         award: award.awards_items.map(item => ({
           title: item.title,
           organization: item.organization,
           date: item.date,
           description: item.description
         }))
-      }))
+      })))
     } catch (error) {
       console.error('Error fetching awards data:', error)
       throw error
@@ -235,14 +248,13 @@ export const portfolioService = {
             education_organization_involvement(*)
           )
         `)
-        .eq('language_code', 'en') // Always fetch English data
-        .eq('is_active', true)
+        .eq('languageCode', 'en') // Always fetch English data
+        .eq('isActive', true)
 
       if (educationError) throw educationError
 
-      return educationData.map(edu => ({
-        educationImageUrl: edu.educationImageUrl,
-        description: edu.description,
+      return camelCaseKeysDeep(educationData.map(edu => ({
+        ...edu,
         education: edu.education_items.map(item => ({
           name: item.name,
           nameUrl: item.nameUrl,
@@ -262,7 +274,7 @@ export const portfolioService = {
             role: org.role
           }))
         }))
-      }))
+      })))
     } catch (error) {
       console.error('Error fetching education data:', error)
       throw error
@@ -285,14 +297,13 @@ export const portfolioService = {
             experience_leadership_positions(*)
           )
         `)
-        .eq('language_code', 'en') // Always fetch English data
-        .eq('is_active', true)
+        .eq('languageCode', 'en') // Always fetch English data
+        .eq('isActive', true)
 
       if (experienceError) throw experienceError
 
-      return experienceData.map(exp => ({
-        experienceImageUrl: exp.experienceImageUrl,
-        description: exp.description,
+      return camelCaseKeysDeep(experienceData.map(exp => ({
+        ...exp,
         professionalexperience: exp.experience_professional.map(prof => ({
           company: prof.company,
           companyUrl: prof.companyUrl,
@@ -319,7 +330,7 @@ export const portfolioService = {
             images: pos.images
           }))
         }))
-      }))
+      })))
     } catch (error) {
       console.error('Error fetching experience data:', error)
       throw error
@@ -335,20 +346,18 @@ export const portfolioService = {
           *,
           gallery_categories(*)
         `)
-        .eq('language_code', 'en') // Always fetch English data
-        .eq('is_active', true)
-        .order('sort_order')
+        .eq('languageCode', 'en') // Always fetch English data
+        .eq('isActive', true)
+        .order('sortOrder')
 
       if (galleryError) throw galleryError
 
-      return galleryData.map(item => ({
-        title: item.title,
-        imageUrl: item.imageUrl,
-        description: item.description,
+      return camelCaseKeysDeep(galleryData.map(item => ({
+        ...item,
         category: item.gallery_categories.map(cat => ({
           categoryName: cat.categoryName
         }))
-      }))
+      })))
     } catch (error) {
       console.error('Error fetching gallery data:', error)
       throw error
@@ -368,14 +377,13 @@ export const portfolioService = {
             project_highlights(*)
           )
         `)
-        .eq('language_code', 'en') // Always fetch English data
-        .eq('is_active', true)
+        .eq('languageCode', 'en') // Always fetch English data
+        .eq('isActive', true)
 
       if (projectsError) throw projectsError
 
-      return projectsData.map(proj => ({
-        projectImageUrl: proj.projectImageUrl,
-        description: proj.description,
+      return camelCaseKeysDeep(projectsData.map(proj => ({
+        ...proj,
         project: proj.project_items.map(item => ({
           title: item.title,
           date: item.date,
@@ -386,10 +394,37 @@ export const portfolioService = {
           imageUrl: item.imageUrl,
           highlights: item.project_highlights.map(highlight => highlight.highlight)
         }))
-      }))
+      })))
     } catch (error) {
       console.error('Error fetching projects data:', error)
       throw error
+    }
+  },
+
+  // Get specific section data
+  async getSection(sectionName, languageCode = 'en') {
+    try {
+      switch (sectionName) {
+        case 'home':
+          return await this.getHomeData(languageCode);
+        case 'about':
+          return await this.getAboutData(languageCode);
+        case 'awards':
+          return await this.getAwardsData(languageCode);
+        case 'education':
+          return await this.getEducationData(languageCode);
+        case 'experience':
+          return await this.getExperienceData(languageCode);
+        case 'gallery':
+          return await this.getGalleryData(languageCode);
+        case 'projects':
+          return await this.getProjectsData(languageCode);
+        default:
+          throw new Error(`Unknown section: ${sectionName}`);
+      }
+    } catch (error) {
+      console.error(`Error fetching ${sectionName} data:`, error);
+      throw error;
     }
   },
 

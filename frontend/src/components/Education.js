@@ -86,9 +86,9 @@ const Education = () => {
     });
 
   // Filter using original data
-  const schooling = sortByDateDesc(educationList.filter(e => e.education_type === 'School'));
-  const certifications = sortByDateDesc(educationList.filter(e => e.education_type === 'Certificate'));
-  const programs = sortByDateDesc(educationList.filter(e => e.education_type === 'Program'));
+  const schooling = sortByDateDesc(educationList.filter(e => e.educationType === 'School'));
+  const certifications = sortByDateDesc(educationList.filter(e => e.educationType === 'Certificate'));
+  const programs = sortByDateDesc(educationList.filter(e => e.educationType === 'Program'));
 
   // Get translated versions of the filtered items
   const getTranslatedItem = (originalItem) => {
@@ -97,7 +97,7 @@ const Education = () => {
     // Find the translated item by matching the original item's index in the array
     const originalIndex = educationList.findIndex(item => 
       item.name === originalItem.name && 
-      item.education_type === originalItem.education_type
+      item.educationType === originalItem.educationType
     );
     
     if (originalIndex === -1) {
@@ -253,12 +253,12 @@ const Education = () => {
                 </div>
                 {/* Right: Education Image */}
                 {educationGroup.educationImageUrl && (
-                  <div className="md:col-span-2 flex justify-center items-stretch p-4 h-[500px]">
+                  <div className="md:col-span-2 flex justify-center items-center">
                     <img
                       src={educationGroup.educationImageUrl}
                       alt="Education"
-                      className="h-full w-auto max-h-[500px] object-contain rounded-lg"
-                      style={{ minHeight: '300px', maxHeight: '100%' }}
+                      className="h-48 w-auto max-w-full object-contain rounded-lg"
+                      style={{ maxHeight: '12rem', minHeight: '8rem' }}
                     />
                   </div>
                 )}
@@ -316,7 +316,7 @@ const Education = () => {
                               )}
                             </h3>
                             <p className="text-gray-600 mb-2">
-                              {translatedEdu.school_type}
+                              {translatedEdu.schoolType}
                               {translatedEdu.major && ` in ${translatedEdu.major}`}
                             </p>
                             <p className="text-gray-600 mb-4">{graduationText} {translatedEdu.completionDate || edu.completionDate}</p>
