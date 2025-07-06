@@ -91,12 +91,10 @@ const Contact = () => {
     return !hasErrors;
   };
 
-  const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submission attempted');
     
     if (!validateForm()) {
-      console.log('Form validation failed');
       return;
     }
     setShowFormError(false);
@@ -105,18 +103,15 @@ const Contact = () => {
     setSubmitStatus({ type: '', message: '' });
 
     try {
-      console.log('Sending email...');
-              const templateParams = {
-          from_name: `${formData.firstName} ${formData.lastName}`,
-          from_email: formData.email,
-          to_email: "justinburrell715@gmail.com",
-          subject: formData.subject,
-          message: formData.content,
-          to_name: "Justin Burrell",
-          reply_to: formData.email
-        };
-
-      console.log('Template params:', templateParams);
+      const templateParams = {
+        from_name: `${formData.firstName} ${formData.lastName}`,
+        from_email: formData.email,
+        to_email: "justinburrell715@gmail.com",
+        subject: formData.subject,
+        message: formData.content,
+        to_name: "Justin Burrell",
+        reply_to: formData.email
+      };
 
       await emailjs.send(
         "service_h89w0oi",
@@ -125,7 +120,6 @@ const Contact = () => {
         "NIv9MQw75_UFg-jlH"
       );
 
-      console.log('Email sent successfully');
       setSubmitStatus({
         type: 'success',
         message: 'Message sent successfully!'

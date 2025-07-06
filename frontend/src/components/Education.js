@@ -70,18 +70,7 @@ const Education = () => {
   const originalEducation = portfolioData?.education?.[0];
   const educationList = originalEducation?.education || [];
   
-  // Debug: Log the data structure
-  console.log('Education Component Debug:', {
-    translatedData: !!translatedData,
-    translatedEducation: !!translatedEducation,
-    educationGroup: !!educationGroup,
-    portfolioData: !!portfolioData,
-    originalEducation: !!originalEducation,
-    educationListLength: educationList.length,
-    educationList: educationList,
-    firstItem: educationList[0],
-    fieldNames: educationList[0] ? Object.keys(educationList[0]) : []
-  });
+  // Data structure validation
 
   // Helper to sort by most recent completion date
   const sortByDateDesc = (arr) =>
@@ -96,17 +85,7 @@ const Education = () => {
   const certifications = sortByDateDesc(educationList.filter(e => (e.educationType || e.education_type) === 'Certificate'));
   const programs = sortByDateDesc(educationList.filter(e => (e.educationType || e.education_type) === 'Program'));
   
-  // Debug: Log the filtered results
-  console.log('Education Filtered Results:', {
-    schooling: schooling.length,
-    certifications: certifications.length,
-    programs: programs.length,
-    allItems: educationList.map(e => ({ 
-      name: e.name, 
-      type: e.educationType || e.education_type,
-      hasImage: !!e.educationImageUrl
-    }))
-  });
+  // Filtered education data ready for rendering
 
   // Get translated versions of the filtered items
   const getTranslatedItem = (originalItem) => {

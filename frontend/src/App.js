@@ -10,30 +10,9 @@ import ContentLoader from './assets/shared/ContentLoader';
 import { LanguageProvider, useLanguage } from './features/language';
 import { GlobalDataProvider, useGlobalData } from './hooks/useGlobalData';
 import PerformanceRoute from './components/PerformanceRoute';
+import performanceOptimizer from './utils/performance';
 
 import './App.css';
-
-// Performance monitoring
-const performanceMonitor = {
-  startTime: Date.now(),
-  routeLoadTimes: {},
-  
-  startRouteLoad(route) {
-    this.routeLoadTimes[route] = Date.now();
-  },
-  
-  endRouteLoad(route) {
-    if (this.routeLoadTimes[route]) {
-      const loadTime = Date.now() - this.routeLoadTimes[route];
-      console.log(`🚀 ${route} loaded in ${loadTime}ms`);
-      
-      // Track slow loads
-      if (loadTime > 2000) {
-        console.warn(`⚠️ Slow load detected: ${route} took ${loadTime}ms`);
-      }
-    }
-  }
-};
 
 // Lazy load components with better chunking and preloading
 const Home = lazy(() => import('./components/Home'));
@@ -78,7 +57,7 @@ const HomePage = memo(() => {
   const { translatedData, isLoading } = useLanguage();
 
   useEffect(() => {
-    performanceMonitor.startRouteLoad('home');
+    performanceOptimizer.startRouteLoad('home');
     
     if (hash) {
       setTimeout(() => {
@@ -122,7 +101,7 @@ const App = memo(() => {
     // Start performance monitoring for route changes
     if (location.pathname !== '/') {
       const routeKey = location.pathname.slice(1);
-      performanceMonitor.startRouteLoad(routeKey);
+      performanceOptimizer.startRouteLoad(routeKey);
     }
   }, [location.pathname]);
 

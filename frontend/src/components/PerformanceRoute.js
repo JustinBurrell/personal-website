@@ -4,7 +4,7 @@ import { useLanguage } from '../features/language';
 import ContentLoader from '../assets/shared/ContentLoader';
 import { motion } from 'framer-motion';
 import imagePreloader from '../utils/imagePreloader';
-import performanceMonitor from '../utils/performanceMonitor';
+import performanceOptimizer from '../utils/performance';
 
 // Optimized loading fallback
 const LoadingFallback = memo(() => (
@@ -35,7 +35,7 @@ const PerformanceRoute = memo(({
   
   // Performance monitoring and image preloading
   useEffect(() => {
-    performanceMonitor.startRouteLoad(routeKey);
+    performanceOptimizer.startRouteLoad(routeKey);
     
     // Preload section images if section is specified
     if (section) {
@@ -43,7 +43,7 @@ const PerformanceRoute = memo(({
     }
     
     return () => {
-      performanceMonitor.endRouteLoad(routeKey);
+      performanceOptimizer.endRouteLoad(routeKey);
     };
   }, [routeKey, section]);
 

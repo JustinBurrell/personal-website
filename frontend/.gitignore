@@ -23,9 +23,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Migration scripts and reports (contain sensitive data)
-/scripts/migrate-to-supabase.js
-/scripts/migrate-images-to-supabase.js
-/scripts/update-image-urls.js
-/scripts/setup-supabase.js
+# Migration reports (contain sensitive data)
 /image-migration-report.json

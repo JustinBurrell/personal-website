@@ -15,9 +15,7 @@ const LazyImage = ({ src, alt, className }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    if (src) {
-      console.log('Gallery image src:', src);
-    }
+    // Image loading handled by onLoad event
   }, [src]);
 
   return (

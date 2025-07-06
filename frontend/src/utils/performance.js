@@ -1,149 +1,42 @@
-// Performance monitoring utility
-class PerformanceMonitor {
-  constructor() {
-    this.metrics = {
-      databaseQueries: [],
-      translationCalls: [],
-      pageLoads: [],
-      cacheHits: 0,
-      cacheMisses: 0
-    };
-  }
-
-  // Track database query performance
-  trackDatabaseQuery(queryName, startTime) {
-    const duration = performance.now() - startTime;
-    this.metrics.databaseQueries.push({
-      query: queryName,
-      duration,
-      timestamp: Date.now()
-    });
-    
-    console.log(`Database query '${queryName}' took ${duration.toFixed(2)}ms`);
-    
-    // Log slow queries
-    if (duration > 1000) {
-      console.warn(`Slow database query detected: ${queryName} took ${duration.toFixed(2)}ms`);
-    }
-  }
-
-  // Track translation performance
-  trackTranslationCall(textLength, startTime) {
-    const duration = performance.now() - startTime;
-    this.metrics.translationCalls.push({
-      textLength,
-      duration,
-      timestamp: Date.now()
-    });
-    
-    console.log(`Translation call took ${duration.toFixed(2)}ms for ${textLength} characters`);
-  }
-
-  // Track page load performance
-  trackPageLoad(pageName, startTime) {
-    const duration = performance.now() - startTime;
-    this.metrics.pageLoads.push({
-      page: pageName,
-      duration,
-      timestamp: Date.now()
-    });
-    
-    console.log(`Page '${pageName}' loaded in ${duration.toFixed(2)}ms`);
-  }
-
-  // Track cache performance
-  trackCacheHit() {
-    this.metrics.cacheHits++;
-  }
-
-  trackCacheMiss() {
-    this.metrics.cacheMisses++;
-  }
-
-  // Get performance summary
-  getSummary() {
-    const dbQueries = this.metrics.databaseQueries;
-    const translations = this.metrics.translationCalls;
-    const pageLoads = this.metrics.pageLoads;
-
-    return {
-      database: {
-        totalQueries: dbQueries.length,
-        averageTime: dbQueries.length > 0 
-          ? dbQueries.reduce((sum, q) => sum + q.duration, 0) / dbQueries.length 
-          : 0,
-        slowestQuery: dbQueries.length > 0 
-          ? dbQueries.reduce((max, q) => q.duration > max.duration ? q : max, dbQueries[0])
-          : null
-      },
-      translation: {
-        totalCalls: translations.length,
-        averageTime: translations.length > 0 
-          ? translations.reduce((sum, t) => sum + t.duration, 0) / translations.length 
-          : 0,
-        totalCharacters: translations.reduce((sum, t) => sum + t.textLength, 0)
-      },
-      pages: {
-        totalLoads: pageLoads.length,
-        averageLoadTime: pageLoads.length > 0 
-          ? pageLoads.reduce((sum, p) => sum + p.duration, 0) / pageLoads.length 
-          : 0
-      },
-      cache: {
-        hits: this.metrics.cacheHits,
-        misses: this.metrics.cacheMisses,
-        hitRate: this.metrics.cacheHits + this.metrics.cacheMisses > 0 
-          ? (this.metrics.cacheHits / (this.metrics.cacheHits + this.metrics.cacheMisses)) * 100 
-          : 0
-      }
-    };
-  }
-
-  // Log performance summary
-  logSummary() {
-    const summary = this.getSummary();
-    console.group('Performance Summary');
-    console.log('Database:', summary.database);
-    console.log('Translation:', summary.translation);
-    console.log('Pages:', summary.pages);
-    console.log('Cache:', summary.cache);
-    console.groupEnd();
-  }
-
-  // Clear metrics
-  clear() {
-    this.metrics = {
-      databaseQueries: [],
-      translationCalls: [],
-      pageLoads: [],
-      cacheHits: 0,
-      cacheMisses: 0
-    };
-  }
-}
-
-// Create global instance
-export const performanceMonitor = new PerformanceMonitor();
-
-// Performance decorator for functions
-export const trackPerformance = (name) => (fn) => {
-  return async (...args) => {
-    const startTime = performance.now();
-    try {
-      const result = await fn(...args);
-      performanceMonitor.trackDatabaseQuery(name, startTime);
-      return result;
-    } catch (error) {
-      performanceMonitor.trackDatabaseQuery(name, startTime);
-      throw error;
-    }
-  };
-};
-
-// Performance optimization utilities
+// Comprehensive performance optimization and monitoring utilities
 class PerformanceOptimizer {
   constructor() {
     this.optimizationsApplied = false;
+    this.metrics = {
+      routeLoadTimes: {},
+      dataFetchTimes: {},
+      imageLoadTimes: {},
+      translationTimes: {},
+      totalLoadTime: 0,
+      firstContentfulPaint: 0,
+      largestContentfulPaint: 0,
+      webVitals: {}
+    };
+    
+    this.startTime = performance.now();
+    this.observers = [];
+    
+    this.initObservers();
+  }
+
+  // Initialize performance observers
+  initObservers() {
+    // First Contentful Paint
+    if ('PerformanceObserver' in window) {
+      try {
+        const paintObserver = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (entry.name === 'first-contentful-paint') {
+              this.metrics.firstContentfulPaint = entry.startTime;
+              console.log(`🎨 First Contentful Paint: ${entry.startTime.toFixed(2)}ms`);
+            }
+          }
+        });
+        paintObserver.observe({ entryTypes: ['paint'] });
+      } catch (error) {
+        console.warn('PerformanceObserver not supported:', error);
+      }
+    }
   }
 
   // Apply all performance optimizations
@@ -156,6 +49,7 @@ class PerformanceOptimizer {
     this.optimizeImages();
     this.preloadCriticalResources();
     this.optimizeFonts();
+    this.optimizeForMobile();
     
     this.optimizationsApplied = true;
     console.log('✅ Performance optimizations applied');
@@ -240,6 +134,183 @@ class PerformanceOptimizer {
     });
   }
 
+  // Optimize for mobile performance
+  optimizeForMobile() {
+    if (window.innerWidth <= 768) {
+      // Reduce animation complexity on mobile
+      document.documentElement.style.setProperty('--animation-duration', '0.3s');
+      
+      // Optimize touch interactions
+      document.documentElement.style.setProperty('--touch-action', 'manipulation');
+    }
+  }
+
+  // PERFORMANCE MONITORING METHODS
+
+  // Start timing a route load
+  startRouteLoad(route) {
+    this.metrics.routeLoadTimes[route] = {
+      startTime: performance.now(),
+      status: 'loading'
+    };
+    console.log(`🚀 Starting route load: ${route}`);
+  }
+
+  // End timing a route load
+  endRouteLoad(route) {
+    if (this.metrics.routeLoadTimes[route]) {
+      const loadTime = performance.now() - this.metrics.routeLoadTimes[route].startTime;
+      this.metrics.routeLoadTimes[route].loadTime = loadTime;
+      this.metrics.routeLoadTimes[route].status = 'loaded';
+      
+      console.log(`⚡ ${route} loaded in ${loadTime.toFixed(2)}ms`);
+      
+      if (loadTime < 100) {
+        console.log(`🚀 ${route} - INSTANT LOAD!`);
+      } else if (loadTime > 1000) {
+        console.warn(`⚠️ Slow load detected: ${route} took ${loadTime.toFixed(2)}ms`);
+      }
+    }
+  }
+
+  // Track data fetch time
+  trackDataFetch(operation, duration) {
+    this.metrics.dataFetchTimes[operation] = duration;
+    console.log(`📊 Data fetch (${operation}): ${duration.toFixed(2)}ms`);
+  }
+
+  // Track image load time
+  trackImageLoad(src, duration) {
+    this.metrics.imageLoadTimes[src] = duration;
+    console.log(`🖼️ Image load (${src}): ${duration.toFixed(2)}ms`);
+  }
+
+  // Track translation time
+  trackTranslation(language, duration) {
+    this.metrics.translationTimes[language] = duration;
+    console.log(`🌐 Translation (${language}): ${duration.toFixed(2)}ms`);
+  }
+
+  // Track web vitals
+  trackWebVital(name, value) {
+    if (!this.metrics.webVitals) {
+      this.metrics.webVitals = {};
+    }
+    this.metrics.webVitals[name] = value;
+    console.log(`📊 Web Vital ${name}: ${value.toFixed(3)}`);
+  }
+
+  // Get performance summary
+  getPerformanceSummary() {
+    const totalTime = performance.now() - this.startTime;
+    this.metrics.totalLoadTime = totalTime;
+
+    const routeAverages = Object.values(this.metrics.routeLoadTimes)
+      .filter(route => route.loadTime)
+      .map(route => route.loadTime);
+
+    const avgRouteLoadTime = routeAverages.length > 0 
+      ? routeAverages.reduce((a, b) => a + b, 0) / routeAverages.length 
+      : 0;
+
+    const summary = {
+      totalLoadTime: totalTime.toFixed(2),
+      averageRouteLoadTime: avgRouteLoadTime.toFixed(2),
+      fastestRoute: this.getFastestRoute(),
+      slowestRoute: this.getSlowestRoute(),
+      firstContentfulPaint: this.metrics.firstContentfulPaint.toFixed(2),
+      routeCount: Object.keys(this.metrics.routeLoadTimes).length,
+      instantLoads: this.countInstantLoads(),
+      slowLoads: this.countSlowLoads()
+    };
+
+    return summary;
+  }
+
+  // Get fastest route
+  getFastestRoute() {
+    const routes = Object.entries(this.metrics.routeLoadTimes)
+      .filter(([_, data]) => data.loadTime)
+      .sort(([_, a], [__, b]) => a.loadTime - b.loadTime);
+    
+    return routes.length > 0 ? {
+      route: routes[0][0],
+      time: routes[0][1].loadTime.toFixed(2)
+    } : null;
+  }
+
+  // Get slowest route
+  getSlowestRoute() {
+    const routes = Object.entries(this.metrics.routeLoadTimes)
+      .filter(([_, data]) => data.loadTime)
+      .sort(([_, a], [__, b]) => b.loadTime - a.loadTime);
+    
+    return routes.length > 0 ? {
+      route: routes[0][0],
+      time: routes[0][1].loadTime.toFixed(2)
+    } : null;
+  }
+
+  // Count instant loads (< 100ms)
+  countInstantLoads() {
+    return Object.values(this.metrics.routeLoadTimes)
+      .filter(route => route.loadTime && route.loadTime < 100).length;
+  }
+
+  // Count slow loads (> 1000ms)
+  countSlowLoads() {
+    return Object.values(this.metrics.routeLoadTimes)
+      .filter(route => route.loadTime && route.loadTime > 1000).length;
+  }
+
+  // Log performance summary
+  logPerformanceSummary() {
+    const summary = this.getPerformanceSummary();
+    
+    console.log('📊 Performance Summary:');
+    console.log('========================');
+    console.log(`Total Load Time: ${summary.totalLoadTime}ms`);
+    console.log(`Average Route Load: ${summary.averageRouteLoadTime}ms`);
+    console.log(`First Contentful Paint: ${summary.firstContentfulPaint}ms`);
+    console.log(`Routes Loaded: ${summary.routeCount}`);
+    console.log(`Instant Loads: ${summary.instantLoads}`);
+    console.log(`Slow Loads: ${summary.slowLoads}`);
+    
+    if (summary.fastestRoute) {
+      console.log(`Fastest Route: ${summary.fastestRoute.route} (${summary.fastestRoute.time}ms)`);
+    }
+    
+    if (summary.slowestRoute) {
+      console.log(`Slowest Route: ${summary.slowestRoute.route} (${summary.slowestRoute.time}ms)`);
+    }
+    
+    console.log('========================');
+  }
+
+  // Export metrics for external analysis
+  exportMetrics() {
+    return {
+      ...this.metrics,
+      summary: this.getPerformanceSummary(),
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  // Reset metrics
+  reset() {
+    this.metrics = {
+      routeLoadTimes: {},
+      dataFetchTimes: {},
+      imageLoadTimes: {},
+      translationTimes: {},
+      totalLoadTime: 0,
+      firstContentfulPaint: 0,
+      largestContentfulPaint: 0,
+      webVitals: {}
+    };
+    this.startTime = performance.now();
+  }
+
   // Measure and log performance metrics
   measurePerformance() {
     if ('performance' in window) {
@@ -271,17 +342,6 @@ class PerformanceOptimizer {
       document.head.appendChild(link);
     });
   }
-
-  // Optimize for mobile performance
-  optimizeForMobile() {
-    if (window.innerWidth <= 768) {
-      // Reduce animation complexity on mobile
-      document.documentElement.style.setProperty('--animation-duration', '0.3s');
-      
-      // Optimize touch interactions
-      document.documentElement.style.setProperty('--touch-action', 'manipulation');
-    }
-  }
 }
 
 // Create singleton instance
@@ -289,5 +349,10 @@ const performanceOptimizer = new PerformanceOptimizer();
 
 // Apply optimizations immediately
 performanceOptimizer.applyOptimizations();
+
+// Log summary on page unload
+window.addEventListener('beforeunload', () => {
+  performanceOptimizer.logPerformanceSummary();
+});
 
 export default performanceOptimizer; 

@@ -1,7 +1,7 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { portfolioService } from '../services/supabase';
 import imagePreloader from '../utils/imagePreloader';
-import performanceMonitor from '../utils/performanceMonitor';
+import performanceOptimizer from '../utils/performance';
 import LoadingProgress from '../assets/shared/LoadingProgress';
 
 // Global data context
@@ -38,7 +38,7 @@ export const GlobalDataProvider = ({ children }) => {
         console.log(`✅ Global data loaded in ${fetchTime.toFixed(2)}ms`);
         
         // Track data fetch performance
-        performanceMonitor.trackDataFetch('global_portfolio_data', fetchTime);
+        performanceOptimizer.trackDataFetch('global_portfolio_data', fetchTime);
         
         setGlobalData(data);
         setLastFetch(Date.now());

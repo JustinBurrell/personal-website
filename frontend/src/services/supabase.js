@@ -129,8 +129,7 @@ export const portfolioService = {
     try {
       // For now, always use the original method since the materialized view is incomplete
       // The materialized view doesn't include related data like education_items
-      console.log('Using original method for complete data structure')
-        return this.getPortfolioData(languageCode)
+      return this.getPortfolioData(languageCode)
     } catch (error) {
       console.error('Error fetching optimized portfolio data:', error)
       // Fallback to original method
@@ -247,11 +246,7 @@ export const portfolioService = {
 
       if (educationError) throw educationError
 
-      // Debug: Log the raw data from Supabase
-      console.log('Raw education data from Supabase:', educationData);
-      if (educationData && educationData[0] && educationData[0].education_items) {
-        console.log('First education item raw data:', educationData[0].education_items[0]);
-      }
+      // Process education data
 
       const mappedData = educationData.map(edu => ({
         ...edu,
@@ -276,8 +271,7 @@ export const portfolioService = {
         }))
       }));
 
-      // Debug: Log the mapped data before camelCase conversion
-      console.log('Mapped education data before camelCase:', mappedData[0]?.education[0]);
+      // Return mapped education data
 
       // No need to camelCaseKeysDeep since data is already camelCase
       return mappedData;
