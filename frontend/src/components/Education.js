@@ -5,10 +5,10 @@ import { useLanguage } from '../features/language';
 import { useTranslateText } from '../features/language/useTranslateText';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
-import { scroller } from 'react-scroll';
-import { scrollSpy } from 'react-scroll';
 import { usePortfolioData } from '../hooks/usePortfolioData';
 import { Element } from 'react-scroll';
+import { useScrollSpy } from '../hooks/useScrollSpy';
+import { safeScrollTo } from '../utils/scrollUtils';
 
 const Education = () => {
   const { translatedData, currentLanguage, isLoading } = useLanguage();
@@ -26,24 +26,17 @@ const Education = () => {
   const graduationText = useTranslateText("Graduation:");
   const completionText = useTranslateText("Completion:");
 
+  // Initialize scroll spy safely
+  useScrollSpy();
+
   // Move all useEffect hooks to the top
   React.useEffect(() => {
     if (location.state && location.state.scrollTo) {
-      setTimeout(() => {
-        scroller.scrollTo(location.state.scrollTo, {
-          duration: 600,
-          smooth: 'easeInOutQuart',
-          offset: -80,
-        });
-        // Clear the state so it doesn't scroll again
-        window.history.replaceState({}, document.title);
-      }, 200);
+      safeScrollTo(location.state.scrollTo, { delay: 200 });
+      // Clear the state so it doesn't scroll again
+      window.history.replaceState({}, document.title);
     }
   }, [location.state]);
-
-  React.useEffect(() => {
-    scrollSpy.update();
-  }, []);
 
   // Add loading state and null checks
   if (isLoading || !translatedData || !translatedData.education || !translatedData.education[0]) {
@@ -258,19 +251,19 @@ const Education = () => {
                   <div className="flex gap-2 mt-8 items-center whitespace-nowrap">
                     <button
                       className="px-2 py-1 rounded-full font-semibold border bg-gray-100 text-blue-700 border-blue-700 text-xs shrink-0"
-                      onClick={() => scroller.scrollTo('schooling-section', { duration: 600, smooth: 'easeInOutQuart', offset: -80 })}
+                      onClick={() => safeScrollTo('schooling-section')}
                     >
                       {schoolingText}
                     </button>
                     <button
                       className="px-2 py-1 rounded-full font-semibold border bg-gray-100 text-blue-700 border-blue-700 text-xs shrink-0"
-                      onClick={() => scroller.scrollTo('certifications-section', { duration: 600, smooth: 'easeInOutQuart', offset: -80 })}
+                      onClick={() => safeScrollTo('certifications-section')}
                     >
                       {certificationsText}
                     </button>
                     <button
                       className="px-2 py-1 rounded-full font-semibold border bg-gray-100 text-blue-700 border-blue-700 text-xs shrink-0"
-                      onClick={() => scroller.scrollTo('programs-section', { duration: 600, smooth: 'easeInOutQuart', offset: -80 })}
+                      onClick={() => safeScrollTo('programs-section')}
                     >
                       {programsText}
                     </button>

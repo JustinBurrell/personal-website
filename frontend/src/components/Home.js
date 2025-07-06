@@ -3,13 +3,13 @@ import { motion } from 'framer-motion';
 import SectionTitle from '../assets/ui/SectionTitle';
 import Card from '../assets/ui/Card';
 import Button from '../assets/ui/Button';
-import { scroller } from 'react-scroll';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import { useLanguage } from '../features/language';
 import { useTranslateText } from '../features/language/useTranslateText';
 import { useLocation } from 'react-router-dom';
-import { scrollSpy } from 'react-scroll';
 import { Element } from 'react-scroll';
+import { useScrollSpy } from '../hooks/useScrollSpy';
+import { safeScrollTo } from '../utils/scrollUtils';
 
 const Home = () => {
   const { translatedData, isLoading } = useLanguage();
@@ -20,24 +20,17 @@ const Home = () => {
   const viewResumeText = useTranslateText("View Resume");
   const contactMeText = useTranslateText("Contact Me");
 
+  // Initialize scroll spy safely
+  useScrollSpy();
+
   // Move all useEffect hooks to the top
   React.useEffect(() => {
     if (location.state && location.state.scrollTo) {
-      setTimeout(() => {
-        scroller.scrollTo(location.state.scrollTo, {
-          duration: 600,
-          smooth: 'easeInOutQuart',
-          offset: -80,
-        });
-        // Clear the state so it doesn't scroll again
-        window.history.replaceState({}, document.title);
-      }, 200);
+      safeScrollTo(location.state.scrollTo, { delay: 200 });
+      // Clear the state so it doesn't scroll again
+      window.history.replaceState({}, document.title);
     }
   }, [location.state]);
-
-  React.useEffect(() => {
-    scrollSpy.update();
-  }, []);
 
   // Add loading state and null checks
   if (isLoading || !translatedData || !translatedData.home) {
@@ -157,7 +150,7 @@ const Home = () => {
                       </Button>
                       <Button
                         onClick={() => {
-                          scroller.scrollTo('contact', {
+                          safeScrollTo('contact', {
                             duration: 800,
                             delay: 0,
                             smooth: 'easeInOutQuart'

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Link as ScrollLink, Events, scrollSpy } from 'react-scroll';
-import { scroller } from 'react-scroll';
+import { Link as ScrollLink } from 'react-scroll';
 import LanguageSelector from './LanguageSelector';
 import { useLanguage } from '../../features/language';
 import { useTranslateText } from '../../features/language/useTranslateText';
+import { useScrollSpy } from '../../hooks/useScrollSpy';
+import { safeScrollToTop } from '../../utils/scrollUtils';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,27 +33,11 @@ const Navbar = () => {
   const certificationsText = useTranslateText("Certifications");
   const programsText = useTranslateText("Programs");
 
-  // Initialize scroll spy
-  useEffect(() => {
-    // Always remove existing event listeners first
-    Events.scrollEvent.remove('begin');
-    Events.scrollEvent.remove('end');
-
-    if (location.pathname === '/') {
-      // Register new event listeners
-      Events.scrollEvent.register('begin', () => {});
-      Events.scrollEvent.register('end', () => {});
-      
-      // Initialize scrollspy
-      scrollSpy.update();
-
-      // Cleanup function
-      return () => {
-        Events.scrollEvent.remove('begin');
-        Events.scrollEvent.remove('end');
-      };
-    }
-  }, [location.pathname]);
+  // Initialize scroll spy safely
+  useScrollSpy({
+    enabled: location.pathname === '/',
+    pathname: location.pathname
+  });
 
   // Handle device detection and click outside
   useEffect(() => {
@@ -139,18 +124,8 @@ const Navbar = () => {
     setIsOpen(false);
     setActiveSubmenu(null);
     if (location.pathname === item.to) {
-      // If clicking home while on home, scroll to top
-      if (item.to === '/') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-      // If clicking experience while on experience, scroll to top
-      else if (item.to === '/experience') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-      // If clicking education while on education, scroll to top
-      else if (item.to === '/education') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      // If clicking on current page, scroll to top
+      safeScrollToTop();
     } else {
       navigate(item.to);
     }
@@ -208,7 +183,7 @@ const Navbar = () => {
                 e.preventDefault();
                 setIsOpen(false);
                 if (location.pathname === '/') {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  safeScrollToTop();
                 } else {
                   navigate('/');
                 }

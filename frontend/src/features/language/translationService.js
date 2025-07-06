@@ -47,6 +47,7 @@ const TRANSLATABLE_FIELDS = new Set([
   'company',
   'location',
   'responsibilities',
+  'skills',
   'technologies',
   'view_timeline',
   'view_resume',
@@ -368,6 +369,15 @@ const translateObject = async (obj, targetLang) => {
         // Special handling for education-related arrays
         result[key] = await Promise.all(
           value.map(item => translateObject(item, targetLang))
+        );
+      } else if (key === 'skills' || key === 'technologies' || key === 'responsibilities') {
+        // Special handling for skills, technologies, and responsibilities arrays - translate each string
+        result[key] = await Promise.all(
+          value.map(item => 
+            typeof item === 'string' 
+              ? translateText(item, targetLang)
+              : translateObject(item, targetLang)
+          )
         );
       } else {
         result[key] = await Promise.all(

@@ -3,11 +3,12 @@ import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import { useLanguage } from '../features/language';
 import { useTranslateText } from '../features/language/useTranslateText';
 import Card from '../assets/ui/Card';
-import { scroller, Link as ScrollLink, Element } from 'react-scroll';
+import { Link as ScrollLink, Element } from 'react-scroll';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { FaList, FaClock, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { scrollSpy } from 'react-scroll';
+import { useScrollSpy } from '../hooks/useScrollSpy';
+import { safeScrollTo } from '../utils/scrollUtils';
 
 // Timeline component (moved inside Experience.js)
 const Timeline = ({ experiences, type }) => {
@@ -193,24 +194,17 @@ const Experience = () => {
   const skillsText = useTranslateText("Skills");
   const technologiesText = useTranslateText("Technologies");
 
+  // Initialize scroll spy safely
+  useScrollSpy();
+
   // Move all useEffect hooks to the top
   React.useEffect(() => {
     if (location.state && location.state.scrollTo) {
-      setTimeout(() => {
-        scroller.scrollTo(location.state.scrollTo, {
-          duration: 600,
-          smooth: 'easeInOutQuart',
-          offset: -80,
-        });
-        // Clear the state so it doesn't scroll again
-        window.history.replaceState({}, document.title);
-      }, 200);
+      safeScrollTo(location.state.scrollTo, { delay: 200 });
+      // Clear the state so it doesn't scroll again
+      window.history.replaceState({}, document.title);
     }
   }, [location.state]);
-
-  React.useEffect(() => {
-    scrollSpy.update();
-  }, []);
 
   // Add loading state and null checks
   if (isLoading || !translatedData || !translatedData.experience || !translatedData.experience[0]) {
@@ -382,13 +376,13 @@ const Experience = () => {
                   <div className="flex gap-2 mt-6 items-center whitespace-nowrap">
                     <button
                       className="px-2 py-1 rounded-full font-semibold border bg-gray-100 text-blue-700 border-blue-700 text-xs shrink-0"
-                      onClick={() => scroller.scrollTo('professional-experience-section', { duration: 600, smooth: 'easeInOutQuart', offset: -80 })}
+                      onClick={() => safeScrollTo('professional-experience-section')}
                     >
                       {professionalText}
                     </button>
                     <button
                       className="px-2 py-1 rounded-full font-semibold border bg-gray-100 text-blue-700 border-blue-700 text-xs shrink-0"
-                      onClick={() => scroller.scrollTo('leadership-experience-section', { duration: 600, smooth: 'easeInOutQuart', offset: -80 })}
+                      onClick={() => safeScrollTo('leadership-experience-section')}
                     >
                       {leadershipText}
                     </button>
