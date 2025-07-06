@@ -8,6 +8,7 @@ import { useLanguage } from '../features/language';
 import { useTranslateText } from '../features/language/useTranslateText';
 import Button from '../assets/ui/Button';
 import { Element } from 'react-scroll';
+import { portfolioService } from '../services/supabase';
 
 const Contact = () => {
   const { translatedData, isLoading } = useLanguage();
@@ -102,7 +103,29 @@ const Contact = () => {
     setIsSubmitting(true);
     setSubmitStatus({ type: '', message: '' });
 
+    let savedEmailId = null;
+    
     try {
+      // First, store the email in Supabase
+      console.log('🔄 Attempting to save email to Supabase...');
+      const emailData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.content,
+        ipAddress: null, // Could be added if needed
+        userAgent: navigator.userAgent
+      };
+
+      console.log('📧 Email data to save:', emailData);
+
+      const savedEmail = await portfolioService.submitEmail(emailData);
+      savedEmailId = savedEmail.id;
+      console.log('✅ Email saved to Supabase with ID:', savedEmailId);
+
+      // Then send via EmailJS
+      console.log('📤 Sending email via EmailJS...');
       const templateParams = {
         from_name: `${formData.firstName} ${formData.lastName}`,
         from_email: formData.email,
@@ -113,12 +136,19 @@ const Contact = () => {
         reply_to: formData.email
       };
 
-      await emailjs.send(
+      const emailjsResponse = await emailjs.send(
         "service_h89w0oi",
         "template_56y72kh",
         templateParams,
         "NIv9MQw75_UFg-jlH"
       );
+
+      console.log('✅ EmailJS response:', emailjsResponse);
+
+      // Update email status to 'sent' in Supabase
+      console.log('🔄 Updating email status to "sent"...');
+      await portfolioService.updateEmailStatus(savedEmailId, 'sent', emailjsResponse);
+      console.log('✅ Email status updated successfully');
 
       setSubmitStatus({
         type: 'success',
@@ -142,7 +172,24 @@ const Contact = () => {
       });
 
     } catch (error) {
-      console.error('Failed to send email:', error);
+      console.error('❌ Error in contact form submission:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        savedEmailId: savedEmailId
+      });
+      
+      // If we have a saved email, update its status to 'failed'
+      if (savedEmailId) {
+        try {
+          console.log('🔄 Updating email status to "failed"...');
+          await portfolioService.updateEmailStatus(savedEmailId, 'failed', { error: error.message });
+          console.log('✅ Email status updated to failed');
+        } catch (updateError) {
+          console.error('❌ Failed to update email status:', updateError);
+        }
+      }
+
       setSubmitStatus({
         type: 'error',
         message: 'Failed to send message. Please try again.'
