@@ -5,14 +5,14 @@ import { useLanguage } from '../features/language';
 import { useTranslateText } from '../features/language/useTranslateText';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
-import { usePortfolioData } from '../hooks/usePortfolioData';
+import { useGlobalData } from '../hooks/useGlobalData';
 import { Element } from 'react-scroll';
 import { useScrollSpy } from '../hooks/useScrollSpy';
 import { safeScrollTo } from '../utils/scrollUtils';
 
 const Education = () => {
   const { translatedData, currentLanguage, isLoading } = useLanguage();
-  const { data: portfolioData, loading, error } = usePortfolioData(currentLanguage);
+  const { data: portfolioData, loading, error } = useGlobalData();
   const location = useLocation();
   const [modalImage, setModalImage] = useState(null);
 

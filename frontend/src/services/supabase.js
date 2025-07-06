@@ -28,9 +28,22 @@ const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-// Cache for storing fetched data
+// Enhanced cache for storing fetched data
 const cache = new Map()
-const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
+const CACHE_DURATION = 30 * 60 * 1000 // 30 minutes
+
+// Cache cleanup function
+const cleanupCache = () => {
+  const now = Date.now()
+  for (const [key, value] of cache.entries()) {
+    if (now - value.timestamp > CACHE_DURATION) {
+      cache.delete(key)
+    }
+  }
+}
+
+// Run cleanup every 10 minutes
+setInterval(cleanupCache, 10 * 60 * 1000)
 
 // Helper function to check if cache is valid
 const isCacheValid = (key) => {

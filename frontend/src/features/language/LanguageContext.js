@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect, useMemo, useCallback } from 'react';
 import { translateObject } from './translationService';
-import { usePortfolioData } from '../../hooks/usePortfolioData';
+import { useGlobalData } from '../../hooks/useGlobalData';
 
 const LanguageContext = createContext();
 
@@ -24,7 +24,7 @@ export const LanguageProvider = ({ children }) => {
   const [currentLanguage, setCurrentLanguage] = useState('en');
   const [translatedData, setTranslatedData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { data: portfolioData, loading: dataLoading, error } = usePortfolioData('en'); // Always fetch English
+  const { data: portfolioData } = useGlobalData(); // Use global data
 
   // Detect browser language on mount
   useEffect(() => {

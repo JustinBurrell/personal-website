@@ -8,6 +8,8 @@ import PageTransition from './assets/shared/PageTransition';
 import CustomCursor from './assets/shared/CustomCursor';
 import ContentLoader from './assets/shared/ContentLoader';
 import { LanguageProvider, useLanguage } from './features/language';
+import { GlobalDataProvider } from './hooks/useGlobalData';
+import PerformanceRoute from './components/PerformanceRoute';
 
 import './App.css';
 
@@ -67,37 +69,7 @@ const LoadingFallback = memo(() => (
   </div>
 ));
 
-// Memoized wrapper component for routes that need content loading
-const RouteWithContentLoader = memo(({ component: Component, data, routeKey }) => {
-  const { translatedData, isLoading } = useLanguage();
-  
-  // Add null check for translatedData
-  const routeData = translatedData ? (data ? translatedData[data] : translatedData) : null;
 
-  // Debug logging
-  console.log(`RouteWithContentLoader [${routeKey}]:`, {
-    isLoading,
-    hasTranslatedData: !!translatedData,
-    hasRouteData: !!routeData,
-    dataKeys: translatedData ? Object.keys(translatedData) : [],
-    requestedData: data
-  });
-
-  useEffect(() => {
-    performanceMonitor.endRouteLoad(routeKey);
-  }, [routeKey]);
-
-  // Show loading state if data is not available yet
-  if (isLoading || !translatedData || !routeData) {
-    return <LoadingFallback />;
-  }
-
-  return (
-    <ContentLoader data={routeData} routeKey={routeKey}>
-      <Component />
-    </ContentLoader>
-  );
-});
 
 // Memoized HomePage component
 const HomePage = memo(() => {
@@ -175,48 +147,52 @@ const App = memo(() => {
             <Route path="/education" element={
               <PageTransition>
                 <Suspense fallback={<LoadingFallback />}>
-                  <RouteWithContentLoader 
+                  <PerformanceRoute 
                     component={Education} 
-                    data="education" 
+                    section="education" 
                     routeKey="education" 
-                  />
-                  <Footer />
+                  >
+                    <Footer />
+                  </PerformanceRoute>
                 </Suspense>
               </PageTransition>
             } />
             <Route path="/experience" element={
               <PageTransition>
                 <Suspense fallback={<LoadingFallback />}>
-                  <RouteWithContentLoader 
+                  <PerformanceRoute 
                     component={Experience} 
-                    data="experience" 
+                    section="experience" 
                     routeKey="experience" 
-                  />
-                  <Footer />
+                  >
+                    <Footer />
+                  </PerformanceRoute>
                 </Suspense>
               </PageTransition>
             } />
             <Route path="/projects" element={
               <PageTransition>
                 <Suspense fallback={<LoadingFallback />}>
-                  <RouteWithContentLoader 
+                  <PerformanceRoute 
                     component={Projects} 
-                    data="projects" 
+                    section="projects" 
                     routeKey="projects" 
-                  />
-                  <Footer />
+                  >
+                    <Footer />
+                  </PerformanceRoute>
                 </Suspense>
               </PageTransition>
             } />
             <Route path="/awards" element={
               <PageTransition>
                 <Suspense fallback={<LoadingFallback />}>
-                  <RouteWithContentLoader 
+                  <PerformanceRoute 
                     component={Awards} 
-                    data="awards" 
+                    section="awards" 
                     routeKey="awards" 
-                  />
-                  <Footer />
+                  >
+                    <Footer />
+                  </PerformanceRoute>
                 </Suspense>
               </PageTransition>
             } />
@@ -231,9 +207,11 @@ const App = memo(() => {
 const AppWrapper = () => (
   <Router>
     <HelmetProvider>
-      <LanguageProvider>
-        <App />
-      </LanguageProvider>
+      <GlobalDataProvider>
+        <LanguageProvider>
+          <App />
+        </LanguageProvider>
+      </GlobalDataProvider>
     </HelmetProvider>
   </Router>
 );
