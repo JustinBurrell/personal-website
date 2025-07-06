@@ -6,7 +6,7 @@ import Card from '../assets/ui/Card';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../features/language';
 import { useTranslateText } from '../features/language/useTranslateText';
-import Button from '../assets/ui/Button';
+
 import { Element } from 'react-scroll';
 import { portfolioService } from '../services/supabase';
 
@@ -199,26 +199,7 @@ const Contact = () => {
     setIsSubmitting(false);
   };
 
-  const formAnimation = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.5,
-        staggerChildren: 0.1
-      }
-    }
-  };
 
-  const itemAnimation = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.5 }
-    }
-  };
 
   // Add loading state and null checks
   if (isLoading || !translatedData || !translatedData.home) {

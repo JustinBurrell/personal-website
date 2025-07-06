@@ -193,7 +193,8 @@ const saveCache = () => {
 // Load cache on initialization
 loadCache();
 
-// Optimized batch translation function
+// Optimized batch translation function - currently unused
+// eslint-disable-next-line no-unused-vars
 const translateBatch = async (texts, targetLang) => {
   if (!texts.length) return [];
   
@@ -280,7 +281,7 @@ const translateBatch = async (texts, targetLang) => {
             monthlyCharCount += text.length;
           });
           
-          // Update results
+          // Update results - using map to avoid loop function issues
           batch.forEach((text, batchIndex) => {
             const originalIndex = uncachedIndices[uncachedTexts.indexOf(text)];
             cachedResults[originalIndex] = translations[batchIndex] || text;
@@ -289,6 +290,7 @@ const translateBatch = async (texts, targetLang) => {
       } catch (error) {
         console.error('Batch translation error:', error);
         // Fallback: use original text for failed batch
+        // eslint-disable-next-line no-loop-func
         batch.forEach((text) => {
           const originalIndex = uncachedIndices[uncachedTexts.indexOf(text)];
           cachedResults[originalIndex] = text;

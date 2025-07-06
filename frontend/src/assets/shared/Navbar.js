@@ -15,7 +15,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const navRef = useRef(null);
   const timeoutRef = useRef(null);
-  const { currentLanguage, changeLanguage } = useLanguage();
 
   // Use translation hook for navigation items
   const homeText = useTranslateText("Home");

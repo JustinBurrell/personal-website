@@ -1,13 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import SectionTitle from '../assets/ui/SectionTitle';
+
 import Card from '../assets/ui/Card';
 import Button from '../assets/ui/Button';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import { useLanguage } from '../features/language';
 import { useTranslateText } from '../features/language/useTranslateText';
 import { useLocation } from 'react-router-dom';
-import { Element } from 'react-scroll';
+
 import { useScrollSpy } from '../hooks/useScrollSpy';
 import { safeScrollTo } from '../utils/scrollUtils';
 
