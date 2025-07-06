@@ -1,3 +1,5 @@
+import logger from './logger.js';
+
 // Comprehensive performance optimization and monitoring utilities
 class PerformanceOptimizer {
   constructor() {
@@ -28,13 +30,13 @@ class PerformanceOptimizer {
           for (const entry of list.getEntries()) {
             if (entry.name === 'first-contentful-paint') {
               this.metrics.firstContentfulPaint = entry.startTime;
-              console.log(`🎨 First Contentful Paint: ${entry.startTime.toFixed(2)}ms`);
+              logger.performance('First Contentful Paint', entry.startTime);
             }
           }
         });
         paintObserver.observe({ entryTypes: ['paint'] });
       } catch (error) {
-        console.warn('PerformanceObserver not supported:', error);
+        logger.warn('PerformanceObserver not supported:', error);
       }
     }
   }
@@ -43,7 +45,7 @@ class PerformanceOptimizer {
   applyOptimizations() {
     if (this.optimizationsApplied) return;
     
-    console.log('🚀 Applying performance optimizations...');
+    logger.performanceOpt('Applying performance optimizations...');
     
     this.addResourceHints();
     this.optimizeImages();
@@ -52,7 +54,7 @@ class PerformanceOptimizer {
     this.optimizeForMobile();
     
     this.optimizationsApplied = true;
-    console.log('✅ Performance optimizations applied');
+    logger.performanceOpt('Performance optimizations applied');
   }
 
   // Add resource hints for faster loading
@@ -153,7 +155,7 @@ class PerformanceOptimizer {
       startTime: performance.now(),
       status: 'loading'
     };
-    console.log(`🚀 Starting route load: ${route}`);
+    logger.route(`Starting route load: ${route}`);
   }
 
   // End timing a route load
@@ -163,12 +165,12 @@ class PerformanceOptimizer {
       this.metrics.routeLoadTimes[route].loadTime = loadTime;
       this.metrics.routeLoadTimes[route].status = 'loaded';
       
-      console.log(`⚡ ${route} loaded in ${loadTime.toFixed(2)}ms`);
+      logger.route(`${route} loaded in ${loadTime.toFixed(2)}ms`);
       
       if (loadTime < 100) {
-        console.log(`🚀 ${route} - INSTANT LOAD!`);
+        logger.route(`${route} - INSTANT LOAD!`);
       } else if (loadTime > 1000) {
-        console.warn(`⚠️ Slow load detected: ${route} took ${loadTime.toFixed(2)}ms`);
+        logger.warn(`Slow load detected: ${route} took ${loadTime.toFixed(2)}ms`);
       }
     }
   }
@@ -176,7 +178,7 @@ class PerformanceOptimizer {
   // Track data fetch time
   trackDataFetch(operation, duration) {
     this.metrics.dataFetchTimes[operation] = duration;
-    console.log(`📊 Data fetch (${operation}): ${duration.toFixed(2)}ms`);
+    logger.performance(`Data fetch (${operation})`, duration);
   }
 
   // Track image load time

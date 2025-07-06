@@ -3,6 +3,7 @@ import { portfolioService } from '../services/supabase';
 import imagePreloader from '../utils/imagePreloader';
 import performanceOptimizer from '../utils/performance';
 import LoadingProgress from '../assets/shared/LoadingProgress';
+import logger from '../utils/logger';
 
 // Global data context
 const GlobalDataContext = createContext();
@@ -25,7 +26,7 @@ export const GlobalDataProvider = ({ children }) => {
         setLoading(true);
         setError(null);
         
-        console.log('🔄 Fetching global portfolio data...');
+        logger.data('Fetching global portfolio data...');
         const startTime = performance.now();
         
         // Start preloading critical images immediately
@@ -35,7 +36,7 @@ export const GlobalDataProvider = ({ children }) => {
         
         const endTime = performance.now();
         const fetchTime = endTime - startTime;
-        console.log(`✅ Global data loaded in ${fetchTime.toFixed(2)}ms`);
+        logger.data(`Global data loaded in ${fetchTime.toFixed(2)}ms`);
         
         // Track data fetch performance
         performanceOptimizer.trackDataFetch('global_portfolio_data', fetchTime);
@@ -59,7 +60,7 @@ export const GlobalDataProvider = ({ children }) => {
         // Mark initial load as complete
         setIsInitialLoad(false);
       } catch (err) {
-        console.error('❌ Error fetching global data:', err);
+        logger.error('Error fetching global data:', err);
         setError(err.message);
         setIsInitialLoad(false);
       } finally {
@@ -73,9 +74,9 @@ export const GlobalDataProvider = ({ children }) => {
     if (shouldFetch) {
       fetchGlobalData();
     } else {
-      console.log('📦 Using cached global data');
-      setLoading(false);
-      setIsInitialLoad(false);
+              logger.data('Using cached global data');
+        setLoading(false);
+        setIsInitialLoad(false);
     }
   }, [globalData, lastFetch, CACHE_DURATION]);
 

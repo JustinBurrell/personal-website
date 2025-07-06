@@ -1,3 +1,5 @@
+import logger from './logger.js';
+
 // Image preloader utility for instant image loading
 class ImagePreloader {
   constructor() {
@@ -29,13 +31,13 @@ class ImagePreloader {
       img.onload = () => {
         clearTimeout(timeoutId);
         this.preloadedImages.add(src);
-        console.log(`🖼️ Preloaded: ${src}`);
+        logger.imagePreload('Preloaded:', src);
         resolve(src);
       };
       
       img.onerror = () => {
         clearTimeout(timeoutId);
-        console.warn(`⚠️ Failed to preload: ${src}`);
+        logger.warn(`Failed to preload: ${src}`);
         reject(new Error(`Failed to preload image: ${src}`));
       };
       
@@ -74,7 +76,7 @@ class ImagePreloader {
 
   // Preload critical images immediately
   async preloadCriticalImages() {
-    console.log('🔄 Preloading critical images...');
+    logger.imagePreload('Preloading critical images...');
     const startTime = performance.now();
     
     try {
@@ -95,9 +97,9 @@ class ImagePreloader {
       const failed = results.filter(r => r.status === 'rejected').length;
       
       const endTime = performance.now();
-      console.log(`✅ Critical images: ${successful} loaded, ${failed} failed in ${(endTime - startTime).toFixed(2)}ms`);
+      logger.imagePreload(`Critical images: ${successful} loaded, ${failed} failed in ${(endTime - startTime).toFixed(2)}ms`);
     } catch (error) {
-      console.error('❌ Error preloading critical images:', error);
+      logger.error('Error preloading critical images:', error);
     }
   }
 
@@ -108,7 +110,7 @@ class ImagePreloader {
     const imageUrls = this.extractImageUrls(data);
     if (imageUrls.length === 0) return;
     
-    console.log(`🔄 Preloading ${imageUrls.length} images from data...`);
+    logger.imagePreload(`Preloading ${imageUrls.length} images from data...`);
     const startTime = performance.now();
     
     try {
@@ -131,15 +133,15 @@ class ImagePreloader {
       }
       
       const endTime = performance.now();
-      console.log(`✅ Data images preloaded in ${(endTime - startTime).toFixed(2)}ms`);
+      logger.imagePreload(`Data images preloaded in ${(endTime - startTime).toFixed(2)}ms`);
     } catch (error) {
-      console.error('❌ Error preloading data images:', error);
+      logger.error('Error preloading data images:', error);
     }
   }
 
   // Preload images for a specific section with priority
   async preloadSectionImages(section) {
-    console.log(`🔄 Preloading ${section} images...`);
+    logger.imagePreload(`Preloading ${section} images...`);
     const startTime = performance.now();
     
     try {
@@ -171,9 +173,9 @@ class ImagePreloader {
       }
       
       const endTime = performance.now();
-      console.log(`✅ ${section} priority images preloaded in ${(endTime - startTime).toFixed(2)}ms`);
+      logger.imagePreload(`${section} priority images preloaded in ${(endTime - startTime).toFixed(2)}ms`);
     } catch (error) {
-      console.error(`❌ Error preloading ${section} images:`, error);
+      logger.error(`Error preloading ${section} images:`, error);
     }
   }
 
