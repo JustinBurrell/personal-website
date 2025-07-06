@@ -5,6 +5,31 @@ const MONTHLY_CHAR_LIMIT = 450000;
 const STORAGE_KEY = 'translation_cache';
 const BATCH_SIZE = 15; // Increased batch size for better performance
 
+// Technology names that should NOT be translated (keep in English)
+const NON_TRANSLATABLE_TECHNOLOGIES = new Set([
+  // Programming Languages
+  'Python', 'Java', 'JavaScript', 'C', 'C++', 'C#', 'Dart', 'TypeScript',
+  
+  // Frameworks & Libraries
+  'React', 'Angular', 'Vue', 'Node.js', 'Express', 'Django', 'Flask',
+  'ASP.NET', 'Flutter', 'Spring', 'Laravel', 'Symfony',
+  
+  // Databases
+  'SQL', 'MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'SQLite',
+  
+  // Cloud & DevOps
+  'AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes', 'Jenkins',
+  'Git', 'GitHub', 'GitLab', 'CI/CD',
+  
+  // Tools & Platforms
+  'Firebase', 'Maven', 'Gradle', 'npm', 'yarn', 'Webpack', 'Babel',
+  'HTML', 'CSS', 'Sass', 'Less', 'Bootstrap', 'Tailwind',
+  
+  // Other Technologies
+  'REST', 'GraphQL', 'API', 'JSON', 'XML', 'JWT', 'OAuth',
+  'Linux', 'Unix', 'Windows', 'macOS', 'Ubuntu', 'CentOS'
+]);
+
 // Initialize cache from localStorage
 let translationCache = new Map();
 let monthlyCharCount = 0;
@@ -41,6 +66,7 @@ const TRANSLATABLE_FIELDS = new Set([
   'skills_title',
   'interests_title',
   'interests',
+  'skills',
   
   // Experience section
   'position',
@@ -291,6 +317,11 @@ const translateText = async (text, targetLang) => {
 
   // Don't translate dates
   if (/^\d{4}-\d{2}-\d{2}|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d{4}$/i.test(text)) {
+    return text;
+  }
+
+  // Don't translate technology names
+  if (NON_TRANSLATABLE_TECHNOLOGIES.has(text)) {
     return text;
   }
 
