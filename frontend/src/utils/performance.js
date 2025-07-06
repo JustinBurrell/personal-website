@@ -138,4 +138,156 @@ export const trackPerformance = (name) => (fn) => {
       throw error;
     }
   };
-}; 
+};
+
+// Performance optimization utilities
+class PerformanceOptimizer {
+  constructor() {
+    this.optimizationsApplied = false;
+  }
+
+  // Apply all performance optimizations
+  applyOptimizations() {
+    if (this.optimizationsApplied) return;
+    
+    console.log('🚀 Applying performance optimizations...');
+    
+    this.addResourceHints();
+    this.optimizeImages();
+    this.preloadCriticalResources();
+    this.optimizeFonts();
+    
+    this.optimizationsApplied = true;
+    console.log('✅ Performance optimizations applied');
+  }
+
+  // Add resource hints for faster loading
+  addResourceHints() {
+    const hints = [
+      // DNS prefetch for external domains
+      { rel: 'dns-prefetch', href: 'https://fonts.googleapis.com' },
+      { rel: 'dns-prefetch', href: 'https://fonts.gstatic.com' },
+      { rel: 'dns-prefetch', href: 'https://supabase.co' },
+      
+      // Preconnect to critical domains
+      { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+      { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+      { rel: 'preconnect', href: 'https://supabase.co' },
+      
+      // Preload critical CSS
+      { rel: 'preload', href: '/src/index.css', as: 'style' },
+      { rel: 'preload', href: '/src/App.css', as: 'style' }
+    ];
+
+    hints.forEach(hint => {
+      const link = document.createElement('link');
+      Object.entries(hint).forEach(([key, value]) => {
+        link.setAttribute(key, value);
+      });
+      document.head.appendChild(link);
+    });
+  }
+
+  // Optimize image loading
+  optimizeImages() {
+    // Add loading="lazy" to non-critical images
+    const images = document.querySelectorAll('img:not([data-critical])');
+    images.forEach(img => {
+      if (!img.hasAttribute('loading')) {
+        img.setAttribute('loading', 'lazy');
+      }
+    });
+
+    // Add decoding="async" for better performance
+    const allImages = document.querySelectorAll('img');
+    allImages.forEach(img => {
+      if (!img.hasAttribute('decoding')) {
+        img.setAttribute('decoding', 'async');
+      }
+    });
+  }
+
+  // Preload critical resources
+  preloadCriticalResources() {
+    const criticalResources = [
+      // Critical images
+      { href: '/assets/images/home/FLOC Headshot.jpeg', as: 'image', type: 'image/jpeg' },
+      { href: '/assets/images/about/About Background Photo.jpg', as: 'image', type: 'image/jpeg' },
+      { href: '/assets/images/gallery/Gallery Background Photo.jpg', as: 'image', type: 'image/jpeg' },
+      
+      // Critical fonts
+      { href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap', as: 'style' }
+    ];
+
+    criticalResources.forEach(resource => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      Object.entries(resource).forEach(([key, value]) => {
+        link.setAttribute(key, value);
+      });
+      document.head.appendChild(link);
+    });
+  }
+
+  // Optimize font loading
+  optimizeFonts() {
+    // Add font-display: swap for better perceived performance
+    const fontLinks = document.querySelectorAll('link[href*="fonts.googleapis.com"]');
+    fontLinks.forEach(link => {
+      if (!link.href.includes('&display=swap')) {
+        link.href += '&display=swap';
+      }
+    });
+  }
+
+  // Measure and log performance metrics
+  measurePerformance() {
+    if ('performance' in window) {
+      const navigation = performance.getEntriesByType('navigation')[0];
+      const paint = performance.getEntriesByType('paint');
+      
+      console.log('📊 Performance Metrics:');
+      console.log(`- DOM Content Loaded: ${navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart}ms`);
+      console.log(`- Load Complete: ${navigation.loadEventEnd - navigation.loadEventStart}ms`);
+      
+      paint.forEach(entry => {
+        console.log(`- ${entry.name}: ${Math.round(entry.startTime)}ms`);
+      });
+    }
+  }
+
+  // Optimize bundle loading
+  optimizeBundleLoading() {
+    // Add modulepreload for critical modules
+    const criticalModules = [
+      '/static/js/main.chunk.js',
+      '/static/js/runtime-main.js'
+    ];
+
+    criticalModules.forEach(module => {
+      const link = document.createElement('link');
+      link.rel = 'modulepreload';
+      link.href = module;
+      document.head.appendChild(link);
+    });
+  }
+
+  // Optimize for mobile performance
+  optimizeForMobile() {
+    if (window.innerWidth <= 768) {
+      // Reduce animation complexity on mobile
+      document.documentElement.style.setProperty('--animation-duration', '0.3s');
+      
+      // Optimize touch interactions
+      document.documentElement.style.setProperty('--touch-action', 'manipulation');
+    }
+  }
+}
+
+// Create singleton instance
+const performanceOptimizer = new PerformanceOptimizer();
+
+// Apply optimizations immediately
+performanceOptimizer.applyOptimizations();
+
+export default performanceOptimizer; 

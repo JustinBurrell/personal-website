@@ -8,7 +8,7 @@ import PageTransition from './assets/shared/PageTransition';
 import CustomCursor from './assets/shared/CustomCursor';
 import ContentLoader from './assets/shared/ContentLoader';
 import { LanguageProvider, useLanguage } from './features/language';
-import { GlobalDataProvider } from './hooks/useGlobalData';
+import { GlobalDataProvider, useGlobalData } from './hooks/useGlobalData';
 import PerformanceRoute from './components/PerformanceRoute';
 
 import './App.css';
@@ -45,31 +45,32 @@ const Awards = lazy(() => import('./components/Awards'));
 const Gallery = lazy(() => import('./components/Gallery'));
 const Contact = lazy(() => import('./components/Contact'));
 
-// Preload critical components
+// Aggressive preloading strategy
 const preloadComponents = () => {
-  // Preload components after initial load
-  setTimeout(() => {
-    import('./components/About');
-    import('./components/Gallery');
-  }, 1000);
+  // Immediate preload of critical components
+  Promise.all([
+    import('./components/About'),
+    import('./components/Gallery'),
+    import('./components/Contact')
+  ]);
   
-  // Preload other components after a delay
+  // Preload other components after a short delay
   setTimeout(() => {
-    import('./components/Education');
-    import('./components/Experience');
-    import('./components/Projects');
-    import('./components/Awards');
-  }, 2000);
+    Promise.all([
+      import('./components/Education'),
+      import('./components/Experience'),
+      import('./components/Projects'),
+      import('./components/Awards')
+    ]);
+  }, 500);
 };
 
 // Optimized loading fallback component
 const LoadingFallback = memo(() => (
   <div className="min-h-screen flex items-center justify-center">
-    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-500"></div>
   </div>
 ));
-
-
 
 // Memoized HomePage component
 const HomePage = memo(() => {
@@ -88,7 +89,7 @@ const HomePage = memo(() => {
       }, 100);
     }
     
-    // Preload other components
+    // Aggressive preloading
     preloadComponents();
   }, [hash]);
 
@@ -110,9 +111,10 @@ const HomePage = memo(() => {
   );
 });
 
-// Memoized App component
+// Main App component with conditional navbar
 const App = memo(() => {
   const location = useLocation();
+  const { isInitialLoad } = useGlobalData();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -131,12 +133,21 @@ const App = memo(() => {
         <title>Justin Burrell</title>
         <meta name="description" content="With a passion for technology and a knack for problem-solving, I aim to leverage my technical skills, consulting experience, and leadership background to drive innovation and create scalable solutions that make a positive impact." />
         <meta name="keywords" content="Justin Burrell, thejustinburrell.com, Justin Burrell portfolio website, Justin Burrell Lehigh, Justin Burrell Computer Science, Justin Burrell CSE, Lehigh University Computer Science, Lehigh CSE, Lehigh University Class of 2026, Software Engineer, Horace Mann, Prep for Prep, All Star Code, Lehigh University, Consulting, Portfolio, Python, Java, Kappa Alpha Psi, Kappa" />
-        {/* Preload critical resources */}
+        
+        {/* Aggressive preloading for critical resources */}
         <link rel="preload" href="/assets/images/home/FLOC Headshot.jpeg" as="image" />
         <link rel="preload" href="/assets/images/about/About Background Photo.jpg" as="image" />
+        <link rel="preload" href="/assets/images/gallery/Gallery Background Photo.jpg" as="image" />
+        
+        {/* Preload critical fonts */}
+        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" />
+        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </Helmet>
-      <Navbar />
-      <main className="flex-grow pt-16 bg-gray-50">
+      
+      {/* Only show navbar after initial load */}
+      {!isInitialLoad && <Navbar />}
+      
+      <main className={`flex-grow bg-gray-50 ${!isInitialLoad ? 'pt-16' : ''}`}>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={
