@@ -43,9 +43,12 @@ export const GlobalDataProvider = ({ children }) => {
         setGlobalData(data);
         setLastFetch(Date.now());
         
-        // Preload section images after data is loaded
+        // Preload images from actual data
         if (data) {
-          // Preload images for all sections
+          // Preload all images found in the data
+          imagePreloader.preloadDataImages(data);
+          
+          // Also preload section images as fallback
           Object.keys(data).forEach(section => {
             if (section !== 'home' && section !== 'contact') {
               imagePreloader.preloadSectionImages(section);

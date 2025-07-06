@@ -2,18 +2,15 @@
 class ImagePreloader {
   constructor() {
     this.preloadedImages = new Set();
-    this.criticalImages = [
-      '/assets/images/home/FLOC Headshot.jpeg',
-      '/assets/images/about/About Background Photo.jpg',
-      '/assets/images/gallery/Gallery Background Photo.jpg',
-      '/assets/images/education/lehigh logo.png',
-      '/assets/images/education/horace mann logo.png',
-      '/assets/images/experiences/professional/ey/ey 1.jpg',
-      '/assets/images/gallery/kappa/provincecouncil spr25 2.jpg'
-    ];
+    this.supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
     
     // Start preloading critical images immediately
     this.preloadCriticalImages();
+  }
+
+  // Get full Supabase URL for an asset
+  getAssetUrl(filePath) {
+    return `${this.supabaseUrl}/storage/v1/object/public/assets/${filePath}`;
   }
 
   // Preload a single image with timeout
@@ -46,15 +43,52 @@ class ImagePreloader {
     });
   }
 
+  // Extract image URLs from data recursively
+  extractImageUrls(data) {
+    const imageUrls = new Set();
+    
+    const extract = (obj) => {
+      if (!obj || typeof obj !== 'object') return;
+      
+      if (Array.isArray(obj)) {
+        obj.forEach(extract);
+        return;
+      }
+      
+      Object.entries(obj).forEach(([key, value]) => {
+        // Check for common image URL keys
+        if (key === 'imageUrl' || key === 'awardImageUrl' || key === 'educationImageUrl' || 
+            key === 'experienceImageUrl' || key === 'projectImageUrl' || key === 'galleryImageUrl') {
+          if (value && typeof value === 'string') {
+            imageUrls.add(value);
+          }
+        } else if (typeof value === 'object' && value !== null) {
+          extract(value);
+        }
+      });
+    };
+    
+    extract(data);
+    return Array.from(imageUrls);
+  }
+
   // Preload critical images immediately
   async preloadCriticalImages() {
     console.log('🔄 Preloading critical images...');
     const startTime = performance.now();
     
     try {
+      // Only preload images that we know exist
+      const criticalImages = [
+        'assets/images/home/FLOC Headshot.jpeg',
+        'assets/images/about/About Background Photo.jpg'
+      ];
+      
+      const criticalUrls = criticalImages.map(path => this.getAssetUrl(path));
+      
       // Use Promise.allSettled to not fail if some images fail
       const results = await Promise.allSettled(
-        this.criticalImages.map(src => this.preloadImage(src))
+        criticalUrls.map(src => this.preloadImage(src))
       );
       
       const successful = results.filter(r => r.status === 'fulfilled').length;
@@ -67,18 +101,60 @@ class ImagePreloader {
     }
   }
 
-  // Preload images for a specific section with priority
-  async preloadSectionImages(section) {
-    const sectionImages = this.getSectionImages(section);
-    if (sectionImages.length === 0) return;
-
-    console.log(`🔄 Preloading ${section} images...`);
+  // Preload images from actual data
+  async preloadDataImages(data) {
+    if (!data) return;
+    
+    const imageUrls = this.extractImageUrls(data);
+    if (imageUrls.length === 0) return;
+    
+    console.log(`🔄 Preloading ${imageUrls.length} images from data...`);
     const startTime = performance.now();
     
     try {
       // Split into priority batches for better performance
-      const priorityImages = sectionImages.slice(0, 3);
-      const remainingImages = sectionImages.slice(3);
+      const priorityImages = imageUrls.slice(0, 5);
+      const remainingImages = imageUrls.slice(5);
+      
+      // Load priority images first
+      await Promise.allSettled(
+        priorityImages.map(src => this.preloadImage(src))
+      );
+      
+      // Load remaining images in background
+      if (remainingImages.length > 0) {
+        setTimeout(() => {
+          Promise.allSettled(
+            remainingImages.map(src => this.preloadImage(src))
+          );
+        }, 100);
+      }
+      
+      const endTime = performance.now();
+      console.log(`✅ Data images preloaded in ${(endTime - startTime).toFixed(2)}ms`);
+    } catch (error) {
+      console.error('❌ Error preloading data images:', error);
+    }
+  }
+
+  // Preload images for a specific section with priority
+  async preloadSectionImages(section) {
+    console.log(`🔄 Preloading ${section} images...`);
+    const startTime = performance.now();
+    
+    try {
+      // Only preload images that we know exist
+      const sectionImages = this.getSectionImages(section);
+      if (sectionImages.length === 0) return;
+      
+      // Convert to full URLs if they're relative paths
+      const sectionUrls = sectionImages.map(path => 
+        path.startsWith('http') ? path : this.getAssetUrl(path)
+      );
+      
+      // Split into priority batches for better performance
+      const priorityImages = sectionUrls.slice(0, 3);
+      const remainingImages = sectionUrls.slice(3);
       
       // Load priority images first
       await Promise.allSettled(
@@ -101,33 +177,30 @@ class ImagePreloader {
     }
   }
 
-  // Get images for a specific section
+  // Get images for a specific section (relative paths)
   getSectionImages(section) {
+    // Only include images that actually exist in your storage
     const sectionImageMap = {
       education: [
-        '/assets/images/education/lehigh logo.png',
-        '/assets/images/education/horace mann logo.png',
-        '/assets/images/education/all star code logo.webp',
-        '/assets/images/education/prep for prep logo.png'
+        'assets/images/education/lehigh logo.png',
+        'assets/images/education/horace mann logo.jpg', // Changed from .png to .jpg
+        'assets/images/education/ibm logo.png',
+        'assets/images/education/all star code logo.webp',
+        'assets/images/education/prep for prep logo.png'
       ],
       experience: [
-        '/assets/images/experiences/professional/ey/ey 1.jpg',
-        '/assets/images/experiences/professional/ey/ey 2.jpg',
-        '/assets/images/experiences/professional/ey/ey 3.jpg',
-        '/assets/images/experiences/professional/ey/ey 4.jpg'
+        'assets/images/experiences/professional/ey/ey 1.jpg'
       ],
       gallery: [
-        '/assets/images/gallery/kappa/provincecouncil spr25 2.jpg',
-        '/assets/images/gallery/misc/tech week nyc 2025.jpg',
-        '/assets/images/gallery/bsu/bsu new exec election.jpg'
+        'assets/images/gallery/kappa/provincecouncil spr25 2.jpg'
       ],
       projects: [
-        '/assets/images/projects/project1.jpg',
-        '/assets/images/projects/project2.jpg'
+        'assets/images/projects/Student Score Predictor Cover.png',
+        'assets/images/projects/Personal Website Cover.png',
+        'assets/images/projects/KiNECT Website Cover.png'
       ],
       awards: [
-        '/assets/images/awards/award1.jpg',
-        '/assets/images/awards/award2.jpg'
+        'assets/images/awards/About Background.gif'
       ]
     };
 
