@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Slider from 'react-slick';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import Card from '../assets/ui/Card';
@@ -8,31 +8,6 @@ import { useTranslateText } from '../features/language/useTranslateText';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { Element } from 'react-scroll';
-
-// Lazy loaded image component
-const LazyImage = ({ src, alt, className }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    // Image loading handled by onLoad event
-  }, [src]);
-
-  return (
-    <div className={`relative ${className}`}>
-      {!isLoaded && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse rounded-lg"></div>
-      )}
-      <img
-        src={src}
-        alt={alt}
-        className={`transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-        onLoad={() => setIsLoaded(true)}
-        loading="lazy"
-      />
-    </div>
-  );
-};
 
 const Gallery = () => {
   const { translatedData, isLoading } = useLanguage();
@@ -87,7 +62,7 @@ const Gallery = () => {
   const settings = {
     dots: true,
     infinite: true,
-    speed: 300, // Faster transitions
+    speed: 500, // Slightly slower for smoother transitions
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: false, // Disable autoplay for better performance
@@ -96,9 +71,9 @@ const Gallery = () => {
     pauseOnHover: true,
     adaptiveHeight: false, // Disable for better performance
     cssEase: 'ease-out',
-    fade: false, // Disable fade for better performance
+    fade: true, // Enable fade for smooth transitions
     swipeToSlide: true,
-    waitForAnimate: false // Don't wait for animations
+    waitForAnimate: true // Wait for animations to complete
   };
 
   return (
@@ -119,28 +94,40 @@ const Gallery = () => {
                     <div key={index} className="outline-none">
                       <motion.div 
                         className="overflow-hidden"
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ margin: "-20px" }}
-                        transition={{ duration: 0.3 }}
+                        transition={{ 
+                          duration: 0.5, 
+                          ease: "easeOut"
+                        }}
                       >
                         <div className="relative w-full flex justify-center bg-white">
                           <motion.img
                             src={item.imageUrl}
                             alt={item.title}
                             className="max-h-[600px] w-auto object-contain rounded-lg"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.3 }}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ margin: "-20px" }}
+                            transition={{ 
+                              duration: 0.6, 
+                              ease: "easeOut",
+                              opacity: { duration: 0.4 },
+                              scale: { duration: 0.6 }
+                            }}
                           />
                         </div>
                         <motion.div 
                           className="p-6 bg-white rounded-b-lg"
-                          initial={{ opacity: 0, y: 20 }}
+                          initial={{ opacity: 0, y: 30 }}
                           whileInView={{ opacity: 1, y: 0 }}
                           viewport={{ margin: "-20px" }}
-                          transition={{ duration: 0.5, delay: 0.1 }}
+                          transition={{ 
+                            duration: 0.6, 
+                            ease: "easeOut",
+                            delay: 0.1
+                          }}
                         >
                           <h3 className="text-2xl font-semibold mb-3">{item.title}</h3>
                           <p className="text-gray-600 mb-4">{item.description}</p>
