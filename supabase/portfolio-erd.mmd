@@ -1,0 +1,109 @@
+erDiagram
+  home ||--o{ home_organizations : has
+  home ||--o{ home_qualities : has
+
+  about ||--o{ about_skills : has
+  about ||--o{ about_interests : has
+
+  awards ||--o{ awards_items : has
+
+  education ||--o{ education_items : has
+  education_items ||--o{ education_relevant_courses : has
+  education_items ||--o{ education_organization_involvement : has
+
+  experience ||--o{ experience_professional : has
+  experience_professional ||--o{ experience_professional_positions : has
+  experience ||--o{ experience_leadership : has
+  experience_leadership ||--o{ experience_leadership_positions : has
+
+  gallery ||--o{ gallery_categories : has
+
+  projects ||--o{ project_items : has
+  project_items ||--o{ project_technologies : has
+  project_items ||--o{ project_highlights : has
+
+  home {
+    int id PK
+  }
+  home_organizations {
+    int id PK
+    int home_id FK
+  }
+  home_qualities {
+    int id PK
+    int home_id FK
+  }
+  about {
+    int id PK
+  }
+  about_skills {
+    int id PK
+    int about_id FK
+  }
+  about_interests {
+    int id PK
+    int about_id FK
+  }
+  awards {
+    int id PK
+  }
+  awards_items {
+    int id PK
+    int awards_id FK
+  }
+  education {
+    int id PK
+  }
+  education_items {
+    int id PK
+    int education_id FK
+  }
+  education_relevant_courses {
+    int id PK
+    int education_item_id FK
+  }
+  education_organization_involvement {
+    int id PK
+    int education_item_id FK
+  }
+  experience {
+    int id PK
+  }
+  experience_professional {
+    int id PK
+    int experience_id FK
+  }
+  experience_professional_positions {
+    int id PK
+    int professional_id FK
+  }
+  experience_leadership {
+    int id PK
+    int experience_id FK
+  }
+  experience_leadership_positions {
+    int id PK
+    int leadership_id FK
+  }
+  gallery {
+    int id PK
+  }
+  gallery_categories {
+    int id PK
+    int gallery_id FK
+  }
+  projects {
+    int id PK
+  }
+  project_items {
+    int id PK
+    int projects_id FK
+  }
+  project_technologies {
+    int id PK
+    int project_item_id FK
+  }
+  project_highlights {
+    int id PK
+    int project_item_id FK
+  } 
