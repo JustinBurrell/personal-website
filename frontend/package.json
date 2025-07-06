@@ -7,7 +7,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "generate-favicon": "node scripts/generate-favicon.js"
+    "generate-favicon": "node scripts/generate-favicon.js",
+    "clean": "find . -name '*.DS_Store' -delete && find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + 2>/dev/null || true",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
+    "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,json}"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
