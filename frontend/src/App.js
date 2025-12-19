@@ -11,6 +11,7 @@ import { LanguageProvider, useLanguage } from './features/language';
 import { GlobalDataProvider, useGlobalData } from './hooks/useGlobalData';
 import PerformanceRoute from './components/PerformanceRoute';
 import performanceOptimizer from './utils/performance';
+import prefetchManager from './utils/prefetch';
 
 import './App.css';
 
@@ -102,6 +103,9 @@ const App = memo(() => {
     if (location.pathname !== '/') {
       const routeKey = location.pathname.slice(1);
       performanceOptimizer.startRouteLoad(routeKey);
+      
+      // Prefetch other routes in background
+      prefetchManager.prefetchAllRoutes();
     }
   }, [location.pathname]);
 
@@ -123,10 +127,10 @@ const App = memo(() => {
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </Helmet>
       
-      {/* Only show navbar after initial load */}
-      {!isInitialLoad && <Navbar />}
+      {/* Always show navbar - no blocking loader */}
+      <Navbar />
       
-      <main className={`flex-grow bg-gray-50 ${!isInitialLoad ? 'pt-16' : ''}`}>
+      <main className="flex-grow bg-gray-50 pt-16">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={

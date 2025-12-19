@@ -6,6 +6,7 @@ import { useLanguage } from '../../features/language';
 import { useTranslateText } from '../../features/language/useTranslateText';
 import { useScrollSpy } from '../../hooks/useScrollSpy';
 import { safeScrollToTop } from '../../utils/scrollUtils';
+import prefetchManager from '../../utils/prefetch';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -106,11 +107,19 @@ const Navbar = () => {
     return location.pathname === path ? 'text-indigo-600' : 'text-gray-700';
   };
 
-  const handleMouseEnter = (itemName) => {
+  const handleMouseEnter = (itemName, item) => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
     setActiveSubmenu(itemName);
+    
+    // Prefetch route data on hover for instant navigation
+    if (item.to && item.to !== '/') {
+      const route = item.to.slice(1); // Remove leading slash
+      if (route) {
+        prefetchManager.prefetchSection(route);
+      }
+    }
   };
 
   const handleMouseLeave = () => {
@@ -200,8 +209,29 @@ const Navbar = () => {
                 <div 
                   key={item.name} 
                   className="relative"
-                  onMouseEnter={() => item.subItems && handleMouseEnter(item.name)}
+                  onMouseEnter={() => {
+                    if (item.subItems) {
+                      handleMouseEnter(item.name, item);
+                    } else {
+                      // Prefetch even without submenu
+                      if (item.to && item.to !== '/') {
+                        const route = item.to.slice(1);
+                        if (route) {
+                          prefetchManager.prefetchSection(route);
+                        }
+                      }
+                    }
+                  }}
                   onMouseLeave={item.subItems ? handleMouseLeave : undefined}
+                  onFocus={() => {
+                    // Also prefetch on focus for keyboard navigation
+                    if (item.to && item.to !== '/') {
+                      const route = item.to.slice(1);
+                      if (route) {
+                        prefetchManager.prefetchSection(route);
+                      }
+                    }
+                  }}
                 >
                   <button
                     onClick={() => handleNavItemClick(item)}

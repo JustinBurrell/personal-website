@@ -2,7 +2,6 @@ import { useState, useEffect, createContext, useContext } from 'react';
 import { portfolioService } from '../services/supabase';
 import imagePreloader from '../utils/imagePreloader';
 import performanceOptimizer from '../utils/performance';
-import LoadingProgress from '../assets/shared/LoadingProgress';
 import logger from '../utils/logger';
 
 // Global data context
@@ -11,28 +10,32 @@ const GlobalDataContext = createContext();
 // Global data provider component
 export const GlobalDataProvider = ({ children }) => {
   const [globalData, setGlobalData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Start as false - show content immediately
   const [error, setError] = useState(null);
   const [lastFetch, setLastFetch] = useState(0);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const [showProgress, setShowProgress] = useState(true);
 
   // Cache duration: 30 minutes
   const CACHE_DURATION = 30 * 60 * 1000;
 
   useEffect(() => {
+    let mounted = true;
+
     const fetchGlobalData = async () => {
       try {
-        setLoading(true);
+        // Don't set loading to true - show cached data immediately if available
         setError(null);
         
         logger.data('Fetching global portfolio data...');
         const startTime = performance.now();
         
-        // Start preloading critical images immediately
+        // Start preloading critical images immediately (non-blocking)
         imagePreloader.preloadCriticalImages();
         
+        // Fetch data (will use cache if available)
         const data = await portfolioService.getPortfolioDataOptimized('en');
+        
+        if (!mounted) return;
         
         const endTime = performance.now();
         const fetchTime = endTime - startTime;
@@ -44,7 +47,7 @@ export const GlobalDataProvider = ({ children }) => {
         setGlobalData(data);
         setLastFetch(Date.now());
         
-        // Preload images from actual data
+        // Preload images from actual data (non-blocking)
         if (data) {
           // Preload all images found in the data
           imagePreloader.preloadDataImages(data);
@@ -60,29 +63,44 @@ export const GlobalDataProvider = ({ children }) => {
         // Mark initial load as complete
         setIsInitialLoad(false);
       } catch (err) {
+        if (!mounted) return;
         logger.error('Error fetching global data:', err);
         setError(err.message);
         setIsInitialLoad(false);
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     };
 
-    // Check if we need to fetch data
-    const shouldFetch = !globalData || (Date.now() - lastFetch) > CACHE_DURATION;
-    
-    if (shouldFetch) {
-      fetchGlobalData();
-    } else {
-              logger.data('Using cached global data');
-        setLoading(false);
-        setIsInitialLoad(false);
-    }
-  }, [globalData, lastFetch, CACHE_DURATION]);
+    // Try to get cached data immediately (non-blocking)
+    const loadCachedData = async () => {
+      try {
+        // The getPortfolioDataOptimized will check cache first
+        // This allows us to show cached data instantly
+        const cachedData = await portfolioService.getPortfolioDataOptimized('en');
+        if (mounted && cachedData) {
+          setGlobalData(cachedData);
+          setIsInitialLoad(false);
+          logger.data('Loaded cached data instantly');
+        }
+      } catch (err) {
+        // Ignore errors, will fetch fresh data
+      }
+    };
 
-  const handleProgressComplete = () => {
-    setShowProgress(false);
-  };
+    // Load cached data immediately (non-blocking)
+    loadCachedData();
+
+    // Always fetch fresh data in background to ensure it's up to date
+    // This runs in parallel with cached data load
+    fetchGlobalData();
+
+    return () => {
+      mounted = false;
+    };
+  }, []); // Only run once on mount
 
   const value = {
     data: globalData,
@@ -95,11 +113,7 @@ export const GlobalDataProvider = ({ children }) => {
     }
   };
 
-  // Show progress loader during first load
-  if (isInitialLoad && showProgress) {
-    return <LoadingProgress onComplete={handleProgressComplete} />;
-  }
-
+  // Always render children immediately - no blocking loader
   return (
     <GlobalDataContext.Provider value={value}>
       {children}

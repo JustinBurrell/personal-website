@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import indexedDBCache from '../utils/indexedDBCache'
 
 // Utility: Convert snake_case to camelCase
 function toCamelCase(str) {
@@ -28,7 +29,7 @@ const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-// Enhanced cache for storing fetched data
+// Enhanced cache for storing fetched data (in-memory for speed)
 const cache = new Map()
 const CACHE_DURATION = 30 * 60 * 1000 // 30 minutes
 
@@ -45,25 +46,53 @@ const cleanupCache = () => {
 // Run cleanup every 10 minutes
 setInterval(cleanupCache, 10 * 60 * 1000)
 
-// Helper function to check if cache is valid
+// Helper function to check if in-memory cache is valid
 const isCacheValid = (key) => {
   const cached = cache.get(key)
   if (!cached) return false
   return Date.now() - cached.timestamp < CACHE_DURATION
 }
 
-// Helper function to set cache
-const setCache = (key, data) => {
+// Helper function to set cache (both in-memory and IndexedDB)
+const setCache = async (key, data) => {
+  // Set in-memory cache for instant access
   cache.set(key, {
     data,
     timestamp: Date.now()
   })
+  
+  // Set IndexedDB cache for persistence
+  try {
+    await indexedDBCache.set(key, data, CACHE_DURATION)
+  } catch (error) {
+    console.warn('Failed to set IndexedDB cache:', error)
+  }
 }
 
-// Helper function to get cache
-const getCache = (key) => {
+// Helper function to get cache (check both in-memory and IndexedDB)
+const getCache = async (key) => {
+  // First check in-memory cache (fastest)
   const cached = cache.get(key)
-  return cached ? cached.data : null
+  if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+    return cached.data
+  }
+  
+  // Fall back to IndexedDB cache
+  try {
+    const indexedData = await indexedDBCache.get(key)
+    if (indexedData) {
+      // Restore to in-memory cache for faster subsequent access
+      cache.set(key, {
+        data: indexedData,
+        timestamp: Date.now()
+      })
+      return indexedData
+    }
+  } catch (error) {
+    console.warn('Failed to get IndexedDB cache:', error)
+  }
+  
+  return null
 }
 
 // Portfolio data service
@@ -72,9 +101,10 @@ export const portfolioService = {
   async getPortfolioData(languageCode = 'en') {
     const cacheKey = `portfolio_${languageCode}`
     
-    // Check cache first
-    if (isCacheValid(cacheKey)) {
-      return getCache(cacheKey)
+    // Check cache first (both in-memory and IndexedDB)
+    const cachedData = await getCache(cacheKey)
+    if (cachedData) {
+      return cachedData
     }
 
     try {
@@ -107,8 +137,8 @@ export const portfolioService = {
         projects: projectsData
       }
 
-      // Cache the result for 10 minutes instead of 5
-      setCache(cacheKey, portfolioData)
+      // Cache the result (both in-memory and IndexedDB)
+      await setCache(cacheKey, portfolioData)
       
       return portfolioData
     } catch (error) {
@@ -121,15 +151,19 @@ export const portfolioService = {
   async getPortfolioDataOptimized(languageCode = 'en') {
     const cacheKey = `portfolio_optimized_${languageCode}`
     
-    // Check cache first
-    if (isCacheValid(cacheKey)) {
-      return getCache(cacheKey)
+    // Check cache first (both in-memory and IndexedDB)
+    const cachedData = await getCache(cacheKey)
+    if (cachedData) {
+      return cachedData
     }
 
     try {
       // For now, always use the original method since the materialized view is incomplete
       // The materialized view doesn't include related data like education_items
-      return this.getPortfolioData(languageCode)
+      const data = await this.getPortfolioData(languageCode)
+      // Cache the optimized result
+      await setCache(cacheKey, data)
+      return data
     } catch (error) {
       console.error('Error fetching optimized portfolio data:', error)
       // Fallback to original method
@@ -429,13 +463,23 @@ export const portfolioService = {
   },
 
   // Clear all cache
-  clearCache() {
+  async clearCache() {
     cache.clear()
+    try {
+      await indexedDBCache.clear()
+    } catch (error) {
+      console.warn('Failed to clear IndexedDB cache:', error)
+    }
   },
 
   // Clear specific cache entry
-  clearCacheEntry(key) {
+  async clearCacheEntry(key) {
     cache.delete(key)
+    try {
+      await indexedDBCache.delete(key)
+    } catch (error) {
+      console.warn('Failed to clear IndexedDB cache entry:', error)
+    }
   },
 
   // Get asset URL from Supabase Storage

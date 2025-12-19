@@ -61,13 +61,12 @@ const extractImageUrls = (data) => {
 const routeDataCache = new Map();
 
 const ContentLoader = ({ children, data, routeKey }) => {
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const loadContent = async () => {
+    // Preload images in background (non-blocking)
+    const preloadImagesInBackground = async () => {
       try {
-        // Check if this route's data is already cached
         const cacheKey = routeKey || JSON.stringify(data);
         const cachedData = routeDataCache.get(cacheKey);
         
@@ -76,78 +75,57 @@ const ContentLoader = ({ children, data, routeKey }) => {
           const imageUrls = extractImageUrls(data);
           const newImageUrls = imageUrls.filter(url => !imageCache.has(url));
           
-          if (newImageUrls.length === 0) {
-            // All images are already cached, show content immediately
-            setIsLoading(false);
-            return;
+          if (newImageUrls.length > 0) {
+            // Preload new images in background (non-blocking)
+            preloadImages(newImageUrls).catch(err => {
+              console.warn('Error preloading images:', err);
+            });
+          }
+        } else {
+          // First time loading this route - preload images in background
+          const imageUrls = extractImageUrls(data);
+          if (imageUrls.length > 0) {
+            // Preload images in background (non-blocking)
+            preloadImages(imageUrls).catch(err => {
+              console.warn('Error preloading images:', err);
+            });
           }
           
-          // Only preload new images
-          await preloadImages(newImageUrls);
-          setIsLoading(false);
-          return;
+          // Cache the route data
+          routeDataCache.set(cacheKey, data);
         }
-
-        // First time loading this route
-        setIsLoading(true);
-        setError(null);
-
-        // Extract and preload all images
-        const imageUrls = extractImageUrls(data);
-        await preloadImages(imageUrls);
-
-        // Cache the route data
-        routeDataCache.set(cacheKey, data);
-        
-        // Add a small delay only for first load
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
-        setIsLoading(false);
       } catch (err) {
-        console.error('Error preloading content:', err);
+        console.warn('Error preloading content:', err);
         setError(err);
-        setIsLoading(false);
       }
     };
 
-    loadContent();
+    // Preload images in background without blocking render
+    if (data) {
+      // Use requestIdleCallback if available, otherwise setTimeout
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(preloadImagesInBackground, { timeout: 1000 });
+      } else {
+        setTimeout(preloadImagesInBackground, 0);
+      }
+    }
   }, [data, routeKey]);
 
   if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-red-500">Error loading content. Please refresh the page.</div>
-      </div>
-    );
+    // Still show content even if preloading fails
+    console.warn('ContentLoader error:', error);
   }
 
+  // Always render children immediately - no blocking
   return (
-    <AnimatePresence mode="wait">
-      {isLoading ? (
-        <motion.div
-          key="loading"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="min-h-screen flex items-center justify-center"
-        >
-          <div className="flex flex-col items-center space-y-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-            <p className="text-gray-600">Loading content...</p>
-          </div>
-        </motion.div>
-      ) : (
-        <motion.div
-          key="content"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          {children}
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+    >
+      {children}
+    </motion.div>
   );
 };
 
