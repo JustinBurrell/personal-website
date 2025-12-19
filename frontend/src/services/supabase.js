@@ -97,6 +97,38 @@ const getCache = async (key) => {
 
 // Portfolio data service
 export const portfolioService = {
+  // Get critical data first (home and about) for instant initial render
+  async getCriticalData(languageCode = 'en') {
+    const cacheKey = `critical_${languageCode}`
+    
+    // Check cache first
+    const cachedData = await getCache(cacheKey)
+    if (cachedData) {
+      return cachedData
+    }
+
+    try {
+      // Load only critical sections first (home and about)
+      const [homeData, aboutData] = await Promise.all([
+        this.getHomeData('en'),
+        this.getAboutData('en')
+      ])
+
+      const criticalData = {
+        home: homeData,
+        about: aboutData
+      }
+
+      // Cache the result
+      await setCache(cacheKey, criticalData)
+      
+      return criticalData
+    } catch (error) {
+      console.error('Error fetching critical data:', error)
+      throw error
+    }
+  },
+
   // Get all portfolio data - optimized with better caching
   async getPortfolioData(languageCode = 'en') {
     const cacheKey = `portfolio_${languageCode}`
@@ -147,7 +179,7 @@ export const portfolioService = {
     }
   },
 
-  // Optimized single query method (fallback if materialized view exists)
+  // Optimized single query method with critical data preloading
   async getPortfolioDataOptimized(languageCode = 'en') {
     const cacheKey = `portfolio_optimized_${languageCode}`
     
@@ -158,12 +190,37 @@ export const portfolioService = {
     }
 
     try {
-      // For now, always use the original method since the materialized view is incomplete
-      // The materialized view doesn't include related data like education_items
-      const data = await this.getPortfolioData(languageCode)
-      // Cache the optimized result
-      await setCache(cacheKey, data)
-      return data
+      // Strategy: Load critical data first, then load rest in background
+      // This allows instant rendering of home/about while other sections load
+      
+      // Step 1: Load critical data (home + about) immediately
+      const criticalData = await this.getCriticalData(languageCode)
+      
+      // Step 2: Load remaining data in parallel (non-blocking)
+      const remainingDataPromise = Promise.all([
+        this.getAwardsData('en'),
+        this.getEducationData('en'),
+        this.getExperienceData('en'),
+        this.getGalleryData('en'),
+        this.getProjectsData('en')
+      ]).then(([awardsData, educationData, experienceData, galleryData, projectsData]) => ({
+        awards: awardsData,
+        education: educationData,
+        experience: experienceData,
+        gallery: galleryData,
+        projects: projectsData
+      }))
+      
+      // Return critical data immediately, complete data will be cached when ready
+      const completeData = {
+        ...criticalData,
+        ...(await remainingDataPromise)
+      }
+      
+      // Cache the complete result
+      await setCache(cacheKey, completeData)
+      
+      return completeData
     } catch (error) {
       console.error('Error fetching optimized portfolio data:', error)
       // Fallback to original method

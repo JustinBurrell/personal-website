@@ -32,39 +32,84 @@ export const GlobalDataProvider = ({ children }) => {
         // Start preloading critical images immediately (non-blocking)
         imagePreloader.preloadCriticalImages();
         
-        // Fetch data (will use cache if available)
-        const data = await portfolioService.getPortfolioDataOptimized('en');
+        // Strategy: Load critical data first (home + about) for instant render
+        // Then load remaining data in background
+        const criticalStartTime = performance.now();
+        const criticalData = await portfolioService.getCriticalData('en');
         
         if (!mounted) return;
         
-        const endTime = performance.now();
-        const fetchTime = endTime - startTime;
-        logger.data(`Global data loaded in ${fetchTime.toFixed(2)}ms`);
+        const criticalTime = performance.now() - criticalStartTime;
+        logger.data(`Critical data (home+about) loaded in ${criticalTime.toFixed(2)}ms`);
         
-        // Track data fetch performance
-        performanceOptimizer.trackDataFetch('global_portfolio_data', fetchTime);
+        // Set critical data immediately for instant rendering
+        setGlobalData(criticalData);
+        setIsInitialLoad(false);
         
-        setGlobalData(data);
-        setLastFetch(Date.now());
-        
-        // Preload images from actual data (non-blocking)
-        if (data) {
-          // Preload all images found in the data
-          imagePreloader.preloadDataImages(data);
-          
-          // Also preload section images as fallback
-          Object.keys(data).forEach(section => {
-            if (section !== 'home' && section !== 'contact') {
-              imagePreloader.preloadSectionImages(section);
-            }
-          });
+        // Preload images from critical data immediately
+        if (criticalData) {
+          imagePreloader.preloadDataImages(criticalData);
         }
         
-        // Mark initial load as complete
-        setIsInitialLoad(false);
+        // Now load remaining data in background (non-blocking)
+        const remainingDataPromise = (async () => {
+          try {
+            const [
+              awardsData,
+              educationData,
+              experienceData,
+              galleryData,
+              projectsData
+            ] = await Promise.all([
+              portfolioService.getAwardsData('en'),
+              portfolioService.getEducationData('en'),
+              portfolioService.getExperienceData('en'),
+              portfolioService.getGalleryData('en'),
+              portfolioService.getProjectsData('en')
+            ]);
+            
+            if (!mounted) return;
+            
+            // Merge with critical data
+            const completeData = {
+              ...criticalData,
+              awards: awardsData,
+              education: educationData,
+              experience: experienceData,
+              gallery: galleryData,
+              projects: projectsData
+            };
+            
+            setGlobalData(completeData);
+            setLastFetch(Date.now());
+            
+            // Preload images from complete data
+            imagePreloader.preloadDataImages(completeData);
+            
+            // Preload section images
+            Object.keys(completeData).forEach(section => {
+              if (section !== 'home' && section !== 'contact') {
+                imagePreloader.preloadSectionImages(section);
+              }
+            });
+            
+            const endTime = performance.now();
+            const fetchTime = endTime - startTime;
+            logger.data(`Complete data loaded in ${fetchTime.toFixed(2)}ms`);
+            performanceOptimizer.trackDataFetch('global_portfolio_data', fetchTime);
+          } catch (err) {
+            if (!mounted) return;
+            logger.error('Error loading remaining data:', err);
+            // Don't fail completely - we already have critical data
+          }
+        })();
+        
+        // Don't await - let it complete in background
+        remainingDataPromise.catch(() => {});
+        
       } catch (err) {
         if (!mounted) return;
-        logger.error('Error fetching global data:', err);
+        logger.error('Error fetching critical data:', err);
         setError(err.message);
         setIsInitialLoad(false);
       } finally {
@@ -78,15 +123,28 @@ export const GlobalDataProvider = ({ children }) => {
     const loadCachedData = async () => {
       try {
         // Check IndexedDB cache first (fastest path - no network)
-        const cacheKey = 'portfolio_optimized_en';
+        // Try complete data first, then critical data as fallback
+        const completeCacheKey = 'portfolio_optimized_en';
+        const criticalCacheKey = 'critical_en';
         const indexedDBCache = (await import('../utils/indexedDBCache')).default;
-        const cachedData = await indexedDBCache.get(cacheKey);
+        
+        // Try complete data first
+        let cachedData = await indexedDBCache.get(completeCacheKey);
+        
+        // If no complete data, try critical data
+        if (!cachedData) {
+          cachedData = await indexedDBCache.get(criticalCacheKey);
+          if (cachedData) {
+            logger.data('Loaded critical cached data from IndexedDB');
+          }
+        } else {
+          logger.data('Loaded complete cached data from IndexedDB');
+        }
         
         if (mounted && cachedData) {
           setGlobalData(cachedData);
           setLastFetch(Date.now());
           setIsInitialLoad(false);
-          logger.data('Loaded cached data instantly from IndexedDB');
           return true; // Cache hit
         }
       } catch (err) {
