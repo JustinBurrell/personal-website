@@ -10,6 +10,49 @@ import { FaList, FaClock, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useScrollSpy } from '../hooks/useScrollSpy';
 import { safeScrollTo } from '../utils/scrollUtils';
 
+// Helper function to check if images should be hidden for a specific experience
+const shouldHideImages = (company, position) => {
+  const companyLower = company?.toLowerCase() || '';
+  const positionLower = position?.toLowerCase() || '';
+  
+  const hideImageCompanies = [
+    'frood',
+    'prep for prep',
+    'colgate',
+    'lehigh university chapter of colorstack',
+    'colorstack',
+    'omicron kappa',
+    'omicron kappa polemarch',
+    'kappa alpha psi',
+    'black student union',
+    'men of color',
+    'student senate',
+    'office of admissions'
+  ];
+  
+  const hideImagePositions = [
+    'black student union president',
+    'student senate',
+    'office of admissions'
+  ];
+  
+  // Check if company name matches
+  for (const hideCompany of hideImageCompanies) {
+    if (companyLower.includes(hideCompany.toLowerCase())) {
+      return true;
+    }
+  }
+  
+  // Check if position name matches
+  for (const hidePosition of hideImagePositions) {
+    if (positionLower.includes(hidePosition.toLowerCase())) {
+      return true;
+    }
+  }
+  
+  return false;
+};
+
 // Timeline component (moved inside Experience.js)
 const Timeline = ({ experiences, type }) => {
   const scrollContainerRef = useRef(null);
@@ -167,7 +210,7 @@ const Timeline = ({ experiences, type }) => {
               )}
 
               {/* Images gallery */}
-              {exp.images && exp.images.length > 0 && (
+              {exp.images && exp.images.length > 0 && !shouldHideImages(exp.company, exp.position) && (
                 <div className="mt-4">
                   <ExperienceGallery images={exp.images} />
                 </div>
@@ -335,7 +378,7 @@ const Experience = () => {
                 </motion.div>
               )}
               {/* Gallery at the bottom of the card if images exist */}
-              {pos.images && pos.images.length > 0 && <ExperienceGallery images={pos.images} />}
+              {pos.images && pos.images.length > 0 && !shouldHideImages(company.company, pos.position) && <ExperienceGallery images={pos.images} />}
             </motion.div>
           ))}
         </motion.div>
