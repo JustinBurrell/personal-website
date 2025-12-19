@@ -114,7 +114,7 @@ const Navbar = () => {
     setActiveSubmenu(itemName);
     
     // Prefetch route data on hover for instant navigation
-    if (item.to && item.to !== '/') {
+    if (item && item.to && item.to !== '/') {
       const route = item.to.slice(1); // Remove leading slash
       if (route) {
         prefetchManager.prefetchSection(route);
@@ -242,7 +242,7 @@ const Navbar = () => {
                   {item.subItems && activeSubmenu === item.name && (
                     <div 
                       className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
-                      onMouseEnter={() => handleMouseEnter(item.name)}
+                      onMouseEnter={() => handleMouseEnter(item.name, item)}
                       onMouseLeave={handleMouseLeave}
                     >
                       <div className="py-1" role="menu">
