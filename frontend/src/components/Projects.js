@@ -1,20 +1,143 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import { useLanguage } from '../features/language';
 import { useTranslateText } from '../features/language/useTranslateText';
 import Card from '../assets/ui/Card';
-import { motion } from 'framer-motion';
-import { FaChevronLeft, FaChevronRight, FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaGithub, FaExternalLinkAlt, FaTimes } from 'react-icons/fa';
 import { Element } from 'react-scroll';
 
-// Timeline component for projects
-const Timeline = ({ projects }) => {
-  const scrollContainerRef = useRef(null);
-  const [activeIndex, setActiveIndex] = React.useState(0);
+// Project Detail Modal Component
+const ProjectModal = ({ project, isOpen, onClose }) => {
+  React.useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isOpen]);
 
+  if (!isOpen || !project) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 p-4"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          onClick={(e) => e.stopPropagation()}
+          className="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+        >
+          <div className="relative">
+            {/* Close button */}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all"
+              aria-label="Close modal"
+            >
+              <FaTimes className="text-gray-700 text-xl" />
+            </button>
+
+            {/* Project Image */}
+            {project.imageUrl && (
+              <div className="relative h-96 w-full bg-gray-100 rounded-t-lg overflow-hidden">
+                <img
+                  src={project.imageUrl}
+                  alt={project.title}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            )}
+
+            {/* Project Content */}
+            <div className="p-6">
+              <div className="flex items-baseline gap-2 mb-4 flex-wrap">
+                <h2 className="text-3xl font-bold text-gray-800">{project.title}</h2>
+                {project.date && (
+                  <span className="text-sm text-gray-500 font-normal">- {project.date}</span>
+                )}
+              </div>
+
+              <p className="text-gray-600 mb-6 text-lg leading-relaxed">
+                {project.description}
+              </p>
+
+              {/* Highlights */}
+              {project.highlights && project.highlights.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-3">Key Features</h3>
+                  <ul className="list-disc list-inside space-y-2">
+                    {project.highlights.map((highlight, i) => (
+                      <li key={i} className="text-gray-700">
+                        {highlight}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Technologies */}
+              {project.technologies && project.technologies.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-3">Technologies</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {project.technologies.map((tech, i) => (
+                      <span
+                        key={i}
+                        className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Project Links */}
+              <div className="flex gap-4 pt-4 border-t">
+                {project.githubUrl && (
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+                  >
+                    <FaGithub className="text-xl" />
+                    <span>View Code</span>
+                  </a>
+                )}
+                {project.liveUrl && (
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+                  >
+                    <FaExternalLinkAlt className="text-xl" />
+                    <span>Live Demo</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+// Projects Grid Component
+const ProjectsGrid = ({ projects, onProjectClick }) => {
   // Sort projects by date (most recent first)
   const sortedProjects = [...projects].sort((a, b) => {
-    // Parse date as YYYY/MM/DD for comparison, fallback to 0 if invalid
     const parseDate = (dateStr) => {
       if (!dateStr) return 0;
       const d = new Date(dateStr);
@@ -23,201 +146,63 @@ const Timeline = ({ projects }) => {
     return parseDate(b.date) - parseDate(a.date);
   });
 
-  // Center the first card on mount
-  useEffect(() => {
-    if (scrollContainerRef.current) {
-      const containerWidth = scrollContainerRef.current.offsetWidth;
-      const cardWidth = containerWidth;
-      const scrollPosition = (containerWidth - cardWidth) / 2;
-      scrollContainerRef.current.scrollLeft = scrollPosition;
-    }
-  }, []);
-
-  // Update active index on scroll
-  const handleScroll = () => {
-    if (scrollContainerRef.current) {
-      const containerWidth = scrollContainerRef.current.offsetWidth;
-      const scrollLeft = scrollContainerRef.current.scrollLeft;
-      const index = Math.round(scrollLeft / containerWidth);
-      setActiveIndex(index);
-    }
-  };
-
-  // Scroll to a specific card
-  const scrollToIndex = (index) => {
-    if (scrollContainerRef.current) {
-      const containerWidth = scrollContainerRef.current.offsetWidth;
-      scrollContainerRef.current.scrollTo({
-        left: index * containerWidth,
-        behavior: 'smooth',
-      });
-      setActiveIndex(index);
-    }
-  };
-
-  const scroll = (direction) => {
-    let newIndex = activeIndex + (direction === 'left' ? -1 : 1);
-    newIndex = Math.max(0, Math.min(projects.length - 1, newIndex));
-    scrollToIndex(newIndex);
-  };
-
   return (
-    <div className="relative max-w-4xl mx-auto w-full">
-      {/* Scroll buttons further from the card */}
-      <button
-        onClick={() => scroll('left')}
-        className="absolute -left-16 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all duration-200"
-        aria-label="Scroll left"
-        style={{ left: '-4.5rem' }}
-      >
-        <FaChevronLeft className="text-gray-800 text-xl" />
-      </button>
-      <button
-        onClick={() => scroll('right')}
-        className="absolute -right-16 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg transition-all duration-200"
-        aria-label="Scroll right"
-        style={{ right: '-4.5rem' }}
-      >
-        <FaChevronRight className="text-gray-800 text-xl" />
-      </button>
-
-      {/* Timeline container */}
-      <div
-        ref={scrollContainerRef}
-        className="flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scrollbar-hide w-full"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        onScroll={handleScroll}
-      >
-        {sortedProjects.map((project, index) => (
-          <motion.div
-            key={project.title}
-            className="flex-none w-full snap-center"
-            style={{ minWidth: '100%', maxWidth: '100%' }}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: '-20px' }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-          >
-            <Card className="h-full">
-              <div className="flex flex-col h-full">
-                {/* Project Image */}
-                {project.imageUrl && (
-                  <div className="relative h-96 flex items-center justify-center bg-white rounded-t-lg">
-                    <img
-                      src={project.imageUrl}
-                      alt={project.title}
-                      className="max-h-96 w-full object-contain"
-                    />
-                  </div>
-                )}
-
-                {/* Project Content */}
-                <div className="p-6 flex-grow">
-                  <div className="flex items-baseline gap-2 mb-2 flex-wrap">
-                    <motion.h3
-                      className="text-2xl font-bold text-gray-800"
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: '-20px' }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      {project.title}
-                    </motion.h3>
-                    {project.date && (
-                      <span className="text-sm text-gray-500 font-normal">- {project.date}</span>
-                    )}
-                  </div>
-                  <motion.p
-                    className="text-gray-600 mb-4"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-20px' }}
-                    transition={{ duration: 0.5, delay: 0.1 }}
-                  >
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+      {sortedProjects.map((project, index) => (
+        <motion.div
+          key={project.title}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-20px' }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
+          className="group cursor-pointer"
+          onClick={() => onProjectClick(project)}
+        >
+          <Card className="h-full overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <div className="relative h-64 bg-gray-100 overflow-hidden">
+              {project.imageUrl ? (
+                <img
+                  src={project.imageUrl}
+                  alt={project.title}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-indigo-100">
+                  <span className="text-gray-400 text-4xl font-bold">{project.title.charAt(0)}</span>
+                </div>
+              )}
+              
+              {/* Hover overlay with description */}
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-70 transition-all duration-300 flex items-center justify-center p-4 opacity-0 group-hover:opacity-100">
+                <div className="text-white text-center transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                  <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+                  <p className="text-sm text-gray-200 line-clamp-3">
                     {project.description}
-                  </motion.p>
-
-                  {/* Highlights */}
-                  {project.highlights && project.highlights.length > 0 && (
-                    <ul className="list-disc list-inside space-y-2 mb-4">
-                      {project.highlights.map((highlight, i) => (
-                        <motion.li
-                          key={i}
-                          className="text-gray-700"
-                          initial={{ opacity: 0, x: -10 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          viewport={{ once: true, margin: '-20px' }}
-                          transition={{ duration: 0.4, delay: 0.3 + i * 0.05 }}
-                        >
-                          {highlight}
-                        </motion.li>
-                      ))}
-                    </ul>
+                  </p>
+                  {project.date && (
+                    <p className="text-xs text-gray-300 mt-2">{project.date}</p>
                   )}
-
-                  {/* Technologies */}
-                  {project.technologies && project.technologies.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.technologies.map((tech, i) => (
-                        <span
-                          key={i}
-                          className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Project Links */}
-                  <div className="flex gap-4 mt-auto pt-4">
-                    {project.githubUrl && (
-                      <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-gray-600 hover:text-gray-900 transition-colors text-sm"
-                      >
-                        <FaGithub className="text-lg" />
-                        <span>View Code</span>
-                      </a>
-                    )}
-                    {project.liveUrl && (
-                      <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-gray-600 hover:text-gray-900 transition-colors text-sm"
-                      >
-                        <FaExternalLinkAlt className="text-lg" />
-                        <span>Live Demo</span>
-                      </a>
-                    )}
-                  </div>
                 </div>
               </div>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
-      {/* Slider dots below the cards */}
-      <div className="flex justify-center items-center gap-2 mt-2">
-        {projects.map((_, idx) => (
-          <button
-            key={idx}
-            className={`w-3 h-3 rounded-full border-2 ${activeIndex === idx ? 'bg-blue-600 border-blue-600' : 'bg-gray-200 border-gray-400'} transition-all duration-200`}
-            onClick={() => scrollToIndex(idx)}
-            aria-label={`Go to project ${idx + 1}`}
-            style={{ outline: 'none' }}
-          />
-        ))}
-      </div>
+            </div>
+            
+            {/* Project title below image (visible on mobile) */}
+            <div className="p-4 md:hidden">
+              <h3 className="text-lg font-bold text-gray-800 mb-1">{project.title}</h3>
+              {project.date && (
+                <p className="text-sm text-gray-500">{project.date}</p>
+              )}
+            </div>
+          </Card>
+        </motion.div>
+      ))}
     </div>
   );
 };
 
 const Projects = () => {
   const { translatedData, isLoading } = useLanguage();
+  const [selectedProject, setSelectedProject] = useState(null);
 
   // Use translation hook for static text
   const projectsTitle = useTranslateText("Projects");
@@ -296,7 +281,7 @@ const Projects = () => {
             </Card>
           </motion.div>
 
-          {/* Projects Section */}
+          {/* Projects Grid Section */}
           <motion.div
             className="mt-16"
             initial={{ opacity: 0 }}
@@ -305,9 +290,19 @@ const Projects = () => {
             transition={{ duration: 0.5 }}
           >
             <Element name="projects-section">
-              <Timeline projects={projectData.project} />
+              <ProjectsGrid 
+                projects={projectData.project} 
+                onProjectClick={(project) => setSelectedProject(project)}
+              />
             </Element>
           </motion.div>
+
+          {/* Project Detail Modal */}
+          <ProjectModal
+            project={selectedProject}
+            isOpen={!!selectedProject}
+            onClose={() => setSelectedProject(null)}
+          />
         </div>
       </section>
     </AnimationWrapper>
