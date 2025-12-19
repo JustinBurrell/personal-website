@@ -93,8 +93,8 @@ const Timeline = ({ projects }) => {
             key={project.title}
             className="flex-none w-full snap-center"
             style={{ minWidth: '100%', maxWidth: '100%' }}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: '-20px' }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
           >
@@ -257,11 +257,10 @@ const Projects = () => {
           {/* Top Card: Projects Title/Description/Image */}
           <motion.div
             className="max-w-4xl mx-auto mb-2 pt-16"
-            initial={{ opacity: 0, y: -40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -40 }}
-            viewport={{ once: false, margin: '-20px' }}
-            transition={{ duration: 0.7, type: 'spring', stiffness: 100, damping: 18 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: '-20px' }}
+            transition={{ duration: 0.5 }}
           >
             <Card variant="transparent" className="p-0">
               <div className="grid md:grid-cols-5 gap-6 items-center">
@@ -299,8 +298,8 @@ const Projects = () => {
           {/* Projects Section */}
           <motion.div
             className="mt-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: '-20px' }}
             transition={{ duration: 0.5 }}
           >
