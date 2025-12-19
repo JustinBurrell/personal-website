@@ -98,6 +98,7 @@ const getCache = async (key) => {
 // Portfolio data service
 export const portfolioService = {
   // Get critical data first (home and about) for instant initial render
+  // NOTE: Currently using parallel loading instead, but keeping for backwards compatibility
   async getCriticalData(languageCode = 'en') {
     const cacheKey = `critical_${languageCode}`
     
@@ -179,7 +180,7 @@ export const portfolioService = {
     }
   },
 
-  // Optimized single query method with critical data preloading
+  // Optimized single query method - loads all data in parallel
   async getPortfolioDataOptimized(languageCode = 'en') {
     const cacheKey = `portfolio_optimized_${languageCode}`
     
@@ -190,33 +191,36 @@ export const portfolioService = {
     }
 
     try {
-      // Strategy: Load critical data first, then load rest in background
-      // This allows instant rendering of home/about while other sections load
-      
-      // Step 1: Load critical data (home + about) immediately
-      const criticalData = await this.getCriticalData(languageCode)
-      
-      // Step 2: Load remaining data in parallel (non-blocking)
-      const remainingDataPromise = Promise.all([
+      // Load all data in parallel for fastest overall load time
+      // This ensures all pages are ready quickly
+      const [
+        homeData,
+        aboutData,
+        awardsData,
+        educationData,
+        experienceData,
+        galleryData,
+        projectsData
+      ] = await Promise.all([
+        this.getHomeData('en'),
+        this.getAboutData('en'),
         this.getAwardsData('en'),
         this.getEducationData('en'),
         this.getExperienceData('en'),
         this.getGalleryData('en'),
         this.getProjectsData('en')
-      ]).then(([awardsData, educationData, experienceData, galleryData, projectsData]) => ({
+      ])
+
+      const completeData = {
+        home: homeData,
+        about: aboutData,
         awards: awardsData,
         education: educationData,
         experience: experienceData,
         gallery: galleryData,
         projects: projectsData
-      }))
-      
-      // Return critical data immediately, complete data will be cached when ready
-      const completeData = {
-        ...criticalData,
-        ...(await remainingDataPromise)
       }
-      
+
       // Cache the complete result
       await setCache(cacheKey, completeData)
       

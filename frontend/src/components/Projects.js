@@ -222,8 +222,9 @@ const Projects = () => {
   // Use translation hook for static text
   const projectsTitle = useTranslateText("Projects");
 
-  // Add loading state and null checks
-  if (isLoading || !translatedData || !translatedData.projects || !translatedData.projects[0]) {
+  // Show skeleton if data not available yet - but don't block on isLoading
+  // This allows instant rendering while data loads in background
+  if (!translatedData || !translatedData.projects || !translatedData.projects[0]) {
     return (
       <AnimationWrapper>
         <section id="projects" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">

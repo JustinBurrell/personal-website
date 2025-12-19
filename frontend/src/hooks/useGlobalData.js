@@ -32,80 +32,58 @@ export const GlobalDataProvider = ({ children }) => {
         // Start preloading critical images immediately (non-blocking)
         imagePreloader.preloadCriticalImages();
         
-        // Strategy: Load critical data first (home + about) for instant render
-        // Then load remaining data in background
-        const criticalStartTime = performance.now();
-        const criticalData = await portfolioService.getCriticalData('en');
+        // Load all data in parallel for fastest overall load time
+        // This ensures all pages are ready quickly
+        const [
+          homeData,
+          aboutData,
+          awardsData,
+          educationData,
+          experienceData,
+          galleryData,
+          projectsData
+        ] = await Promise.all([
+          portfolioService.getHomeData('en'),
+          portfolioService.getAboutData('en'),
+          portfolioService.getAwardsData('en'),
+          portfolioService.getEducationData('en'),
+          portfolioService.getExperienceData('en'),
+          portfolioService.getGalleryData('en'),
+          portfolioService.getProjectsData('en')
+        ]);
         
         if (!mounted) return;
         
-        const criticalTime = performance.now() - criticalStartTime;
-        logger.data(`Critical data (home+about) loaded in ${criticalTime.toFixed(2)}ms`);
+        const completeData = {
+          home: homeData,
+          about: aboutData,
+          awards: awardsData,
+          education: educationData,
+          experience: experienceData,
+          gallery: galleryData,
+          projects: projectsData
+        };
         
-        // Set critical data immediately for instant rendering
-        setGlobalData(criticalData);
+        setGlobalData(completeData);
+        setLastFetch(Date.now());
         setIsInitialLoad(false);
         
-        // Preload images from critical data immediately
-        if (criticalData) {
-          imagePreloader.preloadDataImages(criticalData);
+        // Cache the complete data
+        const cacheKey = 'portfolio_optimized_en';
+        const indexedDBCache = (await import('../utils/indexedDBCache')).default;
+        indexedDBCache.set(cacheKey, completeData, 30 * 60 * 1000).catch(err => {
+          logger.warn('Failed to cache data:', err);
+        });
+        
+        // Preload images from complete data (non-blocking)
+        if (completeData) {
+          imagePreloader.preloadDataImages(completeData);
         }
         
-        // Now load remaining data in background (non-blocking)
-        const remainingDataPromise = (async () => {
-          try {
-            const [
-              awardsData,
-              educationData,
-              experienceData,
-              galleryData,
-              projectsData
-            ] = await Promise.all([
-              portfolioService.getAwardsData('en'),
-              portfolioService.getEducationData('en'),
-              portfolioService.getExperienceData('en'),
-              portfolioService.getGalleryData('en'),
-              portfolioService.getProjectsData('en')
-            ]);
-            
-            if (!mounted) return;
-            
-            // Merge with critical data
-            const completeData = {
-              ...criticalData,
-              awards: awardsData,
-              education: educationData,
-              experience: experienceData,
-              gallery: galleryData,
-              projects: projectsData
-            };
-            
-            setGlobalData(completeData);
-            setLastFetch(Date.now());
-            
-            // Preload images from complete data
-            imagePreloader.preloadDataImages(completeData);
-            
-            // Preload section images
-            Object.keys(completeData).forEach(section => {
-              if (section !== 'home' && section !== 'contact') {
-                imagePreloader.preloadSectionImages(section);
-              }
-            });
-            
-            const endTime = performance.now();
-            const fetchTime = endTime - startTime;
-            logger.data(`Complete data loaded in ${fetchTime.toFixed(2)}ms`);
-            performanceOptimizer.trackDataFetch('global_portfolio_data', fetchTime);
-          } catch (err) {
-            if (!mounted) return;
-            logger.error('Error loading remaining data:', err);
-            // Don't fail completely - we already have critical data
-          }
-        })();
-        
-        // Don't await - let it complete in background
-        remainingDataPromise.catch(() => {});
+        const endTime = performance.now();
+        const fetchTime = endTime - startTime;
+        logger.data(`Complete data loaded in ${fetchTime.toFixed(2)}ms`);
+        performanceOptimizer.trackDataFetch('global_portfolio_data', fetchTime);
         
       } catch (err) {
         if (!mounted) return;
@@ -123,28 +101,17 @@ export const GlobalDataProvider = ({ children }) => {
     const loadCachedData = async () => {
       try {
         // Check IndexedDB cache first (fastest path - no network)
-        // Try complete data first, then critical data as fallback
         const completeCacheKey = 'portfolio_optimized_en';
-        const criticalCacheKey = 'critical_en';
         const indexedDBCache = (await import('../utils/indexedDBCache')).default;
         
-        // Try complete data first
-        let cachedData = await indexedDBCache.get(completeCacheKey);
-        
-        // If no complete data, try critical data
-        if (!cachedData) {
-          cachedData = await indexedDBCache.get(criticalCacheKey);
-          if (cachedData) {
-            logger.data('Loaded critical cached data from IndexedDB');
-          }
-        } else {
-          logger.data('Loaded complete cached data from IndexedDB');
-        }
+        // Try to get complete cached data
+        const cachedData = await indexedDBCache.get(completeCacheKey);
         
         if (mounted && cachedData) {
           setGlobalData(cachedData);
           setLastFetch(Date.now());
           setIsInitialLoad(false);
+          logger.data('Loaded complete cached data from IndexedDB');
           return true; // Cache hit
         }
       } catch (err) {
@@ -161,18 +128,14 @@ export const GlobalDataProvider = ({ children }) => {
       if (!cacheHit) {
         // No cache - fetch immediately
         fetchGlobalData();
+
       } else {
-        // Cache hit - fetch in background to refresh (non-blocking)
-        // Use requestIdleCallback to not block main thread
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(() => {
-            fetchGlobalData();
-          }, { timeout: 2000 });
-        } else {
-          setTimeout(() => {
-            fetchGlobalData();
-          }, 100);
-        }
+        // Cache hit - fetch fresh data immediately in background (non-blocking)
+        // Start immediately to ensure data is ready when user navigates
+        // Use setTimeout with 0 to not block current execution
+        setTimeout(() => {
+          fetchGlobalData();
+        }, 0);
       }
     });
 
@@ -218,4 +181,4 @@ export const useSectionData = (sectionName) => {
     loading,
     error
   };
-}; 
+};

@@ -4,6 +4,7 @@ import logger from './logger.js';
 class ImagePreloader {
   constructor() {
     this.preloadedImages = new Set();
+    this.preloadingImages = new Set(); // Track images currently being preloaded
     this.supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
     
     // Start preloading critical images immediately
@@ -15,28 +16,49 @@ class ImagePreloader {
     return `${this.supabaseUrl}/storage/v1/object/public/assets/${filePath}`;
   }
 
-  // Preload a single image with timeout
+  // Preload a single image with timeout and deduplication
   preloadImage(src, timeout = 5000) {
     return new Promise((resolve, reject) => {
+      // If already preloaded, resolve immediately
       if (this.preloadedImages.has(src)) {
         resolve(src);
         return;
       }
 
+      // If currently preloading, wait for existing promise
+      if (this.preloadingImages.has(src)) {
+        // Wait a bit and check again (simple deduplication)
+        setTimeout(() => {
+          if (this.preloadedImages.has(src)) {
+            resolve(src);
+          } else {
+            // If still not loaded, try again (shouldn't happen often)
+            this.preloadImage(src, timeout).then(resolve).catch(reject);
+          }
+        }, 100);
+        return;
+      }
+
+      // Mark as preloading
+      this.preloadingImages.add(src);
+
       const img = new Image();
       const timeoutId = setTimeout(() => {
+        this.preloadingImages.delete(src);
         reject(new Error(`Timeout preloading image: ${src}`));
       }, timeout);
 
       img.onload = () => {
         clearTimeout(timeoutId);
         this.preloadedImages.add(src);
+        this.preloadingImages.delete(src);
         logger.imagePreload('Preloaded:', src);
         resolve(src);
       };
       
       img.onerror = () => {
         clearTimeout(timeoutId);
+        this.preloadingImages.delete(src);
         logger.warn(`Failed to preload: ${src}`);
         reject(new Error(`Failed to preload image: ${src}`));
       };

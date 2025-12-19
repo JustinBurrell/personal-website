@@ -16,8 +16,9 @@ const Gallery = () => {
   const galleryTitle = useTranslateText("Gallery");
   const galleryDescription = useTranslateText("Check out moments from various experiences in my professional and academic career.");
 
-  // Add loading state and null checks
-  if (isLoading || !translatedData || !translatedData.gallery) {
+  // Show skeleton if data not available yet - but don't block on isLoading
+  // This allows instant rendering while data loads in background
+  if (!translatedData || !translatedData.gallery) {
     return (
       <AnimationWrapper>
         <section id="gallery" className="min-h-screen py-8">
