@@ -77,25 +77,46 @@ export const GlobalDataProvider = ({ children }) => {
     // Try to get cached data immediately (non-blocking)
     const loadCachedData = async () => {
       try {
-        // The getPortfolioDataOptimized will check cache first
-        // This allows us to show cached data instantly
-        const cachedData = await portfolioService.getPortfolioDataOptimized('en');
+        // Check IndexedDB cache first (fastest path - no network)
+        const cacheKey = 'portfolio_optimized_en';
+        const indexedDBCache = (await import('../utils/indexedDBCache')).default;
+        const cachedData = await indexedDBCache.get(cacheKey);
+        
         if (mounted && cachedData) {
           setGlobalData(cachedData);
+          setLastFetch(Date.now());
           setIsInitialLoad(false);
-          logger.data('Loaded cached data instantly');
+          logger.data('Loaded cached data instantly from IndexedDB');
+          return true; // Cache hit
         }
       } catch (err) {
         // Ignore errors, will fetch fresh data
+        logger.warn('Failed to load cached data:', err);
       }
+      return false; // Cache miss
     };
 
     // Load cached data immediately (non-blocking)
-    loadCachedData();
-
-    // Always fetch fresh data in background to ensure it's up to date
-    // This runs in parallel with cached data load
-    fetchGlobalData();
+    loadCachedData().then((cacheHit) => {
+      // Always fetch fresh data in background to ensure it's up to date
+      // But if cache hit, user sees content immediately
+      if (!cacheHit) {
+        // No cache - fetch immediately
+        fetchGlobalData();
+      } else {
+        // Cache hit - fetch in background to refresh (non-blocking)
+        // Use requestIdleCallback to not block main thread
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(() => {
+            fetchGlobalData();
+          }, { timeout: 2000 });
+        } else {
+          setTimeout(() => {
+            fetchGlobalData();
+          }, 100);
+        }
+      }
+    });
 
     return () => {
       mounted = false;

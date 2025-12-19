@@ -58,8 +58,11 @@ export const LanguageProvider = ({ children }) => {
       }
       
       if (currentLanguage === 'en') {
+        // For English, set data immediately (no translation needed)
+        // This allows instant rendering
         setTranslatedData(portfolioData);
         translationCache.set(cacheKey, portfolioData);
+        setIsLoading(false); // Ensure loading is false
         return;
       }
 

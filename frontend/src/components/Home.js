@@ -32,8 +32,9 @@ const Home = () => {
     }
   }, [location.state]);
 
-  // Add loading state and null checks
-  if (isLoading || !translatedData || !translatedData.home) {
+  // Show skeleton if data not available yet - but don't block on isLoading
+  // This allows instant rendering while data loads in background
+  if (!translatedData || !translatedData.home) {
     return (
       <AnimationWrapper>
         <section id="home" className="min-h-screen py-2">

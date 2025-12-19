@@ -73,11 +73,7 @@ const HomePage = memo(() => {
     preloadComponents();
   }, [hash]);
 
-  // Show loading state if data is not available yet
-  if (isLoading || !translatedData) {
-    return <LoadingFallback />;
-  }
-
+  // Always render - components will handle missing data gracefully
   return (
     <ContentLoader data={translatedData} routeKey="home">
       <Suspense fallback={<LoadingFallback />}>

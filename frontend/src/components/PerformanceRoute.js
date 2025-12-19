@@ -47,18 +47,9 @@ const PerformanceRoute = memo(({
     };
   }, [routeKey, section]);
 
-  // Show loading only if global data is not available
-  if (globalLoading || !globalData) {
-    return <LoadingFallback />;
-  }
-
-  // Show loading if translation is in progress (but data is available)
-  if (translationLoading && !translatedSectionData) {
-    return <LoadingFallback />;
-  }
-
-  // Use translated data if available, otherwise fall back to English
-  const finalData = translatedSectionData || sectionData;
+  // Always render - never block. Components will handle missing data gracefully
+  // Use translated data if available, otherwise fall back to English, otherwise null
+  const finalData = translatedSectionData || sectionData || null;
 
   return (
     <ContentLoader data={finalData} routeKey={routeKey}>

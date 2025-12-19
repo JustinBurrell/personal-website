@@ -249,8 +249,9 @@ const Experience = () => {
     }
   }, [location.state]);
 
-  // Add loading state and null checks
-  if (isLoading || !translatedData || !translatedData.experience || !translatedData.experience[0]) {
+  // Show skeleton if data not available yet - but don't block on isLoading
+  // This allows instant rendering while data loads in background
+  if (!translatedData || !translatedData.experience || !translatedData.experience[0]) {
     return (
       <AnimationWrapper>
         <section id="experience" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
