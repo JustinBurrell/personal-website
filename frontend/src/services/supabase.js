@@ -256,7 +256,6 @@ export const portfolioService = {
           languageCode,
           title,
           description,
-          heroImageUrl,
           isActive,
           home_organizations(name, orgUrl, orgColor, orgPortfolioUrl),
           home_qualities(attribute, description)
@@ -294,7 +293,6 @@ export const portfolioService = {
         .select(`
           id,
           languageCode,
-          description,
           profileImageUrl,
           isActive,
           about_skills(skill),
