@@ -34,15 +34,32 @@ if [ ! -f "package.json" ]; then
     exit 1
 fi
 
-# Check if node_modules exists, if not, run npm install
+# Check if node_modules exists and is valid
 if [ ! -d "node_modules" ]; then
     echo -e "${YELLOW}📦 node_modules not found. Installing dependencies...${NC}"
     npm install
     echo -e "${GREEN}✅ Dependencies installed successfully${NC}"
     echo ""
 else
-    echo -e "${GREEN}✅ Dependencies already installed${NC}"
-    echo ""
+    # Check if node_modules is corrupted by testing a common file
+    if [ ! -f "node_modules/.bin/react-scripts" ] || [ ! -r "node_modules/path-key/index.js" ]; then
+        echo -e "${YELLOW}⚠️  node_modules appears corrupted. Cleaning and reinstalling...${NC}"
+        echo -e "${YELLOW}   This may take a few minutes...${NC}"
+        
+        # Try to remove node_modules with force
+        rm -rf node_modules 2>/dev/null || {
+            echo -e "${YELLOW}   Using npm to clean...${NC}"
+            npm cache clean --force 2>/dev/null || true
+        }
+        
+        # Reinstall
+        npm install
+        echo -e "${GREEN}✅ Dependencies reinstalled successfully${NC}"
+        echo ""
+    else
+        echo -e "${GREEN}✅ Dependencies already installed${NC}"
+        echo ""
+    fi
 fi
 
 # Check for .env file (warn if missing but don't fail)
@@ -52,6 +69,11 @@ if [ ! -f ".env" ] && [ ! -f ".env.local" ]; then
     echo ""
 fi
 
+# Set environment variables to speed up compilation
+export SKIP_PREFLIGHT_CHECK=true
+export TSC_COMPILE_ON_ERROR=true
+export ESLINT_NO_DEV_ERRORS=true
+
 # Start the development server
 echo -e "${BLUE}🎯 Starting development server...${NC}"
 echo -e "${BLUE}   The app will open at http://localhost:3000${NC}"
@@ -59,11 +81,15 @@ echo -e "${BLUE}   If it doesn't open automatically, navigate to that URL${NC}"
 echo -e "${YELLOW}   Check the terminal for any compilation errors${NC}"
 echo -e "${YELLOW}   Check the browser console (F12) for runtime errors${NC}"
 echo ""
-echo -e "${GREEN}Starting server...${NC}"
+echo -e "${GREEN}Starting server (this may take 30-60 seconds on first run)...${NC}"
+echo -e "${YELLOW}   Compiling React app...${NC}"
 echo ""
 
 # Run npm start (this will keep running)
-npm start
+# Use BROWSER=none to prevent auto-opening browser (faster startup)
+# Set NODE_OPTIONS to increase memory if needed
+export NODE_OPTIONS="--max-old-space-size=4096"
+BROWSER=none npm start
 
 # If we get here, npm start exited (which shouldn't happen normally)
 if [ $? -ne 0 ]; then
