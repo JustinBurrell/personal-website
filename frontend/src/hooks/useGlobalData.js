@@ -74,11 +74,11 @@ export const GlobalDataProvider = ({ children }) => {
         indexedDBCache.set(cacheKey, completeData, 30 * 60 * 1000).catch(err => {
           logger.warn('Failed to cache data:', err);
         });
-        
+          
         // Preload images from complete data (non-blocking)
         if (completeData) {
           imagePreloader.preloadDataImages(completeData);
-        }
+            }
         
         const endTime = performance.now();
         const fetchTime = endTime - startTime;
@@ -92,8 +92,8 @@ export const GlobalDataProvider = ({ children }) => {
         setIsInitialLoad(false);
       } finally {
         if (mounted) {
-          setLoading(false);
-        }
+        setLoading(false);
+      }
       }
     };
 
@@ -127,9 +127,9 @@ export const GlobalDataProvider = ({ children }) => {
       // But if cache hit, user sees content immediately
       if (!cacheHit) {
         // No cache - fetch immediately
-        fetchGlobalData();
+      fetchGlobalData();
 
-      } else {
+    } else {
         // Cache hit - fetch fresh data immediately in background (non-blocking)
         // Start immediately to ensure data is ready when user navigates
         // Use setTimeout with 0 to not block current execution
@@ -141,7 +141,7 @@ export const GlobalDataProvider = ({ children }) => {
 
     return () => {
       mounted = false;
-    };
+  };
   }, []); // Only run once on mount
 
   const value = {
@@ -181,4 +181,4 @@ export const useSectionData = (sectionName) => {
     loading,
     error
   };
-};
+}; 

@@ -35,98 +35,98 @@ const ProjectModal = ({ project, isOpen, onClose }) => {
           exit={{ opacity: 0, scale: 0.9, y: 20 }}
           onClick={(e) => e.stopPropagation()}
           className="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
-        >
+      >
           <div className="relative">
             {/* Close button */}
-            <button
+      <button
               onClick={onClose}
               className="absolute top-4 right-4 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all"
               aria-label="Close modal"
-            >
+      >
               <FaTimes className="text-gray-700 text-xl" />
-            </button>
+      </button>
 
-            {/* Project Image */}
-            {project.imageUrl && (
+                {/* Project Image */}
+                {project.imageUrl && (
               <div className="relative h-96 w-full bg-gray-100 rounded-t-lg overflow-hidden">
-                <img
-                  src={project.imageUrl}
-                  alt={project.title}
+                    <img
+                      src={project.imageUrl}
+                      alt={project.title}
                   className="w-full h-full object-contain"
-                />
-              </div>
-            )}
+                    />
+                  </div>
+                )}
 
-            {/* Project Content */}
+                {/* Project Content */}
             <div className="p-6">
               <div className="flex items-baseline gap-2 mb-4 flex-wrap">
                 <h2 className="text-3xl font-bold text-gray-800">{project.title}</h2>
-                {project.date && (
-                  <span className="text-sm text-gray-500 font-normal">- {project.date}</span>
-                )}
-              </div>
+                    {project.date && (
+                      <span className="text-sm text-gray-500 font-normal">- {project.date}</span>
+                    )}
+                  </div>
 
               <p className="text-gray-600 mb-6 text-lg leading-relaxed">
-                {project.description}
+                    {project.description}
               </p>
 
-              {/* Highlights */}
-              {project.highlights && project.highlights.length > 0 && (
+                  {/* Highlights */}
+                  {project.highlights && project.highlights.length > 0 && (
                 <div className="mb-6">
                   <h3 className="text-xl font-semibold text-gray-800 mb-3">Key Features</h3>
                   <ul className="list-disc list-inside space-y-2">
-                    {project.highlights.map((highlight, i) => (
+                      {project.highlights.map((highlight, i) => (
                       <li key={i} className="text-gray-700">
-                        {highlight}
+                          {highlight}
                       </li>
-                    ))}
-                  </ul>
+                      ))}
+                    </ul>
                 </div>
-              )}
+                  )}
 
-              {/* Technologies */}
-              {project.technologies && project.technologies.length > 0 && (
+                  {/* Technologies */}
+                  {project.technologies && project.technologies.length > 0 && (
                 <div className="mb-6">
                   <h3 className="text-xl font-semibold text-gray-800 mb-3">Technologies</h3>
                   <div className="flex flex-wrap gap-2">
-                    {project.technologies.map((tech, i) => (
-                      <span
-                        key={i}
+                      {project.technologies.map((tech, i) => (
+                        <span
+                          key={i}
                         className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                  </div>
+                    </div>
+                  )}
+
+                  {/* Project Links */}
+              <div className="flex gap-4 pt-4 border-t">
+                    {project.githubUrl && (
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
                       >
-                        {tech}
-                      </span>
-                    ))}
+                    <FaGithub className="text-xl" />
+                        <span>View Code</span>
+                      </a>
+                    )}
+                    {project.liveUrl && (
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+                      >
+                    <FaExternalLinkAlt className="text-xl" />
+                        <span>Live Demo</span>
+                      </a>
+                    )}
                   </div>
                 </div>
-              )}
-
-              {/* Project Links */}
-              <div className="flex gap-4 pt-4 border-t">
-                {project.githubUrl && (
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-                  >
-                    <FaGithub className="text-xl" />
-                    <span>View Code</span>
-                  </a>
-                )}
-                {project.liveUrl && (
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-                  >
-                    <FaExternalLinkAlt className="text-xl" />
-                    <span>Live Demo</span>
-                  </a>
-                )}
-              </div>
-            </div>
           </div>
         </motion.div>
       </motion.div>
@@ -192,10 +192,10 @@ const ProjectsGrid = ({ projects, onProjectClick }) => {
               {project.date && (
                 <p className="text-sm text-gray-500">{project.date}</p>
               )}
-            </div>
-          </Card>
-        </motion.div>
-      ))}
+              </div>
+            </Card>
+          </motion.div>
+        ))}
     </div>
   );
 };

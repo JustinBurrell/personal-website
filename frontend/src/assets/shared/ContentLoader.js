@@ -80,19 +80,19 @@ const ContentLoader = ({ children, data, routeKey }) => {
             preloadImages(newImageUrls).catch(err => {
               console.warn('Error preloading images:', err);
             });
-          }
+        }
         } else {
           // First time loading this route - preload images in background
-          const imageUrls = extractImageUrls(data);
+        const imageUrls = extractImageUrls(data);
           if (imageUrls.length > 0) {
             // Preload images in background (non-blocking)
             preloadImages(imageUrls).catch(err => {
               console.warn('Error preloading images:', err);
             });
           }
-          
-          // Cache the route data
-          routeDataCache.set(cacheKey, data);
+
+        // Cache the route data
+        routeDataCache.set(cacheKey, data);
         }
       } catch (err) {
         console.warn('Error preloading content:', err);
@@ -118,14 +118,14 @@ const ContentLoader = ({ children, data, routeKey }) => {
 
   // Always render children immediately - no blocking
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-    >
-      {children}
-    </motion.div>
+        >
+          {children}
+        </motion.div>
   );
 };
 

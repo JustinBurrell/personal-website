@@ -27,7 +27,21 @@ function camelCaseKeysDeep(obj) {
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL
 const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  db: {
+    schema: 'public',
+  },
+  global: {
+    headers: {
+      'x-client-info': 'portfolio-app',
+    },
+  },
+  // Optimize for faster queries
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+})
 
 // Enhanced cache for storing fetched data (in-memory for speed)
 const cache = new Map()
@@ -238,9 +252,15 @@ export const portfolioService = {
       const { data: homeData, error: homeError } = await supabase
         .from('home')
         .select(`
-          *,
-          home_organizations(*),
-          home_qualities(*)
+          id,
+          languageCode,
+          title,
+          subtitle,
+          description,
+          heroImageUrl,
+          isActive,
+          home_organizations(name, orgUrl, orgColor, orgPortfolioUrl),
+          home_qualities(attribute, description)
         `)
         .eq('languageCode', 'en') // Always fetch English data
         .eq('isActive', true)
@@ -273,9 +293,14 @@ export const portfolioService = {
       const { data: aboutData, error: aboutError } = await supabase
         .from('about')
         .select(`
-          *,
-          about_skills(*),
-          about_interests(*)
+          id,
+          languageCode,
+          title,
+          description,
+          profileImageUrl,
+          isActive,
+          about_skills(skill),
+          about_interests(interest)
         `)
         .eq('languageCode', 'en') // Always fetch English data
         .eq('isActive', true)
@@ -300,8 +325,11 @@ export const portfolioService = {
       const { data: awardsData, error: awardsError } = await supabase
         .from('awards')
         .select(`
-          *,
-          awards_items(*)
+          id,
+          languageCode,
+          title,
+          isActive,
+          awards_items(title, organization, date, description)
         `)
         .eq('languageCode', 'en') // Always fetch English data
         .eq('isActive', true)
@@ -329,11 +357,22 @@ export const portfolioService = {
       const { data: educationData, error: educationError } = await supabase
         .from('education')
         .select(`
-          *,
+          id,
+          languageCode,
+          title,
+          isActive,
           education_items(
-            *,
-            education_relevant_courses(*),
-            education_organization_involvement(*)
+            name,
+            nameUrl,
+            educationType,
+            schoolType,
+            major,
+            completionDate,
+            description,
+            gpa,
+            educationImageUrl,
+            education_relevant_courses(course, courseUrl),
+            education_organization_involvement(organization, role)
           )
         `)
         .eq('languageCode', 'en') // Always fetch English data
@@ -382,14 +421,21 @@ export const portfolioService = {
       const { data: experienceData, error: experienceError } = await supabase
         .from('experience')
         .select(`
-          *,
+          id,
+          languageCode,
+          title,
+          isActive,
           experience_professional(
-            *,
-            experience_professional_positions(*)
+            company,
+            companyUrl,
+            location,
+            experience_professional_positions(position, startDate, endDate, responsibilities, skills, images)
           ),
           experience_leadership(
-            *,
-            experience_leadership_positions(*)
+            company,
+            companyUrl,
+            location,
+            experience_leadership_positions(position, startDate, endDate, responsibilities, skills, images)
           )
         `)
         .eq('languageCode', 'en') // Always fetch English data
@@ -438,8 +484,13 @@ export const portfolioService = {
       const { data: galleryData, error: galleryError } = await supabase
         .from('gallery')
         .select(`
-          *,
-          gallery_categories(*)
+          id,
+          languageCode,
+          imageUrl,
+          altText,
+          sortOrder,
+          isActive,
+          gallery_categories(categoryName)
         `)
         .eq('languageCode', 'en') // Always fetch English data
         .eq('isActive', true)
@@ -465,11 +516,19 @@ export const portfolioService = {
       const { data: projectsData, error: projectsError } = await supabase
         .from('projects')
         .select(`
-          *,
+          id,
+          languageCode,
+          title,
+          isActive,
           project_items(
-            *,
-            project_technologies(*),
-            project_highlights(*)
+            title,
+            date,
+            description,
+            githubUrl,
+            liveUrl,
+            imageUrl,
+            project_technologies(technology),
+            project_highlights(highlight)
           )
         `)
         .eq('languageCode', 'en') // Always fetch English data
