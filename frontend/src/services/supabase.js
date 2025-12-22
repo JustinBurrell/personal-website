@@ -518,7 +518,6 @@ export const portfolioService = {
         .select(`
           id,
           languageCode,
-          title,
           isActive,
           project_items(
             title,
