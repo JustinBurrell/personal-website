@@ -255,7 +255,6 @@ export const portfolioService = {
           id,
           languageCode,
           title,
-          subtitle,
           description,
           heroImageUrl,
           isActive,
@@ -295,7 +294,6 @@ export const portfolioService = {
         .select(`
           id,
           languageCode,
-          title,
           description,
           profileImageUrl,
           isActive,
@@ -327,7 +325,6 @@ export const portfolioService = {
         .select(`
           id,
           languageCode,
-          title,
           isActive,
           awards_items(title, organization, date, description)
         `)
@@ -359,7 +356,6 @@ export const portfolioService = {
         .select(`
           id,
           languageCode,
-          title,
           isActive,
           education_items(
             name,
@@ -423,7 +419,6 @@ export const portfolioService = {
         .select(`
           id,
           languageCode,
-          title,
           isActive,
           experience_professional(
             company,
@@ -487,7 +482,6 @@ export const portfolioService = {
           id,
           languageCode,
           imageUrl,
-          altText,
           sortOrder,
           isActive,
           gallery_categories(categoryName)
