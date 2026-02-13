@@ -3,12 +3,152 @@ import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import Card from '../assets/ui/Card';
 import { useLanguage } from '../features/language';
 import { useTranslateText } from '../features/language/useTranslateText';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import { useGlobalData } from '../hooks/useGlobalData';
 import { Element } from 'react-scroll';
 import { useScrollSpy } from '../hooks/useScrollSpy';
 import { safeScrollTo } from '../utils/scrollUtils';
+import { FaTimes } from 'react-icons/fa';
+import { StaggerContainer, StaggerItem } from '../assets/ui/StaggerContainer';
+
+const ImageModal = ({ src, alt, onClose }) => {
+  React.useEffect(() => {
+    if (src) {
+      document.body.style.overflow = 'hidden';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [src]);
+
+  if (!src) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center bg-cream-800/80 backdrop-blur-sm p-4"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          className="relative max-w-3xl w-full flex justify-center"
+          onClick={e => e.stopPropagation()}
+        >
+          <img src={src} alt={alt} className="max-h-[80vh] w-auto rounded-2xl border border-cream-300" />
+          <button
+            className="absolute top-3 right-3 bg-cream-50/90 hover:bg-cream-50 rounded-full p-2 border border-cream-300 transition-all"
+            onClick={onClose}
+            aria-label="Close image modal"
+          >
+            <FaTimes className="text-cream-500 hover:text-cinnabar-500 text-lg" />
+          </button>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+const EducationCard = ({ edu, translatedEdu, type, index, onImageClick, relevantCoursesText, organizationInvolvementText, graduationText, completionText, getTranslatedCourse, getTranslatedOrg }) => {
+  const dateLabel = type === 'Certificate' ? completionText : graduationText;
+
+  return (
+    <StaggerItem>
+      <Card hoverable className="overflow-hidden">
+        <div className="grid md:grid-cols-12 gap-0 items-stretch">
+          <div className="md:col-span-7 p-6 md:p-8">
+            <h3 className="text-2xl font-display font-bold text-cream-800 mb-2">
+              {edu.nameUrl ? (
+                <a
+                  href={edu.nameUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-cinnabar-500 transition-colors"
+                >
+                  {translatedEdu.name}
+                </a>
+              ) : (
+                translatedEdu.name
+              )}
+            </h3>
+
+            <div className="space-y-1 mb-4">
+              {translatedEdu.schoolType && (
+                <p className="font-body text-cream-500">
+                  {translatedEdu.schoolType}
+                  {translatedEdu.major && ` in ${translatedEdu.major}`}
+                </p>
+              )}
+              <p className="font-mono text-xs text-cream-400 uppercase tracking-wider">
+                {dateLabel} {translatedEdu.completionDate || edu.completionDate}
+              </p>
+              {edu.gpa && (
+                <p className="font-mono text-xs text-cream-400 uppercase tracking-wider">GPA: {edu.gpa}</p>
+              )}
+            </div>
+
+            {edu.description && (
+              <p className="font-body text-cream-500 leading-relaxed mb-4">{translatedEdu.description}</p>
+            )}
+
+            {edu.relevantCourses && edu.relevantCourses.length > 0 && (
+              <div className="mb-4">
+                <h4 className="font-display text-sm font-semibold text-cream-700 uppercase tracking-wide mb-2">{relevantCoursesText}</h4>
+                <div className="flex flex-col gap-1">
+                  {edu.relevantCourses.map((course, idx) => {
+                    const translatedCourse = getTranslatedCourse(course, translatedEdu);
+                    return (
+                      <a
+                        key={idx}
+                        href={course.courseUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-cinnabar-500 hover:text-cinnabar-700 text-sm font-body underline decoration-cinnabar-200 underline-offset-4 transition-colors"
+                      >
+                        {translatedCourse.course}
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {edu.organizationInvolvement && edu.organizationInvolvement.length > 0 && (
+              <div>
+                <h4 className="font-display text-sm font-semibold text-cream-700 uppercase tracking-wide mb-2">{organizationInvolvementText}</h4>
+                <div className="flex flex-col gap-1">
+                  {edu.organizationInvolvement.map((org, idx) => {
+                    const translatedOrg = getTranslatedOrg(org, translatedEdu, edu);
+                    return (
+                      <div key={idx} className="text-sm font-body">
+                        <span className="font-semibold text-cinnabar-500">{translatedOrg.organization}</span>
+                        <span className="text-cream-500"> — {translatedOrg.role}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {edu.educationImageUrl && (
+            <div className="md:col-span-5 bg-cream-200 flex items-center justify-center p-6">
+              <img
+                src={edu.educationImageUrl}
+                alt={`${translatedEdu.name}`}
+                className="max-h-[300px] w-auto object-contain rounded-xl cursor-pointer hover:scale-105 transition-transform duration-300"
+                onClick={() => onImageClick({ src: edu.educationImageUrl, alt: `${translatedEdu.name}` })}
+              />
+            </div>
+          )}
+        </div>
+      </Card>
+    </StaggerItem>
+  );
+};
 
 const Education = () => {
   const { translatedData, currentLanguage, isLoading } = useLanguage();
@@ -16,7 +156,6 @@ const Education = () => {
   const location = useLocation();
   const [modalImage, setModalImage] = useState(null);
 
-  // Use the translation hook for inline text
   const educationTitle = useTranslateText("Education");
   const relevantCoursesText = useTranslateText("Relevant Courses");
   const organizationInvolvementText = useTranslateText("Organization Involvement");
@@ -26,37 +165,22 @@ const Education = () => {
   const graduationText = useTranslateText("Graduation:");
   const completionText = useTranslateText("Completion:");
 
-  // Initialize scroll spy safely
   useScrollSpy();
 
-  // Move all useEffect hooks to the top
   React.useEffect(() => {
     if (location.state && location.state.scrollTo) {
       safeScrollTo(location.state.scrollTo, { delay: 200 });
-      // Clear the state so it doesn't scroll again
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
 
-  // Add loading state and null checks
   if (isLoading || !translatedData || !translatedData.education || !translatedData.education[0]) {
     return (
       <AnimationWrapper>
-        <section id="education" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto mb-8 pt-24 pb-10">
-              <Card variant="transparent" className="p-0">
-                <div className="grid md:grid-cols-5 gap-6 items-center">
-                  <div className="md:col-span-3 flex flex-col justify-center p-6">
-                    <div className="h-16 bg-gray-200 animate-pulse rounded mb-4"></div>
-                    <div className="h-8 bg-gray-200 animate-pulse rounded"></div>
-                  </div>
-                  <div className="md:col-span-2">
-                    <div className="w-full h-64 bg-gray-200 animate-pulse rounded-lg"></div>
-                  </div>
-                </div>
-              </Card>
-            </div>
+        <section id="education" className="py-24 bg-cream-100 min-h-[calc(100vh-5rem)]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
+            <div className="h-20 bg-cream-200 animate-pulse rounded-2xl w-3/4 mb-6"></div>
+            <div className="h-6 bg-cream-200 animate-pulse rounded w-1/2"></div>
           </div>
         </section>
       </AnimationWrapper>
@@ -65,14 +189,10 @@ const Education = () => {
 
   const { education: translatedEducation } = translatedData;
   const educationGroup = translatedEducation[0];
-  
-  // Use original data for filtering
+
   const originalEducation = portfolioData?.education?.[0];
   const educationList = originalEducation?.education || [];
-  
-  // Data structure validation
 
-  // Helper to sort by most recent completion date
   const sortByDateDesc = (arr) =>
     [...arr].sort((a, b) => {
       const dateA = new Date(a.completionDate);
@@ -80,51 +200,32 @@ const Education = () => {
       return dateB - dateA;
     });
 
-  // Filter using original data - handle both camelCase and snake_case field names
   const schooling = sortByDateDesc(educationList.filter(e => (e.educationType || e.education_type) === 'School'));
   const certifications = sortByDateDesc(educationList.filter(e => (e.educationType || e.education_type) === 'Certificate'));
   const programs = sortByDateDesc(educationList.filter(e => (e.educationType || e.education_type) === 'Program'));
-  
-  // Filtered education data ready for rendering
 
-  // Get translated versions of the filtered items
   const getTranslatedItem = (originalItem) => {
     if (currentLanguage === 'en') return originalItem;
-    
-    // Find the translated item by matching the original item's index in the array
-    const originalIndex = educationList.findIndex(item => 
-      item.name === originalItem.name && 
+    const originalIndex = educationList.findIndex(item =>
+      item.name === originalItem.name &&
       (item.educationType || item.education_type) === (originalItem.educationType || originalItem.education_type)
     );
-    
-    if (originalIndex === -1) {
-      console.warn('Could not find original item in education list:', originalItem);
-      return originalItem;
-    }
-
+    if (originalIndex === -1) return originalItem;
     const translatedItem = translatedEducation[0].education[originalIndex];
-    if (!translatedItem) {
-      console.warn('Could not find translated item at index:', originalIndex);
-      return originalItem;
-    }
-
+    if (!translatedItem) return originalItem;
     return translatedItem;
   };
 
-  // Get translated course
   const getTranslatedCourse = (originalCourse, translatedEdu) => {
     if (currentLanguage === 'en') return originalCourse;
     if (!translatedEdu.relevantCourses) return originalCourse;
-
     const translatedCourse = translatedEdu.relevantCourses.find(c => c.courseUrl === originalCourse.courseUrl);
     return translatedCourse || originalCourse;
   };
 
-  // Get translated organization
   const getTranslatedOrg = (originalOrg, translatedEdu, edu) => {
     if (currentLanguage === 'en') return originalOrg;
     if (!translatedEdu.organizationInvolvement) return originalOrg;
-    // Try to find by index if direct match fails
     let translatedOrg = translatedEdu.organizationInvolvement.find(o =>
       o.organization === originalOrg.organization && o.role === originalOrg.role
     );
@@ -134,39 +235,16 @@ const Education = () => {
         translatedOrg = translatedEdu.organizationInvolvement[idx];
       }
     }
-    if (!translatedOrg) {
-      console.warn('Could not find translated org for:', originalOrg, 'in', translatedEdu.organizationInvolvement);
-      return originalOrg;
-    }
-    return translatedOrg;
+    return translatedOrg || originalOrg;
   };
 
-  // Modal component
-  const ImageModal = ({ src, alt, onClose }) => (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70" onClick={onClose}>
-      <div className="relative max-w-3xl w-full flex justify-center" onClick={e => e.stopPropagation()}>
-        <img src={src} alt={alt} className="max-h-[80vh] w-auto rounded-lg shadow-2xl" />
-        <button
-          className="absolute top-2 right-2 bg-white bg-opacity-80 rounded-full p-2 hover:bg-opacity-100 transition"
-          onClick={onClose}
-          aria-label="Close image modal"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6 text-gray-700">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  );
-
-  // Show loading state
   if (loading) {
     return (
       <AnimationWrapper>
-        <section id="education" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
-          <div className="container mx-auto px-4">
+        <section id="education" className="py-24 bg-cream-100 min-h-[calc(100vh-5rem)]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-center items-center h-64">
-              <div className="text-xl text-gray-600">Loading education data...</div>
+              <div className="font-body text-xl text-cream-500">Loading education data...</div>
             </div>
           </div>
         </section>
@@ -174,14 +252,13 @@ const Education = () => {
     );
   }
 
-  // Show error state
   if (error) {
     return (
       <AnimationWrapper>
-        <section id="education" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
-          <div className="container mx-auto px-4">
+        <section id="education" className="py-24 bg-cream-100 min-h-[calc(100vh-5rem)]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-center items-center h-64">
-              <div className="text-xl text-red-600">Error loading education data: {error}</div>
+              <div className="font-body text-xl text-cinnabar-500">Error loading education data: {error}</div>
             </div>
           </div>
         </section>
@@ -189,14 +266,13 @@ const Education = () => {
     );
   }
 
-  // Show loading state if no data
   if (!portfolioData || !originalEducation) {
     return (
       <AnimationWrapper>
-        <section id="education" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
-          <div className="container mx-auto px-4">
+        <section id="education" className="py-24 bg-cream-100 min-h-[calc(100vh-5rem)]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-center items-center h-64">
-              <div className="text-xl text-gray-600">No education data available</div>
+              <div className="font-body text-xl text-cream-500">No education data available</div>
             </div>
           </div>
         </section>
@@ -204,331 +280,120 @@ const Education = () => {
     );
   }
 
+  const navPills = [
+    { label: schoolingText, to: 'schooling-section' },
+    { label: certificationsText, to: 'certifications-section' },
+    { label: programsText, to: 'programs-section' },
+  ];
+
+  const renderSection = (title, items, type) => (
+    <motion.div
+      className="mt-16"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-20px' }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="flex items-center gap-4 mb-8">
+        <div className="w-8 h-0.5 bg-cinnabar-500 rounded-full"></div>
+        <h3 className="text-2xl font-display font-bold text-cream-800">{title}</h3>
+      </div>
+      <StaggerContainer className="space-y-6 max-w-5xl">
+        {items.map((edu, index) => {
+          const translatedEdu = getTranslatedItem(edu);
+          return (
+            <EducationCard
+              key={edu.name + index}
+              edu={edu}
+              translatedEdu={translatedEdu}
+              type={type}
+              index={index}
+              onImageClick={setModalImage}
+              relevantCoursesText={relevantCoursesText}
+              organizationInvolvementText={organizationInvolvementText}
+              graduationText={graduationText}
+              completionText={completionText}
+              getTranslatedCourse={getTranslatedCourse}
+              getTranslatedOrg={getTranslatedOrg}
+            />
+          );
+        })}
+      </StaggerContainer>
+    </motion.div>
+  );
+
   return (
     <AnimationWrapper>
-      {/* Modal for full image view */}
       {modalImage && (
         <ImageModal src={modalImage.src} alt={modalImage.alt} onClose={() => setModalImage(null)} />
       )}
-      <section id="education" className="py-16 bg-gray-50 min-h-[calc(100vh-4rem)]">
-        <div className="container mx-auto px-4">
-          {/* Top Card: Education Title/Description/Image */}
-          <motion.div
-            className="max-w-4xl mx-auto mb-8 pt-24 pb-10"
-            initial={{ opacity: 0, y: -40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -40 }}
-            viewport={{ once: false, margin: '-20px' }}
-            transition={{ duration: 0.7, type: 'spring', stiffness: 100, damping: 18 }}
-          >
-            <Card variant="transparent" className="p-0">
-              <div className="grid md:grid-cols-5 gap-6 items-center">
-                {/* Left: Title & Description */}
-                <div className="md:col-span-3 flex flex-col justify-center p-6">
-                  <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-4">{educationTitle}</h1>
-                  <p className="text-xl md:text-2xl text-gray-600 leading-relaxed mb-6">{educationGroup.description}</p>
-                  <div className="flex gap-2 mt-8 items-center whitespace-nowrap">
-                    <button
-                      className="px-2 py-1 rounded-full font-semibold border bg-gray-100 text-blue-700 border-blue-700 text-xs shrink-0"
-                      onClick={() => safeScrollTo('schooling-section')}
-                    >
-                      {schoolingText}
-                    </button>
-                    <button
-                      className="px-2 py-1 rounded-full font-semibold border bg-gray-100 text-blue-700 border-blue-700 text-xs shrink-0"
-                      onClick={() => safeScrollTo('certifications-section')}
-                    >
-                      {certificationsText}
-                    </button>
-                    <button
-                      className="px-2 py-1 rounded-full font-semibold border bg-gray-100 text-blue-700 border-blue-700 text-xs shrink-0"
-                      onClick={() => safeScrollTo('programs-section')}
-                    >
-                      {programsText}
-                    </button>
-                  </div>
-                </div>
-                {/* Right: Education Image */}
-                {educationGroup.educationImageUrl && (
-                  <div className="md:col-span-2 flex justify-center items-stretch p-4">
-                    <img
-                      src={educationGroup.educationImageUrl}
-                      alt="Education"
-                      className="h-full w-auto max-h-[400px] object-contain rounded-lg"
-                      style={{ minHeight: '200px', maxHeight: '100%' }}
-                    />
-                  </div>
-                )}
-              </div>
-            </Card>
-          </motion.div>
+      <section id="education" className="py-24 bg-cream-100 min-h-[calc(100vh-5rem)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Page Header */}
+          <div className="pt-16 pb-12 grid md:grid-cols-12 gap-8 items-start">
+            <div className="md:col-span-8">
+              <motion.h1
+                className="text-5xl md:text-7xl font-display font-bold text-cream-800 tracking-tight leading-[0.95] mb-6"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                {educationTitle}
+              </motion.h1>
+              <motion.p
+                className="text-xl font-body text-cream-500 leading-relaxed max-w-2xl mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                {educationGroup.description}
+              </motion.p>
+              <motion.div
+                className="flex flex-wrap gap-2"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
+                {navPills.map((pill) => (
+                  <button
+                    key={pill.to}
+                    className="font-mono text-xs uppercase tracking-wider px-4 py-2 rounded-full border border-cream-300 text-cream-500 hover:border-cinnabar-500 hover:text-cinnabar-500 transition-colors"
+                    onClick={() => safeScrollTo(pill.to)}
+                  >
+                    {pill.label}
+                  </button>
+                ))}
+              </motion.div>
+            </div>
+            {educationGroup.educationImageUrl && (
+              <motion.div
+                className="md:col-span-4 flex justify-end"
+                initial={{ opacity: 0, rotate: 0 }}
+                animate={{ opacity: 1, rotate: 2 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                <img
+                  src={educationGroup.educationImageUrl}
+                  alt="Education"
+                  className="w-48 h-48 object-cover rounded-2xl border border-cream-300"
+                />
+              </motion.div>
+            )}
+          </div>
 
           {/* Schooling Section */}
           <Element name="schooling-section">
-            <motion.div
-              className="max-w-4xl mx-auto mt-16"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-20px' }}
-              transition={{ duration: 0.5 }}
-            >
-              <motion.h3
-                className="text-2xl font-bold text-center mb-6 mt-8"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                viewport={{ once: false, margin: '-20px' }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
-                {schoolingText}
-              </motion.h3>
-              <div className="grid gap-8">
-                {schooling.map((edu, index) => {
-                  const translatedEdu = getTranslatedItem(edu);
-                  return (
-                    <motion.div
-                      key={edu.name + index}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -30 }}
-                      viewport={{ once: false, margin: '-20px' }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                    >
-                      <Card className="bg-white rounded-lg shadow-lg p-6">
-                        <div className="grid md:grid-cols-5 gap-6 items-stretch">
-                          {/* Left: Education Details */}
-                          <motion.div className="md:col-span-3 overflow-y-auto max-h-80 pr-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={{ duration: 0.4 }}>
-                            <h3 className="text-2xl font-semibold mb-2">
-                              {edu.nameUrl ? (
-                                <a
-                                  href={edu.nameUrl}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-gray-900 hover:text-indigo-600 transition-colors duration-200"
-                                >
-                                  {translatedEdu.name}
-                                </a>
-                              ) : (
-                                translatedEdu.name
-                              )}
-                            </h3>
-                            <p className="text-gray-600 mb-2">
-                              {translatedEdu.schoolType}
-                              {translatedEdu.major && ` in ${translatedEdu.major}`}
-                            </p>
-                            <p className="text-gray-600 mb-4">{graduationText} {translatedEdu.completionDate || edu.completionDate}</p>
-                            {edu.gpa && (
-                              <p className="text-gray-600 mb-4">GPA: {edu.gpa}</p>
-                            )}
-                            {/* Relevant Courses Section */}
-                            {edu.relevantCourses && edu.relevantCourses.length > 0 && (
-                              <div className="mb-4">
-                                <h4 className="text-sm font-semibold mb-2">{relevantCoursesText}</h4>
-                                <div className="flex flex-col gap-1">
-                                  {edu.relevantCourses.map((course, idx) => {
-                                    const translatedCourse = getTranslatedCourse(course, translatedEdu);
-                                    return (
-                                      <a
-                                        key={idx}
-                                        href={course.courseUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-indigo-700 hover:underline text-sm transition-colors duration-200"
-                                      >
-                                        {translatedCourse.course}
-                                      </a>
-                                    );
-                                  })}
-                                </div>
-                              </div>
-                            )}
-                            {/* Organization Involvement Section */}
-                            {edu.organizationInvolvement && edu.organizationInvolvement.length > 0 && (
-                              <div>
-                                <h4 className="text-sm font-semibold mb-2">{organizationInvolvementText}</h4>
-                                <div className="flex flex-col gap-1">
-                                  {edu.organizationInvolvement.map((org, idx) => {
-                                    const translatedOrg = getTranslatedOrg(org, translatedEdu, edu);
-                                    return (
-                                      <div key={idx} className="text-rose-700 text-sm">
-                                        <span className="font-semibold">{translatedOrg.organization}</span>
-                                        <span className="font-normal"> – {translatedOrg.role}</span>
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              </div>
-                            )}
-                          </motion.div>
-                          {/* Right: Education Image */}
-                          {edu.educationImageUrl && (
-                            <div className="md:col-span-2 flex justify-center items-stretch p-4">
-                              <img
-                                src={edu.educationImageUrl}
-                                alt={`${translatedEdu.name} education`}
-                                className="h-full w-auto max-h-[300px] object-contain rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105 mx-auto"
-                                style={{ minHeight: '150px', maxHeight: '100%' }}
-                                onClick={() => setModalImage({ src: edu.educationImageUrl, alt: `${translatedEdu.name} education` })}
-                              />
-                            </div>
-                          )}
-                        </div>
-                      </Card>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </motion.div>
+            {renderSection(schoolingText, schooling, 'School')}
           </Element>
 
           {/* Certifications Section */}
           <Element name="certifications-section">
-            <motion.div
-              className="max-w-4xl mx-auto mt-16"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-20px' }}
-              transition={{ duration: 0.5 }}
-            >
-              <motion.h3
-                className="text-2xl font-bold text-center mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                viewport={{ once: false, margin: '-20px' }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
-                {certificationsText}
-              </motion.h3>
-              <div className="grid gap-8">
-                {certifications.map((cert, index) => {
-                  const translatedCert = getTranslatedItem(cert);
-                  return (
-                    <motion.div
-                      key={cert.name + index}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -30 }}
-                      viewport={{ once: false, margin: '-20px' }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                    >
-                      <Card className="bg-white rounded-lg shadow-lg p-6">
-                        <div className="grid md:grid-cols-5 gap-6 items-stretch">
-                          {/* Left: Certification Details */}
-                          <motion.div className="md:col-span-3 overflow-y-auto max-h-80 pr-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={{ duration: 0.4 }}>
-                            <h3 className="text-2xl font-semibold mb-2">
-                              {cert.nameUrl ? (
-                                <a
-                                  href={cert.nameUrl}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-gray-900 hover:text-indigo-600 transition-colors duration-200"
-                                >
-                                  {translatedCert.name}
-                                </a>
-                              ) : (
-                                translatedCert.name
-                              )}
-                            </h3>
-                            <p className="text-gray-600 mb-4">{completionText} {translatedCert.completionDate || cert.completionDate}</p>
-                            {cert.description && (
-                              <p className="text-gray-600 mb-4">{translatedCert.description}</p>
-                            )}
-                          </motion.div>
-                          {/* Right: Certification Image */}
-                          {cert.educationImageUrl && (
-                            <div className="md:col-span-2 flex justify-center items-stretch p-4">
-                              <img
-                                src={cert.educationImageUrl}
-                                alt={`${translatedCert.name} certification`}
-                                className="h-full w-auto max-h-[300px] object-contain rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105 mx-auto"
-                                style={{ minHeight: '150px', maxHeight: '100%' }}
-                                onClick={() => setModalImage({ src: cert.educationImageUrl, alt: `${translatedCert.name} certification` })}
-                              />
-                            </div>
-                          )}
-                        </div>
-                      </Card>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </motion.div>
+            {renderSection(certificationsText, certifications, 'Certificate')}
           </Element>
 
           {/* Programs Section */}
           <Element name="programs-section">
-            <motion.div
-              className="max-w-4xl mx-auto mt-16"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-20px' }}
-              transition={{ duration: 0.5 }}
-            >
-              <motion.h3
-                className="text-2xl font-bold text-center mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                viewport={{ once: false, margin: '-20px' }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
-                {programsText}
-              </motion.h3>
-              <div className="grid gap-8">
-                {programs.map((prog, index) => {
-                  const translatedProg = getTranslatedItem(prog);
-                  return (
-                    <motion.div
-                      key={prog.name + index}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -30 }}
-                      viewport={{ once: false, margin: '-20px' }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                    >
-                      <Card className="bg-white rounded-lg shadow-lg p-6">
-                        <div className="grid md:grid-cols-5 gap-6 items-stretch">
-                          {/* Left: Program Details */}
-                          <motion.div className="md:col-span-3 overflow-y-auto max-h-80 pr-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} transition={{ duration: 0.4 }}>
-                            <h3 className="text-2xl font-semibold mb-2">
-                              {prog.nameUrl ? (
-                                <a
-                                  href={prog.nameUrl}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-gray-900 hover:text-indigo-600 transition-colors duration-200"
-                                >
-                                  {translatedProg.name}
-                                </a>
-                              ) : (
-                                translatedProg.name
-                              )}
-                            </h3>
-                            <p className="text-gray-600 mb-4">{graduationText} {translatedProg.completionDate || prog.completionDate}</p>
-                            {prog.description && (
-                              <p className="text-gray-600 mb-4">{translatedProg.description}</p>
-                            )}
-                          </motion.div>
-                          {/* Right: Program Image */}
-                          {prog.educationImageUrl && (
-                            <div className="md:col-span-2 flex justify-center items-stretch p-4">
-                              <img
-                                src={prog.educationImageUrl}
-                                alt={`${translatedProg.name} program`}
-                                className="h-full w-auto max-h-[300px] object-contain rounded-lg cursor-pointer transition-transform duration-200 hover:scale-105 mx-auto"
-                                style={{ minHeight: '150px', maxHeight: '100%' }}
-                                onClick={() => setModalImage({ src: prog.educationImageUrl, alt: `${translatedProg.name} program` })}
-                              />
-                            </div>
-                          )}
-                        </div>
-                      </Card>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </motion.div>
+            {renderSection(programsText, programs, 'Program')}
           </Element>
         </div>
       </section>

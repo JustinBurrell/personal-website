@@ -3,23 +3,22 @@ import { motion } from 'framer-motion';
 
 const PageTransition = ({ children }) => {
   useEffect(() => {
-    // Ensure we're at the top before the animation starts
     window.scrollTo(0, 0);
   }, []);
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ 
-        duration: 0.2,
-        ease: "easeInOut"
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{
+        duration: 0.5,
+        ease: [0.22, 1, 0.36, 1]
       }}
       style={{
         position: 'absolute',
         width: '100%',
-        minHeight: '100vh', // Ensure content takes at least full viewport height
+        minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column'
       }}
@@ -29,4 +28,4 @@ const PageTransition = ({ children }) => {
   );
 };
 
-export default PageTransition; 
+export default PageTransition;

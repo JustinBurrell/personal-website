@@ -11,13 +11,12 @@ import prefetchManager from '../../utils/prefetch';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSubmenu, setActiveSubmenu] = useState(null);
-  const [isMobileDevice, setIsMobileDevice] = useState(true); // Default to true for SSR
+  const [isMobileDevice, setIsMobileDevice] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
   const navRef = useRef(null);
   const timeoutRef = useRef(null);
 
-  // Use translation hook for navigation items
   const homeText = useTranslateText("Home");
   const aboutText = useTranslateText("About");
   const galleryText = useTranslateText("Gallery");
@@ -33,23 +32,17 @@ const Navbar = () => {
   const certificationsText = useTranslateText("Certifications");
   const programsText = useTranslateText("Programs");
 
-  // Initialize scroll spy safely
   useScrollSpy({
     enabled: location.pathname === '/',
     pathname: location.pathname
   });
 
-  // Handle device detection and click outside
   useEffect(() => {
     const checkDevice = () => {
-      // More comprehensive device detection
       const userAgent = navigator.userAgent.toLowerCase();
       const isMobile = /iphone|ipod|android|blackberry|windows phone|opera mini|silk/i.test(userAgent);
       const isTablet = /(ipad|tablet|playbook|silk)|(android(?!.*mobile))/i.test(userAgent);
-      
-      // Additional iPad detection
       const isIPad = /macintosh/i.test(userAgent) && navigator.maxTouchPoints > 1;
-      
       setIsMobileDevice(isMobile || isTablet || isIPad);
     };
 
@@ -104,7 +97,7 @@ const Navbar = () => {
   ];
 
   const isActive = (path) => {
-    return location.pathname === path ? 'text-indigo-600' : 'text-gray-700';
+    return location.pathname === path ? 'text-cinnabar-500' : 'text-cream-500';
   };
 
   const handleMouseEnter = (itemName, item) => {
@@ -112,10 +105,9 @@ const Navbar = () => {
       clearTimeout(timeoutRef.current);
     }
     setActiveSubmenu(itemName);
-    
-    // Prefetch route data on hover for instant navigation
+
     if (item && item.to && item.to !== '/') {
-      const route = item.to.slice(1); // Remove leading slash
+      const route = item.to.slice(1);
       if (route) {
         prefetchManager.prefetchSection(route);
       }
@@ -132,7 +124,6 @@ const Navbar = () => {
     setIsOpen(false);
     setActiveSubmenu(null);
     if (location.pathname === item.to) {
-      // If clicking on current page, scroll to top
       safeScrollToTop();
     } else {
       navigate(item.to);
@@ -141,7 +132,6 @@ const Navbar = () => {
 
   const handleSubItemClick = (subItem, parentItem) => {
     if (location.pathname === parentItem.to) {
-      // Already on target page, scroll to section
       return (
         <ScrollLink
           to={subItem.to}
@@ -149,8 +139,8 @@ const Navbar = () => {
           smooth={true}
           offset={-80}
           duration={500}
-          activeClass="text-indigo-600"
-          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-indigo-600 cursor-pointer"
+          activeClass="text-cinnabar-500"
+          className="block px-4 py-2 text-sm font-display text-cream-600 hover:bg-cream-100 hover:text-cinnabar-500 cursor-pointer transition-colors"
           onClick={() => {
             setActiveSubmenu(null);
             setIsOpen(false);
@@ -160,16 +150,14 @@ const Navbar = () => {
         </ScrollLink>
       );
     } else {
-      // Navigate to target page, then scroll
       return (
         <Link
           to={parentItem.to}
-          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-indigo-600"
+          className="block px-4 py-2 text-sm font-display text-cream-600 hover:bg-cream-100 hover:text-cinnabar-500 transition-colors"
           onClick={async (e) => {
             setActiveSubmenu(null);
             setIsOpen(false);
             e.preventDefault();
-            // Pass scroll target in state
             navigate(parentItem.to, { state: { scrollTo: subItem.to } });
           }}
         >
@@ -180,13 +168,13 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed w-full bg-white shadow-md z-50" ref={navRef}>
+    <nav className="fixed w-full bg-cream-100/80 backdrop-blur-xl border-b border-cream-300 z-50" ref={navRef}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          {/* Logo */}  
+        <div className="flex justify-between h-20">
+          {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               onClick={(e) => {
                 e.preventDefault();
                 setIsOpen(false);
@@ -196,24 +184,23 @@ const Navbar = () => {
                   navigate('/');
                 }
               }}
-              className="text-xl font-bold"
+              className="text-xl font-display font-bold tracking-tight text-cream-800 hover:text-cinnabar-500 transition-colors"
             >
               Justin Burrell
             </Link>
           </div>
-          
-          {/* Desktop Navigation - Only show if not a mobile device */}
+
+          {/* Desktop Navigation */}
           {!isMobileDevice && (
-            <div className="hidden md:flex items-center space-x-4">
+            <div className="hidden md:flex items-center space-x-1">
               {navItems.map((item) => (
-                <div 
-                  key={item.name} 
+                <div
+                  key={item.name}
                   className="relative"
                   onMouseEnter={() => {
                     if (item.subItems) {
                       handleMouseEnter(item.name, item);
                     } else {
-                      // Prefetch even without submenu
                       if (item.to && item.to !== '/') {
                         const route = item.to.slice(1);
                         if (route) {
@@ -224,7 +211,6 @@ const Navbar = () => {
                   }}
                   onMouseLeave={item.subItems ? handleMouseLeave : undefined}
                   onFocus={() => {
-                    // Also prefetch on focus for keyboard navigation
                     if (item.to && item.to !== '/') {
                       const route = item.to.slice(1);
                       if (route) {
@@ -235,19 +221,19 @@ const Navbar = () => {
                 >
                   <button
                     onClick={() => handleNavItemClick(item)}
-                    className={`px-3 py-2 rounded-md text-sm font-medium ${isActive(item.to)} hover:text-gray-900 hover:bg-gray-50`}
+                    className={`px-3 py-2 text-sm font-display font-medium uppercase tracking-wide ${isActive(item.to)} hover:text-cinnabar-500 transition-colors`}
                   >
                     {item.name}
                   </button>
                   {item.subItems && activeSubmenu === item.name && (
-                    <div 
-                      className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+                    <div
+                      className="absolute left-0 mt-2 w-48 rounded-xl bg-cream-50 border border-cream-300 shadow-[0_8px_30px_rgb(0,0,0,0.08)] overflow-hidden"
                       onMouseEnter={() => handleMouseEnter(item.name, item)}
                       onMouseLeave={handleMouseLeave}
                     >
                       <div className="py-1" role="menu">
                         {item.subItems.map((subItem) => (
-                          <div key={subItem.name} className="hover:bg-gray-50">
+                          <div key={subItem.name}>
                             {handleSubItemClick(subItem, item)}
                           </div>
                         ))}
@@ -265,38 +251,16 @@ const Navbar = () => {
             <LanguageSelector />
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+              className="inline-flex items-center justify-center p-2 rounded-xl text-cream-500 hover:text-cinnabar-500 hover:bg-cream-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cinnabar-500 transition-colors"
             >
               <span className="sr-only">{menuText}</span>
               {!isOpen ? (
-                <svg
-                  className="block h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
+                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               ) : (
-                <svg
-                  className="block h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               )}
             </button>
@@ -305,20 +269,20 @@ const Navbar = () => {
 
         {/* Mobile menu dropdown */}
         <div className={`${isOpen && isMobileDevice ? 'block' : 'hidden'}`}>
-          <div className="px-2 pt-2 pb-3 space-y-1">
+          <div className="px-2 pt-2 pb-3 space-y-1 border-t border-cream-300">
             {navItems.map((item) => (
               <div key={item.name}>
                 <div className="flex items-center justify-between">
                   <button
                     onClick={() => handleNavItemClick(item)}
-                    className={`flex-grow text-left px-3 py-2 rounded-md text-base font-medium ${isActive(item.to)} hover:text-gray-900 hover:bg-gray-50`}
+                    className={`flex-grow text-left px-3 py-2 rounded-xl text-base font-display font-medium ${isActive(item.to)} hover:text-cinnabar-500 hover:bg-cream-200 transition-colors`}
                   >
                     {item.name}
                   </button>
                   {item.subItems && (
                     <button
                       onClick={() => setActiveSubmenu(activeSubmenu === item.name ? null : item.name)}
-                      className="px-4 py-2 text-gray-500 hover:text-gray-700"
+                      className="px-4 py-2 text-cream-400 hover:text-cinnabar-500 transition-colors"
                     >
                       <svg
                         className={`w-5 h-5 transform transition-transform ${
@@ -328,12 +292,7 @@ const Navbar = () => {
                         stroke="currentColor"
                         viewBox="0 0 24 24"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 9l-7 7-7-7"
-                        />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </button>
                   )}
@@ -356,4 +315,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar; 
+export default Navbar;
