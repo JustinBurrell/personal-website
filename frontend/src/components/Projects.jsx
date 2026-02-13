@@ -123,7 +123,7 @@ const ProjectsGrid = ({ projects, onProjectClick }) => {
   });
 
   return (
-    <div className="columns-1 md:columns-2 lg:columns-3 gap-6 max-w-7xl mx-auto">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto justify-items-center">
       {sortedProjects.map((project, index) => (
         <motion.div
           key={project.title}
@@ -131,7 +131,7 @@ const ProjectsGrid = ({ projects, onProjectClick }) => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-20px' }}
           transition={{ duration: 0.5, delay: index * 0.08 }}
-          className="group cursor-pointer mb-6 break-inside-avoid"
+          className="group cursor-pointer w-full max-w-xl"
           onClick={() => onProjectClick(project)}
         >
           <Card hoverable className="overflow-hidden">
@@ -232,7 +232,7 @@ const Projects = () => {
             </div>
             {projectData.projectImageUrl && (
               <motion.div
-                className="md:col-span-4 flex justify-end"
+                className="md:col-span-4 flex justify-end items-start"
                 initial={{ opacity: 0, rotate: 0 }}
                 animate={{ opacity: 1, rotate: -2 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
@@ -240,7 +240,7 @@ const Projects = () => {
                 <img
                   src={projectData.projectImageUrl}
                   alt="Projects"
-                  className="w-48 h-48 object-cover rounded-2xl border border-cream-300"
+                  className="w-72 h-72 md:w-80 md:h-80 object-cover rounded-2xl border border-cream-300"
                 />
               </motion.div>
             )}

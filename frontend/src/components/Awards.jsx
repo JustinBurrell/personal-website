@@ -53,7 +53,7 @@ const Awards = () => {
             </div>
             {awardGroup.awardImageUrl && (
               <motion.div
-                className="md:col-span-4 flex justify-end"
+                className="md:col-span-4 flex justify-end items-start"
                 initial={{ opacity: 0, rotate: 0 }}
                 animate={{ opacity: 1, rotate: 2 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
@@ -61,7 +61,7 @@ const Awards = () => {
                 <img
                   src={awardGroup.awardImageUrl}
                   alt="Awards"
-                  className="w-48 h-48 object-cover rounded-2xl border border-cream-300"
+                  className="w-72 h-72 md:w-80 md:h-80 object-cover rounded-2xl border border-cream-300"
                 />
               </motion.div>
             )}

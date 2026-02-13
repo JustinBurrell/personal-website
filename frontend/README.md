@@ -42,10 +42,12 @@ personalWebsiteProject/
 ### Frontend Development
 ```bash
 cd frontend
-npm start          # Start development server
-npm run build      # Build for production
-npm test           # Run tests
+npm start          # Start Vite dev server (fast HMR)
+npm run dev        # Same as npm start
+npm run build      # Build for production (output: dist/)
+npm run preview    # Preview production build locally
 ```
+Environment variables must be prefixed with `VITE_` (e.g. `VITE_SUPABASE_URL`). See `.env.example`.
 
 ### Database Management
 - Use Supabase Dashboard for all database operations

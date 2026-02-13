@@ -248,7 +248,7 @@ const Contact = () => {
             </form>
 
             <motion.div
-              className="mt-12 flex justify-start space-x-6"
+              className="mt-12 flex justify-center space-x-6"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           {/* Left side */}
           <div className="flex items-center space-x-4">
-            <span className="font-mono text-xs uppercase tracking-wide text-cream-400">© 2025 Justin Burrell</span>
+            <span className="font-mono text-xs uppercase tracking-wide text-cream-400">© 2026 Justin Burrell</span>
             <a
               href="https://www.linkedin.com/in/thejustinburrell/"
               target="_blank"

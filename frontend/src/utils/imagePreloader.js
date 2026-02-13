@@ -5,7 +5,7 @@ class ImagePreloader {
   constructor() {
     this.preloadedImages = new Set();
     this.preloadingImages = new Set(); // Track images currently being preloaded
-    this.supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+    this.supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     
     // Start preloading critical images immediately
     this.preloadCriticalImages();

@@ -139,7 +139,7 @@ const EducationCard = ({ edu, translatedEdu, type, index, onImageClick, relevant
               <img
                 src={edu.educationImageUrl}
                 alt={`${translatedEdu.name}`}
-                className="max-h-[300px] w-auto object-contain rounded-xl cursor-pointer hover:scale-105 transition-transform duration-300"
+                className="max-h-[380px] w-auto object-contain rounded-xl cursor-pointer hover:scale-105 transition-transform duration-300"
                 onClick={() => onImageClick({ src: edu.educationImageUrl, alt: `${translatedEdu.name}` })}
               />
             </div>
@@ -367,7 +367,7 @@ const Education = () => {
             </div>
             {educationGroup.educationImageUrl && (
               <motion.div
-                className="md:col-span-4 flex justify-end"
+                className="md:col-span-4 flex justify-end items-start"
                 initial={{ opacity: 0, rotate: 0 }}
                 animate={{ opacity: 1, rotate: 2 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
@@ -375,24 +375,24 @@ const Education = () => {
                 <img
                   src={educationGroup.educationImageUrl}
                   alt="Education"
-                  className="w-48 h-48 object-cover rounded-2xl border border-cream-300"
+                  className="w-72 h-72 md:w-80 md:h-80 object-cover rounded-2xl border border-cream-300"
                 />
               </motion.div>
             )}
           </div>
 
           {/* Schooling Section */}
-          <Element name="schooling-section">
+          <Element name="schooling-section" id="schooling-section">
             {renderSection(schoolingText, schooling, 'School')}
           </Element>
 
           {/* Certifications Section */}
-          <Element name="certifications-section">
+          <Element name="certifications-section" id="certifications-section">
             {renderSection(certificationsText, certifications, 'Certificate')}
           </Element>
 
           {/* Programs Section */}
-          <Element name="programs-section">
+          <Element name="programs-section" id="programs-section">
             {renderSection(programsText, programs, 'Program')}
           </Element>
         </div>

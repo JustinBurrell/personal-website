@@ -72,14 +72,14 @@ const Home = () => {
                   {home.description}
                 </motion.p>
 
-                {/* Organizations */}
+                {/* Organizations - single line, scroll on small screens */}
                 <motion.div
-                  className="flex flex-wrap gap-2 mt-8"
+                  className="flex flex-nowrap items-center gap-2 mt-8 overflow-x-auto scrollbar-hide min-h-9"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.5 }}
                 >
-                  <span className="font-mono text-xs uppercase tracking-wider text-cream-400 self-center mr-2">{organizationsLabel}</span>
+                  <span className="font-mono text-xs uppercase tracking-wider text-cream-400 self-center mr-2 shrink-0">{organizationsLabel}</span>
                   {home.organizations.map((org, index) => (
                     <Button
                       key={index}
@@ -90,7 +90,7 @@ const Home = () => {
                       variant="organization"
                       size="small"
                       customColor={org.orgColor}
-                      className="rounded-lg"
+                      className="rounded-lg shrink-0 whitespace-nowrap"
                     >
                       {org.name}
                     </Button>
@@ -148,8 +148,8 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Qualities Section */}
-          <StaggerContainer className="grid md:grid-cols-2 gap-12 pb-24 max-w-5xl">
+          {/* Qualities Section - 3 columns: Aspiring software | Analytical problem solver | Culture driven leader */}
+          <StaggerContainer className="grid md:grid-cols-3 gap-12 pb-24 max-w-5xl">
             {home.qualities.map((quality, index) => (
               <StaggerItem key={index}>
                 <div className="w-12 h-1 bg-cinnabar-500 mb-4 rounded-full" />

@@ -149,9 +149,9 @@ export const testAboutSkillsTranslation = async (language = 'es') => {
 // Check if environment variables are loaded
 export const checkTranslationConfig = () => {
   const config = {
-    googleTranslateApiKey: process.env.REACT_APP_GOOGLE_TRANSLATE_API_KEY ? 'Set' : 'Not Set',
-    supabaseUrl: process.env.REACT_APP_SUPABASE_URL ? 'Set' : 'Not Set',
-    supabaseAnonKey: process.env.REACT_APP_SUPABASE_ANON_KEY ? 'Set' : 'Not Set'
+    googleTranslateApiKey: import.meta.env.VITE_GOOGLE_TRANSLATE_API_KEY ? 'Set' : 'Not Set',
+    supabaseUrl: import.meta.env.VITE_SUPABASE_URL ? 'Set' : 'Not Set',
+    supabaseAnonKey: import.meta.env.VITE_SUPABASE_ANON_KEY ? 'Set' : 'Not Set'
   };
   
   console.log('Translation Configuration:', config);
