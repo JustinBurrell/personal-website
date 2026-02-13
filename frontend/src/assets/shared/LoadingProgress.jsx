@@ -25,8 +25,7 @@ const LoadingProgress = memo(({ onComplete }) => {
         setProgress(100);
         setLoadingText('Welcome!');
         clearInterval(interval);
-        
-        // Call onComplete after a short delay
+
         setTimeout(() => {
           onComplete && onComplete();
         }, 500);
@@ -41,68 +40,62 @@ const LoadingProgress = memo(({ onComplete }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-gradient-to-br from-indigo-50 via-white to-blue-50 flex items-center justify-center z-50"
+      className="fixed inset-0 bg-cream-100 flex items-center justify-center z-50"
     >
       <div className="text-center w-full max-w-md px-6">
-        {/* Name with elegant typography */}
         <motion.h1
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-4xl md:text-6xl font-bold text-gray-800 mb-8 tracking-tight"
+          className="text-4xl md:text-6xl font-display font-bold text-cream-800 mb-8 tracking-tight"
         >
           Justin Burrell
         </motion.h1>
-        
-        {/* Subtitle */}
+
         <motion.p
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-          className="text-lg md:text-xl text-gray-600 mb-12 font-light"
+          className="text-lg md:text-xl font-body text-cream-500 mb-12"
         >
           Software Engineer & Technology Enthusiast
         </motion.p>
-        
-        {/* Progress bar */}
+
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
           className="mb-6"
         >
-          <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+          <div className="w-full bg-cream-200 rounded-full h-2 mb-4">
             <motion.div
-              className="bg-gradient-to-r from-indigo-500 to-blue-500 h-2 rounded-full"
+              className="bg-cinnabar-500 h-2 rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.3, ease: "easeOut" }}
             />
           </div>
-          
-          {/* Progress percentage */}
+
           <motion.p
             key={progress}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-sm font-medium text-gray-600"
+            className="font-mono text-sm text-cream-500"
           >
             {progress}%
           </motion.p>
         </motion.div>
-        
-        {/* Loading text */}
+
         <motion.p
           key={loadingText}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
-          className="text-sm text-gray-500 font-medium"
+          className="font-mono text-sm text-cream-400"
         >
           {loadingText}
         </motion.p>
-        
-        {/* Loading animation */}
+
         {progress < 100 && (
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
@@ -111,8 +104,8 @@ const LoadingProgress = memo(({ onComplete }) => {
             className="flex justify-center mt-6"
           >
             <div className="relative">
-              <div className="w-8 h-8 border-2 border-indigo-200 rounded-full animate-pulse"></div>
-              <div className="absolute inset-0 w-8 h-8 border-2 border-transparent border-t-indigo-500 rounded-full animate-spin"></div>
+              <div className="w-8 h-8 border-2 border-cinnabar-200 rounded-full animate-pulse"></div>
+              <div className="absolute inset-0 w-8 h-8 border-2 border-transparent border-t-cinnabar-500 rounded-full animate-spin"></div>
             </div>
           </motion.div>
         )}
@@ -121,4 +114,4 @@ const LoadingProgress = memo(({ onComplete }) => {
   );
 });
 
-export default LoadingProgress; 
+export default LoadingProgress;

@@ -13,7 +13,7 @@ const LanguageSelector = () => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         disabled={isLoading}
-        className={`flex items-center space-x-2 px-3 py-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors ${
+        className={`flex items-center space-x-2 px-3 py-2 rounded-xl text-cream-500 hover:text-cinnabar-500 hover:bg-cream-200 transition-colors ${
           isLoading ? 'opacity-50 cursor-not-allowed' : ''
         }`}
         aria-label="Select language"
@@ -28,13 +28,13 @@ const LanguageSelector = () => {
           title={currentLang.name}
         />
         {isLoading && (
-          <span className="animate-spin h-4 w-4 border-2 border-gray-500 rounded-full border-t-transparent" />
+          <span className="animate-spin h-4 w-4 border-2 border-cream-400 rounded-full border-t-transparent" />
         )}
       </button>
 
       {isOpen && (
-        <div 
-          className="absolute right-0 mt-2 py-1 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-50"
+        <div
+          className="absolute right-0 mt-2 py-1 w-48 bg-cream-50 rounded-xl border border-cream-300 shadow-[0_8px_30px_rgb(0,0,0,0.08)] z-50"
           onMouseLeave={() => setIsOpen(false)}
         >
           {supportedLanguages.map((lang) => (
@@ -45,8 +45,8 @@ const LanguageSelector = () => {
                 setIsOpen(false);
               }}
               disabled={isLoading}
-              className={`w-full flex items-center space-x-3 px-4 py-2 text-sm text-gray-700 text-left hover:bg-gray-50 hover:text-gray-900 transition-colors ${
-                currentLanguage === lang.code ? 'bg-gray-50 text-gray-900' : ''
+              className={`w-full flex items-center space-x-3 px-4 py-2 text-sm font-display text-cream-600 text-left hover:bg-cream-100 hover:text-cinnabar-500 transition-colors ${
+                currentLanguage === lang.code ? 'bg-cream-100 text-cinnabar-500' : ''
               } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <ReactCountryFlag
@@ -66,4 +66,4 @@ const LanguageSelector = () => {
   );
 };
 
-export default LanguageSelector; 
+export default LanguageSelector;

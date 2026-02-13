@@ -2,7 +2,7 @@
 
 A modern, high-performance portfolio website showcasing software engineering experience, projects, and technical expertise. Built with React, Supabase, and optimized for production deployment.
 
-## 🚀 Features
+## Features
 
 ### **Core Functionality**
 - **Multi-language Support**: English/Spanish translation system
@@ -26,7 +26,7 @@ A modern, high-performance portfolio website showcasing software engineering exp
 - **Awards**: Recognition and accomplishments
 - **Contact**: Interactive contact form with validation
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 | Category | Technology | Purpose |
 |----------|------------|---------|
@@ -40,7 +40,7 @@ A modern, high-performance portfolio website showcasing software engineering exp
 | **Routing** | React Router | Client-side navigation |
 | **Deployment** | Vercel | Production hosting with CI/CD |
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 personal-website/
@@ -56,7 +56,7 @@ personal-website/
 └── README.md               # Project documentation
 ```
 
-## 🎯 Key Features Explained
+## Key Features Explained
 
 ### **Global Data Management**
 - Single data fetch on app load with 30-minute caching
@@ -79,7 +79,7 @@ personal-website/
 - Supabase storage for contact submissions
 - Admin dashboard for managing submissions
 
-## 🔧 Customization
+## Customization
 
 ### **Adding New Content**
 1. Update Supabase database with new data
@@ -96,14 +96,14 @@ personal-website/
 - Modify preloading strategy in `imagePreloader.js`
 - Configure performance monitoring in `performance.js`
 
-## 📊 Performance Metrics
+## Performance Metrics
 
 - **First Contentful Paint**: < 800ms
 - **Navigation Speed**: Instant (cached data)
 - **Image Load Time**: Preloaded for instant display
 - **Bundle Size**: Optimized with code splitting
 
-## 📞 Contact
+## Contact
 
 - **Website**: [Portfolio](https://www.thejustinburrell.com/)
 - **LinkedIn**: [LinkedIn](https://www.linkedin.com/in/thejustinburrell/)

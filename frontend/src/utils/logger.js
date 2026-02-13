@@ -1,8 +1,8 @@
 // Production-safe logging utility
 class Logger {
   constructor() {
-    this.isDevelopment = process.env.NODE_ENV === 'development';
-    this.isProduction = process.env.NODE_ENV === 'production';
+    this.isDevelopment = import.meta.env.DEV;
+    this.isProduction = import.meta.env.PROD;
   }
 
   // Only log in development

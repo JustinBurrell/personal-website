@@ -47,8 +47,8 @@ const preloadComponents = () => {
 
 // Optimized loading fallback component
 const LoadingFallback = memo(() => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-500"></div>
+  <div className="min-h-screen flex items-center justify-center bg-cream-100">
+    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cinnabar-500"></div>
   </div>
 ));
 
@@ -119,14 +119,14 @@ const App = memo(() => {
         <link rel="preload" href="/assets/images/gallery/Gallery Background Photo.jpg" as="image" />
         
         {/* Preload critical fonts */}
-        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </Helmet>
       
       {/* Always show navbar - no blocking loader */}
       <Navbar />
       
-      <main className="flex-grow bg-gray-50 pt-16">
+      <main className="flex-grow bg-cream-100 pt-20">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={
