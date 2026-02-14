@@ -11,9 +11,12 @@ class ImagePreloader {
     this.preloadCriticalImages();
   }
 
-  // Get full Supabase URL for an asset
+  // Get full Supabase URL for an asset (path or full URL; if full URL return as-is)
   getAssetUrl(filePath) {
-    return `${this.supabaseUrl}/storage/v1/object/public/assets/${filePath}`;
+    if (!filePath) return '';
+    if (typeof filePath === 'string' && filePath.startsWith('http')) return filePath;
+    const path = filePath.startsWith('assets/') ? filePath.slice(7) : (filePath || '');
+    return `${this.supabaseUrl}/storage/v1/object/public/assets/${path}`;
   }
 
   // Preload a single image with timeout and deduplication

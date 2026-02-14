@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Link as ScrollLink } from 'react-scroll';
-import LanguageSelector from './LanguageSelector';
 import { useLanguage } from '../../features/language';
 import { useTranslateText } from '../../features/language/useTranslateText';
 import { useScrollSpy } from '../../hooks/useScrollSpy';
+import { useAuth } from '../../features/auth';
 import { safeScrollToTop } from '../../utils/scrollUtils';
 import prefetchManager from '../../utils/prefetch';
 
@@ -16,6 +16,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const navRef = useRef(null);
   const timeoutRef = useRef(null);
+  const { user, isAdmin, isLoading: authLoading, signIn, signOut } = useAuth();
 
   const homeText = useTranslateText("Home");
   const aboutText = useTranslateText("About");
@@ -241,14 +242,44 @@ const Navbar = () => {
                     </div>
                   )}
                 </div>
-              ))}
-              <LanguageSelector />
+                  ))}
+              {!authLoading && (
+                <>
+                  {user ? (
+                    <>
+                      {isAdmin && (
+                        <Link
+                          to="/admin"
+                          onClick={() => { setIsOpen(false); setActiveSubmenu(null); }}
+                          className="px-3 py-2 text-sm font-display font-medium uppercase tracking-wide rounded-lg bg-cinnabar-500/15 text-cinnabar-600 hover:bg-cinnabar-500/25 transition-colors"
+                        >
+                          Admin
+                        </Link>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => { signOut({ returnTo: window.location.origin }); setIsOpen(false); }}
+                        className="px-3 py-2 text-sm font-display font-medium uppercase tracking-wide text-cream-600 hover:text-cinnabar-500 transition-colors"
+                      >
+                        Sign out
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => signIn()}
+                      className="px-3 py-2 text-sm font-display font-medium uppercase tracking-wide text-cream-600 hover:text-cinnabar-500 transition-colors"
+                    >
+                      Sign in
+                    </button>
+                  )}
+                </>
+              )}
             </div>
           )}
 
           {/* Mobile menu button */}
           <div className={isMobileDevice ? "flex items-center" : "md:hidden flex items-center"}>
-            <LanguageSelector />
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="inline-flex items-center justify-center p-2 rounded-xl text-cream-500 hover:text-cinnabar-500 hover:bg-cream-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cinnabar-500 transition-colors"
@@ -270,6 +301,38 @@ const Navbar = () => {
         {/* Mobile menu dropdown */}
         <div className={`${isOpen && isMobileDevice ? 'block' : 'hidden'}`}>
           <div className="px-2 pt-2 pb-3 space-y-1 border-t border-cream-300">
+            {!authLoading && (
+              <div className="flex gap-2 pb-2 border-b border-cream-200">
+                {user ? (
+                  <>
+                    {isAdmin && (
+                      <Link
+                        to="/admin"
+                        onClick={() => { setIsOpen(false); setActiveSubmenu(null); }}
+                        className="px-3 py-2 rounded-xl text-base font-display font-medium bg-cinnabar-500/15 text-cinnabar-600 hover:bg-cinnabar-500/25"
+                      >
+                        Admin
+                      </Link>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => { signOut({ returnTo: window.location.origin }); setIsOpen(false); }}
+                      className="px-3 py-2 rounded-xl text-base font-display font-medium text-cream-600 hover:text-cinnabar-500 hover:bg-cream-200"
+                    >
+                      Sign out
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => { signIn(); setIsOpen(false); }}
+                    className="px-3 py-2 rounded-xl text-base font-display font-medium text-cream-600 hover:text-cinnabar-500 hover:bg-cream-200"
+                  >
+                    Sign in
+                  </button>
+                )}
+              </div>
+            )}
             {navItems.map((item) => (
               <div key={item.name}>
                 <div className="flex items-center justify-between">

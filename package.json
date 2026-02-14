@@ -1,0 +1,12 @@
+{
+  "name": "personal-website",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n server,frontend -c blue,green \"npm run dev --prefix server\" \"npm run start --prefix frontend\"",
+    "dev:frontend": "npm run start --prefix frontend",
+    "dev:server": "npm run dev --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

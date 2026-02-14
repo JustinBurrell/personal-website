@@ -10,6 +10,30 @@ import { FaList, FaClock, FaChevronLeft, FaChevronRight, FaTimes } from 'react-i
 import { useScrollSpy } from '../hooks/useScrollSpy';
 import { safeScrollTo } from '../utils/scrollUtils';
 
+// Sort companies and their positions by recency (most recent start date first)
+const parseExperienceDate = (d) => {
+  if (!d || typeof d !== 'string') return new Date(0);
+  return new Date(d.trim()) || new Date(0);
+};
+
+const sortExperiencesByRecency = (companies) => {
+  if (!companies || !Array.isArray(companies)) return [];
+  return [...companies]
+    .map((company) => ({
+      ...company,
+      positions: [...(company.positions || [])].sort(
+        (a, b) => parseExperienceDate(b.startDate) - parseExperienceDate(a.startDate)
+      ),
+    }))
+    .sort((a, b) => {
+      const aLatest =
+        a.positions?.length > 0 ? parseExperienceDate(a.positions[0].startDate) : new Date(0);
+      const bLatest =
+        b.positions?.length > 0 ? parseExperienceDate(b.positions[0].startDate) : new Date(0);
+      return bLatest - aLatest;
+    });
+};
+
 // Helper function to check if images should be hidden for a specific experience
 const shouldHideImages = (company, position) => {
   const companyLower = company?.toLowerCase() || '';
@@ -481,7 +505,7 @@ const Experience = () => {
                 <h3 className="text-2xl font-display font-bold text-cream-800">{professionalText}</h3>
               </div>
               {viewMode === 'resume' ? (
-                renderGroupedExperience(expData.professionalexperience)
+                renderGroupedExperience(sortExperiencesByRecency(expData.professionalexperience || []))
               ) : (
                 <Timeline experiences={expData.professionalexperience} type="professional" />
               )}
@@ -502,7 +526,7 @@ const Experience = () => {
                 <h3 className="text-2xl font-display font-bold text-cream-800">{leadershipText}</h3>
               </div>
               {viewMode === 'resume' ? (
-                renderGroupedExperience(expData.leadershipexperience)
+                renderGroupedExperience(sortExperiencesByRecency(expData.leadershipexperience || []))
               ) : (
                 <Timeline experiences={expData.leadershipexperience} type="leadership" />
               )}

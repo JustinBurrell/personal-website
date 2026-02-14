@@ -11,6 +11,7 @@ import { useLocation } from 'react-router-dom';
 
 import { useScrollSpy } from '../hooks/useScrollSpy';
 import { safeScrollTo } from '../utils/scrollUtils';
+import { portfolioService } from '../services/supabase';
 
 const Home = () => {
   const { translatedData, isLoading } = useLanguage();
@@ -106,7 +107,7 @@ const Home = () => {
                 >
                   <Button
                     as="a"
-                    href={home.resumeUrl}
+                    href={home.resumeUrl ? (home.resumeUrl.startsWith('http') ? home.resumeUrl : portfolioService.getAssetUrl(home.resumeUrl)) : '#'}
                     target="_blank"
                     rel="noopener noreferrer"
                     variant="primary"
@@ -139,7 +140,7 @@ const Home = () => {
               >
                 <motion.div style={{ y: imageY }} className="relative">
                   <img
-                    src={home.imageUrl}
+                    src={home.imageUrl ? (home.imageUrl.startsWith('http') ? home.imageUrl : portfolioService.getAssetUrl(home.imageUrl)) : ''}
                     alt="Justin Burrell"
                     className="w-full max-w-md rounded-2xl border-4 border-cream-200 object-cover"
                   />

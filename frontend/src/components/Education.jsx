@@ -11,6 +11,7 @@ import { useScrollSpy } from '../hooks/useScrollSpy';
 import { safeScrollTo } from '../utils/scrollUtils';
 import { FaTimes } from 'react-icons/fa';
 import { StaggerContainer, StaggerItem } from '../assets/ui/StaggerContainer';
+import { portfolioService } from '../services/supabase';
 
 const ImageModal = ({ src, alt, onClose }) => {
   React.useEffect(() => {
@@ -137,10 +138,10 @@ const EducationCard = ({ edu, translatedEdu, type, index, onImageClick, relevant
           {edu.educationImageUrl && (
             <div className="md:col-span-5 bg-cream-200 flex items-center justify-center p-6">
               <img
-                src={edu.educationImageUrl}
+                src={edu.educationImageUrl.startsWith('http') ? edu.educationImageUrl : portfolioService.getAssetUrl(edu.educationImageUrl)}
                 alt={`${translatedEdu.name}`}
                 className="max-h-[380px] w-auto object-contain rounded-xl cursor-pointer hover:scale-105 transition-transform duration-300"
-                onClick={() => onImageClick({ src: edu.educationImageUrl, alt: `${translatedEdu.name}` })}
+                onClick={() => onImageClick({ src: edu.educationImageUrl.startsWith('http') ? edu.educationImageUrl : portfolioService.getAssetUrl(edu.educationImageUrl), alt: `${translatedEdu.name}` })}
               />
             </div>
           )}
@@ -365,20 +366,24 @@ const Education = () => {
                 ))}
               </motion.div>
             </div>
-            {educationGroup.educationImageUrl && (
-              <motion.div
-                className="md:col-span-4 flex justify-end items-start"
-                initial={{ opacity: 0, rotate: 0 }}
-                animate={{ opacity: 1, rotate: 2 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-              >
-                <img
-                  src={educationGroup.educationImageUrl}
-                  alt="Education"
-                  className="w-72 h-72 md:w-80 md:h-80 object-cover rounded-2xl border border-cream-300"
-                />
-              </motion.div>
-            )}
+            {(() => {
+              const sectionImageUrl = educationGroup.educationImageUrl ?? educationGroup.education_image_url ?? educationGroup.educationimageurl ?? '';
+              const displayUrl = sectionImageUrl ? (sectionImageUrl.startsWith('http') ? sectionImageUrl : portfolioService.getAssetUrl(sectionImageUrl)) : '';
+              return displayUrl ? (
+                <motion.div
+                  className="md:col-span-4 flex justify-end items-start"
+                  initial={{ opacity: 0, rotate: 0 }}
+                  animate={{ opacity: 1, rotate: 2 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                >
+                  <img
+                    src={displayUrl}
+                    alt="Education"
+                    className="w-72 h-72 md:w-80 md:h-80 object-cover rounded-2xl border border-cream-300"
+                  />
+                </motion.div>
+              ) : null;
+            })()}
           </div>
 
           {/* Schooling Section */}

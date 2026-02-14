@@ -9,6 +9,8 @@ import CustomCursor from './assets/shared/CustomCursor';
 import ContentLoader from './assets/shared/ContentLoader';
 import { LanguageProvider, useLanguage } from './features/language';
 import { GlobalDataProvider, useGlobalData } from './hooks/useGlobalData';
+import { AuthKitProvider } from '@workos-inc/authkit-react';
+import { AuthProvider } from './features/auth';
 import PerformanceRoute from './components/PerformanceRoute';
 import performanceOptimizer from './utils/performance';
 import prefetchManager from './utils/prefetch';
@@ -24,6 +26,7 @@ const Projects = lazy(() => import('./components/Projects'));
 const Awards = lazy(() => import('./components/Awards'));
 const Gallery = lazy(() => import('./components/Gallery'));
 const Contact = lazy(() => import('./components/Contact'));
+const Admin = lazy(() => import('./components/Admin'));
 
 // Aggressive preloading strategy
 const preloadComponents = () => {
@@ -186,6 +189,13 @@ const App = memo(() => {
                 </Suspense>
               </PageTransition>
             } />
+            <Route path="/admin/*" element={
+              <PageTransition>
+                <Suspense fallback={<LoadingFallback />}>
+                  <Admin />
+                </Suspense>
+              </PageTransition>
+            } />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </AnimatePresence>
@@ -194,14 +204,24 @@ const App = memo(() => {
   );
 });
 
+const workosClientId = import.meta.env.VITE_WORKOS_CLIENT_ID || '';
+const redirectUri = typeof window !== 'undefined' ? window.location.origin : '';
+
 const AppWrapper = () => (
   <Router>
     <HelmetProvider>
-      <GlobalDataProvider>
-        <LanguageProvider>
-          <App />
-        </LanguageProvider>
-      </GlobalDataProvider>
+      <AuthKitProvider
+        clientId={workosClientId}
+        redirectUri={redirectUri}
+      >
+        <AuthProvider>
+          <GlobalDataProvider>
+            <LanguageProvider>
+              <App />
+            </LanguageProvider>
+          </GlobalDataProvider>
+        </AuthProvider>
+      </AuthKitProvider>
     </HelmetProvider>
   </Router>
 );
