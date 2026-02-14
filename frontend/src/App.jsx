@@ -126,10 +126,10 @@ const App = memo(() => {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </Helmet>
       
-      {/* Always show navbar - no blocking loader */}
-      <Navbar />
-      
-      <main className="flex-grow bg-cream-100 pt-20">
+      {/* Hide navbar on admin routes */}
+      {!location.pathname.startsWith('/admin') && <Navbar />}
+
+      <main className={`flex-grow bg-cream-100 ${location.pathname.startsWith('/admin') ? '' : 'pt-20'}`}>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={
