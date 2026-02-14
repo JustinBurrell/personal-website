@@ -5,6 +5,7 @@ import { useLanguage } from '../features/language';
 import { useTranslateText } from '../features/language/useTranslateText';
 import { motion } from 'framer-motion';
 import { StaggerContainer, StaggerItem } from '../assets/ui/StaggerContainer';
+import { portfolioService } from '../services/supabase';
 
 const Awards = () => {
   const { translatedData, isLoading } = useLanguage();
@@ -59,7 +60,7 @@ const Awards = () => {
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
                 <img
-                  src={awardGroup.awardImageUrl}
+                  src={awardGroup.awardImageUrl.startsWith('http') ? awardGroup.awardImageUrl : portfolioService.getAssetUrl(awardGroup.awardImageUrl)}
                   alt="Awards"
                   className="w-72 h-72 md:w-80 md:h-80 object-cover rounded-2xl border border-cream-300"
                 />

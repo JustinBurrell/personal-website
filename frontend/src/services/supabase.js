@@ -341,34 +341,35 @@ export const portfolioService = {
 
       if (educationError) throw educationError
 
-      // Process education data
-
-      const mappedData = educationData.map(edu => ({
-        ...edu,
-        education: edu.education_items.map(item => ({
-          name: item.name,
-          nameUrl: item.nameUrl,
-          educationType: item.educationType,
-          schoolType: item.schoolType,
-          major: item.major,
-          completionDate: item.completionDate,
-          description: item.description,
-          gpa: item.gpa,
-          educationImageUrl: item.educationImageUrl,
-          relevantCourses: item.education_relevant_courses.map(course => ({
-            course: course.course,
-            courseUrl: course.courseUrl
-          })),
-          organizationInvolvement: item.education_organization_involvement.map(org => ({
-            organization: org.organization,
-            role: org.role
+      // Process education data (camelCase section row so educationImageUrl / education_image_url works on public page)
+      const mappedData = educationData.map(edu => {
+        const sectionRow = camelCaseKeysDeep({ ...edu, education: undefined });
+        const sectionImageUrl = edu.education_image_url ?? edu.educationImageUrl ?? edu.educationimageurl ?? sectionRow.educationImageUrl ?? sectionRow.educationimageurl;
+        return {
+          ...sectionRow,
+          educationImageUrl: sectionImageUrl ?? sectionRow.educationImageUrl,
+          education: (edu.education_items || []).map(item => ({
+            name: item.name,
+            nameUrl: item.nameUrl,
+            educationType: item.educationType,
+            schoolType: item.schoolType,
+            major: item.major,
+            completionDate: item.completionDate,
+            description: item.description,
+            gpa: item.gpa,
+            educationImageUrl: item.educationImageUrl ?? item.education_image_url,
+            relevantCourses: (item.education_relevant_courses || []).map(course => ({
+              course: course.course,
+              courseUrl: course.courseUrl
+            })),
+            organizationInvolvement: (item.education_organization_involvement || []).map(org => ({
+              organization: org.organization,
+              role: org.role
+            }))
           }))
-        }))
-      }));
+        };
+      });
 
-      // Return mapped education data
-
-      // No need to camelCaseKeysDeep since data is already camelCase
       return mappedData;
     } catch (error) {
       console.error('Error fetching education data:', error)
@@ -543,9 +544,12 @@ export const portfolioService = {
     }
   },
 
-  // Get asset URL from Supabase Storage
+  // Get asset URL from Supabase Storage (bucket = assets). Object keys are under "assets/" folder (e.g. assets/images/gallery/...). If already a full URL, return as-is.
   getAssetUrl(filePath) {
-    return `${supabaseUrl}/storage/v1/object/public/assets/${filePath}`
+    if (!filePath) return '';
+    if (typeof filePath === 'string' && filePath.startsWith('http')) return filePath;
+    const path = (filePath || '').replace(/^\/+/, '');
+    return `${supabaseUrl}/storage/v1/object/public/assets/${path}`;
   },
 
   // Upload asset to Supabase Storage
@@ -664,9 +668,12 @@ export const portfolioService = {
 
 // Asset service for managing images and files
 export const assetService = {
-  // Get asset URL
+  // Get asset URL (path or full URL; if full URL return as-is)
   getAssetUrl(filePath) {
-    return `${supabaseUrl}/storage/v1/object/public/assets/${filePath}`
+    if (!filePath) return '';
+    if (typeof filePath === 'string' && filePath.startsWith('http')) return filePath;
+    const path = filePath.startsWith('assets/') ? filePath.slice(7) : (filePath || '');
+    return `${supabaseUrl}/storage/v1/object/public/assets/${path}`;
   },
 
   // Upload asset
