@@ -52,7 +52,7 @@ const Home = () => {
 
   return (
     <AnimationWrapper>
-      <section id="home" className="min-h-screen bg-cream-100">
+      <section id="home" className="min-h-screen bg-cream-100 overflow-x-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Section */}
           <div className="min-h-screen flex items-center relative">
@@ -61,11 +61,11 @@ const Home = () => {
               <div className="md:col-span-7 flex flex-col justify-center">
                 <TextReveal
                   text={home.title}
-                  className="text-6xl md:text-8xl font-display font-bold text-cream-800 tracking-tight leading-[0.95]"
+                  className="text-4xl sm:text-6xl md:text-8xl font-display font-bold text-cream-800 tracking-tight leading-[0.95]"
                 />
 
                 <motion.p
-                  className="text-xl md:text-2xl font-body text-cream-500 leading-relaxed max-w-2xl mt-8"
+                  className="text-base sm:text-xl md:text-2xl font-body text-cream-500 leading-relaxed max-w-2xl mt-8"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
@@ -75,7 +75,7 @@ const Home = () => {
 
                 {/* Organizations - single line, scroll on small screens */}
                 <motion.div
-                  className="flex flex-nowrap items-center gap-2 mt-8 overflow-x-auto scrollbar-hide min-h-9"
+                  className="flex flex-wrap sm:flex-nowrap items-center gap-2 mt-8 sm:overflow-x-auto scrollbar-hide min-h-9"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.5 }}
