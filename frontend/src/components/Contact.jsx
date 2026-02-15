@@ -134,7 +134,12 @@ const Contact = () => {
           console.error('Failed to update email status:', updateError);
         }
       }
-      setSubmitStatus({ type: 'error', message: 'Failed to send message. Please try again.' });
+      setSubmitStatus({
+        type: 'error',
+        message: savedEmailId
+          ? 'Email could not be sent, but your message has been saved for Justin. We are working on a fix!'
+          : 'Failed to send message. Please try again.',
+      });
     }
 
     setIsSubmitting(false);
