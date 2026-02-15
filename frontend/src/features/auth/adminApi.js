@@ -126,3 +126,18 @@ export async function adminGetEmails(getAccessToken) {
 export async function adminDeleteEmail(id, getAccessToken) {
   return adminFetch(`/api/admin/emails/${id}`, { method: 'DELETE' }, getAccessToken);
 }
+
+/** List all admin emails. */
+export async function adminGetAdminEmails(getAccessToken) {
+  return adminFetch('/api/admin/admin-emails', {}, getAccessToken);
+}
+
+/** Add an admin email. */
+export async function adminPostAdminEmail(email, getAccessToken) {
+  return adminFetch('/api/admin/admin-emails', { method: 'POST', body: JSON.stringify({ email }) }, getAccessToken);
+}
+
+/** Remove an admin email by id. */
+export async function adminDeleteAdminEmail(id, getAccessToken) {
+  return adminFetch(`/api/admin/admin-emails/${id}`, { method: 'DELETE' }, getAccessToken);
+}

@@ -13,6 +13,7 @@ const SECTIONS = [
   { id: 'gallery', label: 'Gallery', icon: '06' },
   { id: 'projects', label: 'Projects', icon: '07' },
   { id: 'emails', label: 'Emails', icon: '08' },
+  { id: 'admin-emails', label: 'Admins', icon: '09' },
 ];
 
 export default function Admin() {
@@ -40,8 +41,50 @@ export default function Admin() {
     );
   }
 
-  if (!user || !isAdmin) {
+  if (!user) {
     return <Navigate to="/" replace />;
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-cream-100 px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-md w-full text-center"
+        >
+          <div className="w-12 h-12 mx-auto mb-6 rounded-full bg-cinnabar-500/10 flex items-center justify-center">
+            <svg className="w-6 h-6 text-cinnabar-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-display font-bold text-cream-800 mb-2">
+            Access Denied
+          </h2>
+          <p className="font-body text-cream-500 mb-1">
+            Signed in as <span className="font-mono text-cream-600">{user.email}</span>
+          </p>
+          <p className="font-body text-cream-400 text-sm mb-8">
+            This account doesn't have admin access.
+          </p>
+          <div className="flex items-center justify-center gap-4">
+            <Link
+              to="/"
+              className="px-5 py-2.5 font-mono text-xs tracking-wide text-cream-600 hover:text-cream-800 transition-colors"
+            >
+              Back to site
+            </Link>
+            <button
+              onClick={signOut}
+              className="px-5 py-2.5 rounded-lg bg-cinnabar-500 text-white font-mono text-xs tracking-wide hover:bg-cinnabar-600 transition-colors"
+            >
+              Sign out
+            </button>
+          </div>
+        </motion.div>
+      </div>
+    );
   }
 
   const base = '/admin';

@@ -17,7 +17,6 @@ This starts the API on port 3001 and the frontend on port 3000.
 1. Copy `.env.example` to `.env` and fill in:
    - **WORKOS_API_KEY** and **WORKOS_CLIENT_ID** from [WorkOS Dashboard](https://dashboard.workos.com) (Authentication → API Keys).
    - **SUPABASE_URL** and **SUPABASE_SERVICE_ROLE_KEY** from your Supabase project (Settings → API). Use the **service role** key here only; never expose it to the frontend.
-   - **ADMIN_EMAILS**: comma-separated list of emails allowed to access admin (e.g. `you@example.com`).
    - **FRONTEND_ORIGIN**: one origin or comma-separated list for CORS (e.g. `http://localhost:3000` for local only, or `http://localhost:3000,https://my-site.vercel.app` for local + Vercel).
 
 2. **WorkOS Dashboard** (so sign-in redirects back and the browser allows API requests):
@@ -30,13 +29,13 @@ This starts the API on port 3001 and the frontend on port 3000.
    - **Sign-out redirect**: On the same [**Redirects**](https://dashboard.workos.com/redirects) page, set the default **Sign-out redirect** to your app origin (e.g. `http://localhost:3000` for local, and add production URL). Otherwise after Sign out you may see a WorkOS error page instead of returning to your app.
    - Optionally enable OAuth providers under **Authentication** → OAuth providers.
 
-3. In `server/.env`, set **ADMIN_EMAILS** to your real email (comma-separated if multiple). Only those addresses can see the Admin link and use the dashboard.
+3. In Supabase, create the `admin_emails` table and add your email address. Only those addresses can see the Admin link and use the dashboard. Admin emails are managed through the admin portal UI.
 
 ### Expected sign-in flow
 
 1. Click **Sign in** → redirects to WorkOS (Google or other provider).
 2. After login, WorkOS redirects back to your app with a code; the AuthKit SDK exchanges it with `api.workos.com` (this request **must** be allowed by WorkOS CORS).
-3. App state updates; navbar shows **Admin** (if your email is in `ADMIN_EMAILS`) and **Sign out**.
+3. App state updates; navbar shows **Admin** (if your email is in the `admin_emails` table) and **Sign out**. Non-admin users who navigate to `/admin` see an access denied message.
 
 If you see a CORS error mentioning `api.workos.com/user_management/authenticate` and “nothing happens” after logging in, add your app origin to WorkOS CORS (see step 2 above). Without it, the browser blocks the token exchange.
 
@@ -50,11 +49,11 @@ If you see a CORS error mentioning `api.workos.com/user_management/authenticate`
 ### Troubleshooting: "Token verification failed" / JWKS 404
 
 - The server fetches WorkOS public keys from `https://api.workos.com/sso/jwks/{clientId}` (the client ID is required in the path). If you use a custom API host, set `WORKOS_API_HOSTNAME` in `.env`.
-- After verification works, the **Admin** link only appears when the signed-in user’s email (from the token) matches **ADMIN_EMAILS** in `server/.env`. Use the exact Google account email in that list.
+- After verification works, the **Admin** link only appears when the signed-in user's email (from the token) is in the `admin_emails` table in Supabase. Use the exact Google account email.
 
 ### Troubleshooting: Admin button not showing / "Could not fetch user by sub"
 
-- The server needs the signed-in user’s **email** to compare with **ADMIN_EMAILS**. By default the WorkOS session JWT may not include `email`.
+- The server needs the signed-in user's **email** to look up in the `admin_emails` table. By default the WorkOS session JWT may not include `email`.
 - **Recommended:** Add the email claim to your JWT in the WorkOS Dashboard so the token includes it and the Admin check works without any extra API call:
   1. Go to [WorkOS Dashboard](https://dashboard.workos.com) → **Authentication** → **Sessions**.
   2. Find **JWT Template** (or **Configure JWT Template**) and add a claim: name **`email`**, value **`{{ user.email }}`** (or use the template editor to add `"email": "{{ user.email }}"`).
@@ -86,7 +85,9 @@ Server listens on `PORT` (default 3001). Point the frontend `VITE_API_BASE_URL` 
 - `GET/POST/DELETE /api/admin/sections/:section/nested/:parentTable/:parentId/:nestedType` – nested items (e.g. gallery categories, experience positions)
 - `POST /api/admin/upload` – multipart: `file`, `section`, optional `path`; returns `{ path, url }`
 
-All `/api/admin/*` routes require an authenticated admin (Bearer token + email in ADMIN_EMAILS).
+- `GET/POST/DELETE /api/admin/admin-emails` – manage admin email addresses
+
+All `/api/admin/*` routes require an authenticated admin (Bearer token + email in `admin_emails` table).
 
 ## Supabase security
 

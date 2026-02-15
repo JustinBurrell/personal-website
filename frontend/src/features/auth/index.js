@@ -20,4 +20,7 @@ export {
   adminListStorageFiles,
   adminGetEmails,
   adminDeleteEmail,
+  adminGetAdminEmails,
+  adminPostAdminEmail,
+  adminDeleteAdminEmail,
 } from './adminApi';

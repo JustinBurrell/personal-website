@@ -43,9 +43,15 @@ export async function requireAuth(req, res, next) {
       }
     }
 
-    const adminEmails = req.adminEmails || [];
-    const isAdmin = adminEmails.length > 0 && email && adminEmails.includes(email);
-
+    let isAdmin = false;
+    if (email && req.supabaseAdmin) {
+      const { data } = await req.supabaseAdmin
+        .from('admin_emails')
+        .select('id')
+        .eq('email', email)
+        .maybeSingle();
+      isAdmin = !!data;
+    }
 
     req.auth = { sub, email, isAdmin, payload };
     next();

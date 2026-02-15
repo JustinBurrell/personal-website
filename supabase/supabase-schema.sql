@@ -248,3 +248,9 @@ CREATE TABLE public.projects (
   createdAt timestamp with time zone DEFAULT now(),
   CONSTRAINT projects_pkey PRIMARY KEY (id)
 );
+CREATE TABLE public.admin_emails (
+  id integer NOT NULL DEFAULT nextval('admin_emails_id_seq'::regclass),
+  email character varying NOT NULL UNIQUE,
+  createdAt timestamp with time zone DEFAULT now(),
+  CONSTRAINT admin_emails_pkey PRIMARY KEY (id)
+);

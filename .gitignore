@@ -111,4 +111,7 @@ temp/
 .supabase/
 
 # Local development
-*.local 
+*.local
+
+# Security audit
+SECURITY-AUDIT.md

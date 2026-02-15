@@ -14,11 +14,6 @@ const supabaseAdmin = process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_R
   ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
   : null;
 
-const adminEmails = (process.env.ADMIN_EMAILS || '')
-  .split(',')
-  .map((e) => e.trim().toLowerCase())
-  .filter(Boolean);
-
 // Support one origin or comma-separated list (e.g. local + Vercel)
 const allowedOrigins = (process.env.FRONTEND_ORIGIN || 'http://localhost:3000')
   .split(',')
@@ -36,7 +31,6 @@ app.use(express.json());
 app.use((req, res, next) => {
   req.workos = workos;
   req.supabaseAdmin = supabaseAdmin;
-  req.adminEmails = adminEmails;
   next();
 });
 

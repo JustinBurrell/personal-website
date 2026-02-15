@@ -81,6 +81,65 @@ adminRouter.delete('/emails/:id', async (req, res) => {
   }
 });
 
+/** GET /api/admin/admin-emails — list all admin emails. */
+adminRouter.get('/admin-emails', async (req, res) => {
+  try {
+    const supabase = req.supabaseAdmin;
+    if (!supabase) return res.status(503).json({ error: 'Database not configured' });
+    const { data, error } = await supabase
+      .from('admin_emails')
+      .select('id, email, createdAt')
+      .order('createdAt', { ascending: true });
+    if (error) throw error;
+    res.json(data || []);
+  } catch (err) {
+    console.error('Admin GET admin-emails error:', err);
+    res.status(500).json({ error: err.message || 'Failed' });
+  }
+});
+
+/** POST /api/admin/admin-emails — add an admin email. */
+adminRouter.post('/admin-emails', async (req, res) => {
+  try {
+    const supabase = req.supabaseAdmin;
+    if (!supabase) return res.status(503).json({ error: 'Database not configured' });
+    const email = (req.body.email || '').trim().toLowerCase();
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+    const { data, error } = await supabase
+      .from('admin_emails')
+      .insert({ email })
+      .select()
+      .single();
+    if (error) {
+      if (error.code === '23505') return res.status(409).json({ error: 'Email already exists' });
+      throw error;
+    }
+    res.status(201).json(data);
+  } catch (err) {
+    console.error('Admin POST admin-emails error:', err);
+    res.status(500).json({ error: err.message || 'Failed' });
+  }
+});
+
+/** DELETE /api/admin/admin-emails/:id — remove an admin email (cannot remove last one). */
+adminRouter.delete('/admin-emails/:id', async (req, res) => {
+  try {
+    const supabase = req.supabaseAdmin;
+    if (!supabase) return res.status(503).json({ error: 'Database not configured' });
+    const { count, error: countErr } = await supabase
+      .from('admin_emails')
+      .select('id', { count: 'exact', head: true });
+    if (countErr) throw countErr;
+    if (count <= 1) return res.status(400).json({ error: 'Cannot remove the last admin email' });
+    const { error } = await supabase.from('admin_emails').delete().eq('id', req.params.id);
+    if (error) throw error;
+    res.status(204).send();
+  } catch (err) {
+    console.error('Admin DELETE admin-emails error:', err);
+    res.status(500).json({ error: err.message || 'Failed' });
+  }
+});
+
 adminRouter.get('/sections', (req, res) => {
   res.json({
     sections: ['home', 'about', 'awards', 'education', 'experience', 'gallery', 'projects'],

@@ -18,8 +18,9 @@ import AdminSectionExperience from './AdminSectionExperience';
 import AdminSectionGallery from './AdminSectionGallery';
 import AdminSectionProjects from './AdminSectionProjects';
 import AdminSectionEmails from './AdminSectionEmails';
+import AdminSectionAdminEmails from './AdminSectionAdminEmails';
 
-const SECTIONS = ['home', 'about', 'awards', 'education', 'experience', 'gallery', 'projects', 'emails'];
+const SECTIONS = ['home', 'about', 'awards', 'education', 'experience', 'gallery', 'projects', 'emails', 'admin-emails'];
 
 export default function AdminSection() {
   const { section } = useParams();
@@ -44,7 +45,7 @@ export default function AdminSection() {
       setLoading(false);
       return;
     }
-    if (section === 'emails') {
+    if (section === 'emails' || section === 'admin-emails') {
       setData([]);
       setLoading(false);
       return;
@@ -472,6 +473,7 @@ export default function AdminSection() {
   if (section === 'gallery') return <AdminSectionGallery data={data} onSave={onSave} />;
   if (section === 'projects') return <AdminSectionProjects data={data} onSave={onSave} />;
   if (section === 'emails') return <AdminSectionEmails />;
+  if (section === 'admin-emails') return <AdminSectionAdminEmails />;
 
   return (
     <div>
