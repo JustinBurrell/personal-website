@@ -129,7 +129,7 @@ const Contact = () => {
       console.error('Error in contact form submission:', error);
       if (savedEmailId) {
         try {
-          await portfolioService.updateEmailStatus(savedEmailId, 'failed', { error: error.message });
+          await portfolioService.updateEmailStatus(savedEmailId, 'failed', { error: error?.text || error?.message || String(error) });
         } catch (updateError) {
           console.error('Failed to update email status:', updateError);
         }

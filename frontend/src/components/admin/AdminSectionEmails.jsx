@@ -43,6 +43,13 @@ export default function AdminSectionEmails() {
   const subject = (row) => row.subject ?? '';
   const message = (row) => row.message ?? '';
   const createdAt = (row) => row.created_at ?? row.createdAt ?? '';
+  const status = (row) => row.status ?? 'sent';
+  const failReason = (row) => {
+    const resp = row.emailjs_response ?? row.emailjsResponse;
+    if (!resp) return null;
+    const obj = typeof resp === 'string' ? (() => { try { return JSON.parse(resp); } catch { return null; } })() : resp;
+    return obj?.error || null;
+  };
 
   const handleDeleteClick = (id) => {
     setConfirmDeleteId(id);
@@ -87,7 +94,13 @@ export default function AdminSectionEmails() {
           <ul className="space-y-4">
             {emails.map((row) => (
               <li key={row.id}>
-                <article className="bg-white/80 rounded-2xl border border-cream-300/80 border-l-4 border-l-cinnabar-400 pl-5 pr-5 py-5 shadow-sm hover:shadow-md transition-shadow">
+                <article className={`bg-white/80 rounded-2xl border border-cream-300/80 border-l-4 pl-5 pr-5 py-5 shadow-sm hover:shadow-md transition-shadow ${status(row) === 'failed' ? 'border-l-amber-400' : 'border-l-cinnabar-400'}`}>
+                  {status(row) === 'failed' && (
+                    <div className="mb-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800">
+                      <span className="font-semibold">Email not delivered</span>
+                      {failReason(row) && <span className="text-amber-600"> — {failReason(row)}</span>}
+                    </div>
+                  )}
                   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-2">
                     <span className="font-display font-semibold text-cream-800">
                       {firstName(row)} {lastName(row)}

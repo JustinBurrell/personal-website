@@ -56,7 +56,7 @@ adminRouter.get('/emails', async (req, res) => {
     if (!supabase) return res.status(503).json({ error: 'Database not configured' });
     const { data, error } = await supabase
       .from('emails')
-      .select('id, first_name, last_name, email, subject, message, created_at')
+      .select('id, first_name, last_name, email, subject, message, status, emailjs_response, created_at')
       .order('created_at', { ascending: false });
     if (error) throw error;
     res.json(data || []);
