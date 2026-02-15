@@ -3,11 +3,6 @@
   "name": "Justin Burrell - Software Engineer and Tech Consultant",
   "icons": [
     {
-      "src": "favicons/favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    },
-    {
       "src": "favicons/android-chrome-192x192.png",
       "type": "image/png",
       "sizes": "192x192"
@@ -20,6 +15,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
-} 
+  "theme_color": "#F5F0EB",
+  "background_color": "#F5F0EB"
+}
