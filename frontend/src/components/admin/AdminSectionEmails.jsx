@@ -39,6 +39,7 @@ export default function AdminSectionEmails() {
 
   const firstName = (row) => row.first_name ?? row.firstName ?? '';
   const lastName = (row) => row.last_name ?? row.lastName ?? '';
+  const email = (row) => row.email ?? '';
   const subject = (row) => row.subject ?? '';
   const message = (row) => row.message ?? '';
   const createdAt = (row) => row.created_at ?? row.createdAt ?? '';
@@ -91,6 +92,14 @@ export default function AdminSectionEmails() {
                     <span className="font-display font-semibold text-cream-800">
                       {firstName(row)} {lastName(row)}
                     </span>
+                    {email(row) && (
+                      <a
+                        href={`mailto:${email(row)}`}
+                        className="text-sm text-cinnabar-600 hover:underline"
+                      >
+                        {email(row)}
+                      </a>
+                    )}
                     <span className="text-xs text-cream-500 font-mono">
                       {formatDateTime(createdAt(row))}
                     </span>
