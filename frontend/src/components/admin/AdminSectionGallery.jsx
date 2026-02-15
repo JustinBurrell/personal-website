@@ -12,6 +12,20 @@ import {
 } from '../../features/auth';
 import { portfolioService } from '../../services/supabase';
 
+const MONTH_ORDER = [
+  'january', 'february', 'march', 'april', 'may', 'june',
+  'july', 'august', 'september', 'october', 'november', 'december',
+];
+
+function parseDateKey(dateStr) {
+  if (!dateStr) return 0;
+  const parts = dateStr.trim().split(/\s+/);
+  if (parts.length < 2) return 0;
+  const month = MONTH_ORDER.indexOf(parts[0].toLowerCase());
+  const year = parseInt(parts[parts.length - 1], 10) || 0;
+  return year * 100 + (month >= 0 ? month : 0);
+}
+
 function normalizeCategories(row) {
   const raw = row.categories ?? row.gallery_categories ?? row.galleryCategories ?? [];
   return Array.isArray(raw)
@@ -32,8 +46,6 @@ export default function AdminSectionGallery({ data, onSave }) {
   const [pendingRowDeletes, setPendingRowDeletes] = useState(new Set());
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
-  const [draggedId, setDraggedId] = useState(null);
-
   const loadRows = useCallback(async () => {
     try {
       const list = await adminGetGalleryRows(getAccessToken);
@@ -72,6 +84,9 @@ export default function AdminSectionGallery({ data, onSave }) {
           sortOrder: i,
           title: edits.title ?? row.title ?? '',
           description: edits.description ?? row.description ?? '',
+          fullDescription: edits.fullDescription ?? row.fullDescription ?? row.full_description ?? '',
+          date: edits.date ?? row.date ?? '',
+          showInCarousel: edits.showInCarousel ?? row.showInCarousel ?? row.show_in_carousel ?? false,
           imageUrl: edits.imageUrl ?? row.imageUrl ?? row.image_url ?? '',
         };
         await adminPatchGalleryRow(row.id, patch, getAccessToken);
@@ -139,40 +154,6 @@ export default function AdminSectionGallery({ data, onSave }) {
     }
   };
 
-  const handleDragStart = (e, rowId) => {
-    setDraggedId(rowId);
-    e.dataTransfer.setData('text/plain', String(rowId));
-    e.dataTransfer.effectAllowed = 'move';
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-  };
-
-  const handleDrop = (e, targetRowId) => {
-    e.preventDefault();
-    const sourceId = Number(e.dataTransfer.getData('text/plain'));
-    if (!sourceId || sourceId === targetRowId) {
-      setDraggedId(null);
-      return;
-    }
-    setRows((prev) => {
-      const idx = prev.findIndex((r) => r.id === sourceId);
-      const targetIdx = prev.findIndex((r) => r.id === targetRowId);
-      if (idx === -1 || targetIdx === -1) return prev;
-      const next = [...prev];
-      const [removed] = next.splice(idx, 1);
-      next.splice(targetIdx, 0, removed);
-      return next;
-    });
-    setDraggedId(null);
-  };
-
-  const handleDragEnd = () => {
-    setDraggedId(null);
-  };
-
   const addCategory = (galleryId) => {
     setPendingNewCategories((prev) => ({
       ...prev,
@@ -195,7 +176,31 @@ export default function AdminSectionGallery({ data, onSave }) {
     });
   };
 
-  const displayRows = rows.filter((r) => !pendingRowDeletes.has(r.id));
+  const displayRows = rows
+    .filter((r) => !pendingRowDeletes.has(r.id))
+    .sort((a, b) => {
+      const dateA = parseDateKey(rowEdits[a.id]?.date ?? a.date ?? '');
+      const dateB = parseDateKey(rowEdits[b.id]?.date ?? b.date ?? '');
+      return dateB - dateA;
+    });
+
+  const carouselCount = displayRows.filter((r) => {
+    const edit = rowEdits[r.id];
+    return edit?.showInCarousel ?? r.showInCarousel ?? r.show_in_carousel ?? false;
+  }).length;
+
+  const toggleCarousel = (rowId) => {
+    const row = rows.find((r) => r.id === rowId);
+    if (!row) return;
+    const edit = rowEdits[rowId];
+    const current = edit?.showInCarousel ?? row.showInCarousel ?? row.show_in_carousel ?? false;
+    if (!current && carouselCount >= 5) {
+      setError('Maximum 5 items can be shown in the carousel.');
+      return;
+    }
+    setError(null);
+    setRowEdits((p) => ({ ...p, [rowId]: { ...p[rowId], showInCarousel: !current } }));
+  };
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -207,8 +212,13 @@ export default function AdminSectionGallery({ data, onSave }) {
 
       <div className="space-y-8">
         <section className="bg-white/60 rounded-2xl border border-cream-300/80 p-6 shadow-sm">
-          <h2 className="font-display font-semibold text-cream-800 text-lg mb-2">Gallery items</h2>
-          <p className="text-sm text-cream-600 mb-4">Drag items to reorder. Edit image, title, description, and tags. New items are added at the top.</p>
+          <div className="flex items-baseline justify-between mb-2">
+            <h2 className="font-display font-semibold text-cream-800 text-lg">Gallery items</h2>
+            <span className="font-mono text-xs text-cream-400 tracking-wide">
+              Carousel: {carouselCount}/5
+            </span>
+          </div>
+          <p className="text-sm text-cream-600 mb-4">Items are sorted by date (newest first). Star items to show in the home carousel (max 5).</p>
           <button
             type="button"
             onClick={addRow}
@@ -224,6 +234,9 @@ export default function AdminSectionGallery({ data, onSave }) {
               const edit = rowEdits[row.id] || {};
               const title = edit.title ?? row.title ?? '';
               const description = edit.description ?? row.description ?? '';
+              const fullDescription = edit.fullDescription ?? row.fullDescription ?? row.full_description ?? '';
+              const date = edit.date ?? row.date ?? '';
+              const isStarred = edit.showInCarousel ?? row.showInCarousel ?? row.show_in_carousel ?? false;
               const imageUrl = edit.imageUrl ?? row.imageUrl ?? row.image_url ?? '';
               const imageDisplay = imageUrl
                 ? (imageUrl.startsWith('http') ? imageUrl : portfolioService.getAssetUrl(imageUrl))
@@ -232,16 +245,27 @@ export default function AdminSectionGallery({ data, onSave }) {
               return (
                 <li
                   key={row.id}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, row.id)}
-                  onDragOver={handleDragOver}
-                  onDrop={(e) => handleDrop(e, row.id)}
-                  onDragEnd={handleDragEnd}
-                  className={`p-4 bg-cream-100/80 rounded-xl border border-cream-300/80 space-y-4 ${draggedId === row.id ? 'opacity-60' : ''}`}
+                  className="p-4 bg-cream-100/80 rounded-xl border border-cream-300/80 space-y-4"
                 >
                   <div className="flex items-center gap-2 text-cream-500 text-sm mb-2">
-                    <span className="cursor-grab active:cursor-grabbing" title="Drag to reorder">⋮⋮</span>
-                    <span>Drag to reorder</span>
+                    {date && (
+                      <span className="font-mono text-xs text-cream-400 tracking-wide">{date}</span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => toggleCarousel(row.id)}
+                      title={isStarred ? 'Remove from carousel' : 'Show in carousel'}
+                      className={`ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
+                        isStarred
+                          ? 'bg-cinnabar-50 text-cinnabar-600 border border-cinnabar-200'
+                          : 'bg-cream-200/60 text-cream-400 border border-cream-300/60 hover:text-cinnabar-500 hover:border-cinnabar-200'
+                      }`}
+                    >
+                      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill={isStarred ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                      </svg>
+                      {isStarred ? 'In carousel' : 'Add to carousel'}
+                    </button>
                   </div>
                   <div className="grid gap-4 sm:grid-cols-[140px_1fr]">
                     <div className="flex flex-col items-start gap-2">
@@ -271,13 +295,30 @@ export default function AdminSectionGallery({ data, onSave }) {
                         onChange={(e) => setRowEdits((p) => ({ ...p, [row.id]: { ...p[row.id], title: e.target.value } }))}
                         className="w-full px-3 py-2 border border-cream-300 rounded-xl bg-white text-cream-800 focus:ring-2 focus:ring-cinnabar-500/30 text-sm"
                       />
+                      <input
+                        type="text"
+                        placeholder="e.g. February 2026"
+                        value={date}
+                        onChange={(e) => setRowEdits((p) => ({ ...p, [row.id]: { ...p[row.id], date: e.target.value } }))}
+                        className="w-full px-3 py-2 border border-cream-300 rounded-xl bg-white text-cream-800 focus:ring-2 focus:ring-cinnabar-500/30 text-sm"
+                      />
                       <textarea
-                        placeholder="Description"
+                        placeholder="Description (shown on card)"
                         value={description}
                         onChange={(e) => setRowEdits((p) => ({ ...p, [row.id]: { ...p[row.id], description: e.target.value } }))}
-                        rows={3}
+                        rows={2}
                         className="w-full px-3 py-2 border border-cream-300 rounded-xl bg-white text-cream-800 focus:ring-2 focus:ring-cinnabar-500/30 resize-y text-sm"
                       />
+                      <div>
+                        <label className="block text-xs font-medium text-cream-600 mb-1.5">Full description (shown on detail view)</label>
+                        <textarea
+                          placeholder="Longer description shown when clicking into the gallery item..."
+                          value={fullDescription}
+                          onChange={(e) => setRowEdits((p) => ({ ...p, [row.id]: { ...p[row.id], fullDescription: e.target.value } }))}
+                          rows={4}
+                          className="w-full px-3 py-2 border border-cream-300 rounded-xl bg-white text-cream-800 focus:ring-2 focus:ring-cinnabar-500/30 resize-y text-sm"
+                        />
+                      </div>
                       <div>
                         <label className="block text-xs font-medium text-cream-600 mb-1.5">Tags / categories</label>
                         <div className="flex flex-wrap gap-2">

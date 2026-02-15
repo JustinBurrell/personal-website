@@ -26,6 +26,7 @@ const Projects = lazy(() => import('./components/Projects'));
 const Awards = lazy(() => import('./components/Awards'));
 const Gallery = lazy(() => import('./components/Gallery'));
 const Contact = lazy(() => import('./components/Contact'));
+const FullGallery = lazy(() => import('./components/FullGallery'));
 const Admin = lazy(() => import('./components/Admin'));
 
 // Aggressive preloading strategy
@@ -43,7 +44,8 @@ const preloadComponents = () => {
       import('./components/Education'),
       import('./components/Experience'),
       import('./components/Projects'),
-      import('./components/Awards')
+      import('./components/Awards'),
+      import('./components/FullGallery')
     ]);
   }, 500);
 };
@@ -183,6 +185,19 @@ const App = memo(() => {
                     component={Awards} 
                     section="awards" 
                     routeKey="awards" 
+                  >
+                    <Footer />
+                  </PerformanceRoute>
+                </Suspense>
+              </PageTransition>
+            } />
+            <Route path="/gallery" element={
+              <PageTransition>
+                <Suspense fallback={<LoadingFallback />}>
+                  <PerformanceRoute
+                    component={FullGallery}
+                    section="gallery"
+                    routeKey="gallery"
                   >
                     <Footer />
                   </PerformanceRoute>
