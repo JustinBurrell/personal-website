@@ -8,16 +8,28 @@ export function AuthProvider({ children }) {
   const { user: workosUser, getAccessToken, isLoading: workosLoading, signIn, signOut } = useWorkOSAuth();
   const [adminState, setAdminState] = useState({ isAdmin: false, checked: false });
 
-  const refreshAdminState = useCallback(async () => {
+  const refreshAdminState = useCallback(async (retries = 2) => {
     if (!getAccessToken) {
       setAdminState({ isAdmin: false, checked: true });
       return;
     }
-    const data = await fetchAuthMe(getAccessToken);
-    setAdminState({
-      isAdmin: data?.isAdmin ?? false,
-      checked: true,
-    });
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      try {
+        const data = await fetchAuthMe(getAccessToken);
+        if (data) {
+          setAdminState({ isAdmin: data.isAdmin ?? false, checked: true });
+          return;
+        }
+        // null response (non-200) — retry after delay if attempts remain
+      } catch {
+        // Network error (backend cold start, CORS, etc.) — retry
+      }
+      if (attempt < retries) {
+        await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
+      }
+    }
+    // All retries exhausted
+    setAdminState({ isAdmin: false, checked: true });
   }, [getAccessToken]);
 
   useEffect(() => {

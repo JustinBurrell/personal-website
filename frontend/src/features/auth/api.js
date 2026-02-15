@@ -19,6 +19,6 @@ export async function fetchAuthMe(getAccessTokenFn) {
     headers: { Authorization: `Bearer ${token}` },
     credentials: 'include',
   });
-  if (!res.ok) return null;
+  if (!res.ok) throw new Error(`Auth check failed: ${res.status}`);
   return res.json();
 }
