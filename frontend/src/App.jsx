@@ -110,11 +110,23 @@ const App = memo(() => {
     }
   }, [location.pathname]);
 
+  const routeTitles = {
+    '/': 'Justin Burrell | Software Engineer and Tech Consultant',
+    '/education': 'Justin Burrell | Education',
+    '/experience': 'Justin Burrell | Experience',
+    '/projects': 'Justin Burrell | Projects',
+    '/awards': 'Justin Burrell | Awards',
+    '/gallery': 'Justin Burrell | Gallery',
+  };
+  const pageTitle = location.pathname.startsWith('/admin')
+    ? 'Justin Burrell | Admin'
+    : routeTitles[location.pathname] || 'Justin Burrell | Software Engineer and Tech Consultant';
+
   return (
     <div className="flex flex-col min-h-screen">
       <CustomCursor />
       <Helmet>
-        <title>Justin Burrell | Software Engineer and Tech Consultant</title>
+        <title>{pageTitle}</title>
         <meta name="description" content="With a passion for technology and a knack for problem-solving, I aim to leverage my technical skills, consulting experience, and leadership background to drive innovation and create scalable solutions that make a positive impact." />
         <meta name="keywords" content="Justin Burrell, thejustinburrell.com, Justin Burrell portfolio website, Justin Burrell Lehigh, Justin Burrell Computer Science, Justin Burrell CSE, Lehigh University Computer Science, Lehigh CSE, Lehigh University Class of 2026, Software Engineer, Horace Mann, Prep for Prep, All Star Code, Lehigh University, Consulting, Portfolio, Python, Java, Kappa Alpha Psi, Kappa" />
         
