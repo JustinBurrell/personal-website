@@ -169,7 +169,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed w-full bg-cream-100 md:bg-cream-100/80 md:backdrop-blur-xl border-b border-cream-300 z-50" ref={navRef}>
+    <nav className="relative md:fixed w-full bg-cream-100 md:bg-cream-100/80 md:backdrop-blur-xl border-b border-cream-300 z-50" ref={navRef}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20">
           {/* Logo */}

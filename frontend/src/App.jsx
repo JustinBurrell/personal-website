@@ -143,7 +143,7 @@ const App = memo(() => {
       {/* Hide navbar on admin routes */}
       {!location.pathname.startsWith('/admin') && <Navbar />}
 
-      <main className={`flex-grow bg-cream-100 ${location.pathname.startsWith('/admin') ? '' : 'pt-20'}`}>
+      <main className={`flex-grow bg-cream-100 ${location.pathname.startsWith('/admin') ? '' : 'md:pt-20'}`}>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={
