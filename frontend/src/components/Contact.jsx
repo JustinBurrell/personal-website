@@ -87,7 +87,7 @@ const Contact = () => {
     setIsSubmitting(true);
     setSubmitStatus({ type: '', message: '' });
 
-    let savedEmailId = null;
+    let emailSaved = false;
 
     try {
       const emailData = {
@@ -100,8 +100,8 @@ const Contact = () => {
         userAgent: navigator.userAgent
       };
 
-      const savedEmail = await portfolioService.submitEmail(emailData);
-      savedEmailId = savedEmail.id;
+      await portfolioService.submitEmail(emailData);
+      emailSaved = true;
 
       const templateParams = {
         from_name: `${formData.firstName} ${formData.lastName}`,
@@ -113,30 +113,21 @@ const Contact = () => {
         reply_to: formData.email
       };
 
-      const emailjsResponse = await emailjs.send(
+      await emailjs.send(
         "service_h89w0oi",
         "template_56y72kh",
         templateParams,
         "NIv9MQw75_UFg-jlH"
       );
 
-      await portfolioService.updateEmailStatus(savedEmailId, 'sent', emailjsResponse);
-
       setSubmitStatus({ type: 'success', message: 'Message sent successfully!' });
       setFormData({ firstName: '', lastName: '', email: '', subject: '', content: '' });
       setFieldErrors({ firstName: false, lastName: false, email: false, subject: false, content: false });
     } catch (error) {
       console.error('Error in contact form submission:', error);
-      if (savedEmailId) {
-        try {
-          await portfolioService.updateEmailStatus(savedEmailId, 'failed', { error: error?.text || error?.message || String(error) });
-        } catch (updateError) {
-          console.error('Failed to update email status:', updateError);
-        }
-      }
       setSubmitStatus({
         type: 'error',
-        message: savedEmailId
+        message: emailSaved
           ? 'Email could not be sent, but your message has been saved for Justin. We are working on a fix!'
           : 'Failed to send message. Please try again.',
       });

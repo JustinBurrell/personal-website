@@ -591,7 +591,7 @@ export const portfolioService = {
       console.log('🔄 Submitting email to Supabase table "emails"...');
       console.log('📧 Email data:', emailData);
       
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('emails')
         .insert([{
           first_name: emailData.firstName,
@@ -603,16 +603,14 @@ export const portfolioService = {
           user_agent: emailData.userAgent,
           status: 'pending'
         }])
-        .select()
-        .single()
 
       if (error) {
         console.error('❌ Supabase error:', error);
         throw error;
       }
-      
-      console.log('✅ Email successfully saved to Supabase:', data);
-      return data;
+
+      console.log('✅ Email successfully saved to Supabase');
+      return { success: true };
     } catch (error) {
       console.error('❌ Error submitting email to Supabase:', error);
       
@@ -626,44 +624,6 @@ export const portfolioService = {
     }
   },
 
-  // Update email status after EmailJS response
-  async updateEmailStatus(emailId, status, emailjsResponse = null) {
-    try {
-      const { data, error } = await supabase
-        .from('emails')
-        .update({
-          status: status,
-          emailjs_response: emailjsResponse,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', emailId)
-        .select()
-        .single()
-
-      if (error) throw error
-      return data
-    } catch (error) {
-      console.error('Error updating email status:', error)
-      throw error
-    }
-  },
-
-  // Get all emails (for admin purposes)
-  async getEmails(limit = 100, offset = 0) {
-    try {
-      const { data, error } = await supabase
-        .from('emails')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .range(offset, offset + limit - 1)
-
-      if (error) throw error
-      return data
-    } catch (error) {
-      console.error('Error fetching emails:', error)
-      throw error
-    }
-  }
 }
 
 // Asset service for managing images and files
