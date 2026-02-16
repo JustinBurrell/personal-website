@@ -56,7 +56,7 @@ const Contact = () => {
   const [showFormError, setShowFormError] = useState(false);
 
   useEffect(() => {
-    emailjs.init("NIv9MQw75_UFg-jlH");
+    emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
   }, []);
 
   const handleChange = (e) => {
@@ -114,10 +114,10 @@ const Contact = () => {
       };
 
       await emailjs.send(
-        "service_h89w0oi",
-        "template_56y72kh",
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         templateParams,
-        "NIv9MQw75_UFg-jlH"
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       );
 
       setSubmitStatus({ type: 'success', message: 'Message sent successfully!' });
