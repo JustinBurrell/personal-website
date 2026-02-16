@@ -32,6 +32,8 @@ personal-website/
 └── README.md
 ```
 
+See [frontend/README.md](frontend/README.md) and [server/README.md](server/README.md) for setup, environment variables, and details on each.
+
 ## Contact
 
 - **Site**: [thejustinburrell.com](https://www.thejustinburrell.com/)

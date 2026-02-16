@@ -1,85 +1,53 @@
-# Personal Website Project
+# Frontend
 
-A modern portfolio website built with React and Supabase backend.
+React single-page application built with Vite and Tailwind CSS. Serves the public portfolio and an authenticated admin dashboard.
 
-## Project Structure
+## Pages
+
+- **Public**: Home, About, Education, Experience, Projects, Gallery, Awards, Contact
+- **Admin** (`/admin`): Content editing, image uploads, gallery management, contact form inbox, admin email management. Requires WorkOS sign-in and an email listed in the `admin_emails` table.
+- **Full Gallery** (`/gallery`): Expanded gallery view with carousel and category filtering.
+
+## Key directories
 
 ```
-personalWebsiteProject/
-├── frontend/     # React frontend application
-├── supabase-schema.sql    # Database schema for Supabase
-├── SUPABASE_SETUP.md      # Detailed setup instructions
-└── README.md              # This file
+src/
+  components/        # Page components (Home.jsx, About.jsx, etc.)
+  components/admin/  # Admin dashboard section editors
+  services/          # Supabase client and portfolio data service
+  hooks/             # Custom React hooks
+  features/          # Feature modules (translation)
+  utils/             # Helpers
+  assets/            # Static images and icons
 ```
 
-## Architecture
+## Data flow
 
-- **Frontend**: React with TypeScript, Tailwind CSS, Framer Motion
-- **Backend**: Supabase (PostgreSQL database + real-time API)
-- **Storage**: Supabase Storage for images and assets
-- **Admin**: Supabase Dashboard for content management
-- **Translation**: Google Cloud Translate API integration
+- Portfolio content is fetched from Supabase using the **anon key** (read-only, enforced by RLS).
+- Contact form submissions go through `POST /api/contact` on the Express backend (rate-limited).
+- Admin operations (content edits, uploads, email management) go through authenticated `/api/admin/*` endpoints on the backend.
+- EmailJS sends a notification email to the site owner on each contact submission (client-side).
 
-## Features
+## Environment variables
 
-- **Fast Performance**: Cached API calls and optimized loading
-- **Real-time Updates**: Changes appear instantly across all users
-- **Multi-language Support**: 10+ languages with Google Translate
-- **Responsive Design**: Works perfectly on all devices
-- **Easy Content Management**: Use Supabase dashboard to update content
-- **Image Management**: Centralized storage with Supabase
+Create `.env.local`:
 
-## Quick Start
+```
+VITE_SUPABASE_URL=<supabase project url>
+VITE_SUPABASE_ANON_KEY=<supabase anon key>
+VITE_API_BASE_URL=http://localhost:3001
+VITE_WORKOS_CLIENT_ID=<workos client id>
+VITE_EMAILJS_PUBLIC_KEY=<emailjs public key>
+VITE_EMAILJS_SERVICE_ID=<emailjs service id>
+VITE_EMAILJS_TEMPLATE_ID=<emailjs template id>
+VITE_GOOGLE_TRANSLATE_API_KEY=<google translate api key>  # optional, translation currently disabled
+```
 
-1. **Set up Supabase**: Follow instructions in `SUPABASE_SETUP.md`
-2. **Install dependencies**: `cd frontend && npm install`
-3. **Configure environment**: Create `.env.local` with Supabase credentials
-4. **Migrate data**: `npm run migrate-to-supabase`
-5. **Start development**: `npm start`
+## Run
 
-## Development
-
-### Frontend Development
 ```bash
-cd frontend
-npm start          # Start Vite dev server (fast HMR)
-npm run dev        # Same as npm start
-npm run build      # Build for production (output: dist/)
-npm run preview    # Preview production build locally
+npm install
+npm run dev
 ```
-Environment variables must be prefixed with `VITE_` (e.g. `VITE_SUPABASE_URL`). See `.env.example`.
 
-### Database Management
-- Use Supabase Dashboard for all database operations
-- Run `supabase-schema.sql` in Supabase SQL Editor
-- Manage content through Table Editor
-
-### Content Updates
-1. Log into Supabase Dashboard
-2. Navigate to Table Editor
-3. Edit content directly in the tables
-4. Changes appear instantly on your website
-
-## Performance Benefits
-
-- **Faster Loading**: No large data bundles
-- **Better Caching**: 5-minute API response caching
-- **Optimized Images**: Supabase image transformations
-- **Real-time Updates**: Live content changes
-- **Scalable**: Easy to add new sections and content
-
-## Deployment
-
-1. **Frontend**: Deploy to Vercel, Netlify, or your preferred platform
-2. **Backend**: Supabase handles all backend infrastructure
-3. **Environment Variables**: Set production Supabase credentials
-
-## Support
-
-- [Supabase Documentation](https://supabase.com/docs)
-- [React Documentation](https://reactjs.org/docs)
-- [Tailwind CSS](https://tailwindcss.com/docs)
-
-## License
-
-MIT License
+Starts on port 3000. Or run both frontend and server together from the project root with `npm run dev`.
