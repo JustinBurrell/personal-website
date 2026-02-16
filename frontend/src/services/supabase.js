@@ -585,43 +585,25 @@ export const portfolioService = {
     }
   },
 
-  // Submit contact form email to Supabase
+  // Submit contact form email via backend API (rate-limited)
   async submitEmail(emailData) {
-    try {
-      console.log('🔄 Submitting email to Supabase table "emails"...');
-      console.log('📧 Email data:', emailData);
-      
-      const { error } = await supabase
-        .from('emails')
-        .insert([{
-          first_name: emailData.firstName,
-          last_name: emailData.lastName,
-          email: emailData.email,
-          subject: emailData.subject,
-          message: emailData.message,
-          ip_address: emailData.ipAddress,
-          user_agent: emailData.userAgent,
-          status: 'pending'
-        }])
-
-      if (error) {
-        console.error('❌ Supabase error:', error);
-        throw error;
-      }
-
-      console.log('✅ Email successfully saved to Supabase');
-      return { success: true };
-    } catch (error) {
-      console.error('❌ Error submitting email to Supabase:', error);
-      
-      // Check if it's a table not found error
-      if (error.message && error.message.includes('relation "emails" does not exist')) {
-        console.error('❌ The "emails" table does not exist in your Supabase database!');
-        console.error('💡 Please run the SQL from supabase/emails-table.sql in your Supabase dashboard');
-      }
-      
-      throw error;
+    const apiBase = import.meta.env.VITE_API_BASE_URL || '';
+    const res = await fetch(`${apiBase}/api/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        firstName: emailData.firstName,
+        lastName: emailData.lastName,
+        email: emailData.email,
+        subject: emailData.subject,
+        message: emailData.message,
+      }),
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || 'Submission failed');
     }
+    return { success: true };
   },
 
 }

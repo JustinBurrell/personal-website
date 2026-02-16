@@ -6,6 +6,7 @@ import { WorkOS } from '@workos-inc/node';
 import { createClient } from '@supabase/supabase-js';
 import { authRouter } from './routes/auth.js';
 import { adminRouter } from './routes/admin.js';
+import { contactRouter } from './routes/contact.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -38,6 +39,7 @@ app.use((req, res, next) => {
 
 app.use('/api/auth', authRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/contact', contactRouter);
 
 app.get('/api/health', (req, res) => {
   res.json({ ok: true });
