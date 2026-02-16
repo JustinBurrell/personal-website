@@ -158,7 +158,7 @@ function CompanyCard({ company, type, ctx }) {
                         ))}
                         <label className="cursor-pointer px-2 py-1 border border-cream-300 rounded text-sm bg-cream-100 hover:bg-cream-200 text-cream-700">
                           Add image (upload)
-                          <input type="file" accept="image/*" className="sr-only" onChange={async (e) => { const file = e.target.files?.[0]; if (!file) return; try { const { url: u } = await adminUploadFile(file, { section: 'experience', experienceType: type }, ctx.getAccessToken); if (u) ctx.addPositionImage(company.id, pos.id, null, type, u); } catch (_) {} e.target.value = ''; }} />
+                          <input type="file" accept=".jpeg,.jpg,.png,.webp,.gif,.pdf" className="sr-only" onChange={async (e) => { const file = e.target.files?.[0]; if (!file) return; try { const { url: u } = await adminUploadFile(file, { section: 'experience', experienceType: type }, ctx.getAccessToken); if (u) ctx.addPositionImage(company.id, pos.id, null, type, u); } catch (_) {} e.target.value = ''; }} />
                         </label>
                       </div>
                     </div>
@@ -186,7 +186,7 @@ function CompanyCard({ company, type, ctx }) {
                           <button type="button" onClick={() => ctx.removePositionImage(company.id, null, newPos._idx, type, i)} className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs">×</button>
                         </span>
                       ))}
-                      <label className="cursor-pointer px-2 py-1 border border-cream-300 rounded text-sm bg-cream-100 hover:bg-cream-200 text-cream-700">Add image (upload)<input type="file" accept="image/*" className="sr-only" onChange={async (e) => { const file = e.target.files?.[0]; if (!file) return; try { const { url: u } = await adminUploadFile(file, { section: 'experience', experienceType: type }, ctx.getAccessToken); if (u) ctx.addPositionImage(company.id, null, newPos._idx, type, u); } catch (_) {} e.target.value = ''; }} /></label>
+                      <label className="cursor-pointer px-2 py-1 border border-cream-300 rounded text-sm bg-cream-100 hover:bg-cream-200 text-cream-700">Add image (upload)<input type="file" accept=".jpeg,.jpg,.png,.webp,.gif,.pdf" className="sr-only" onChange={async (e) => { const file = e.target.files?.[0]; if (!file) return; try { const { url: u } = await adminUploadFile(file, { section: 'experience', experienceType: type }, ctx.getAccessToken); if (u) ctx.addPositionImage(company.id, null, newPos._idx, type, u); } catch (_) {} e.target.value = ''; }} /></label>
                     </div>
                   </li>
                 );
@@ -589,7 +589,8 @@ export default function AdminSectionExperience({ data, onSave }) {
                 <option key={f.path} value={f.url || f.path}>{f.name}</option>
               ))}
             </select>
-            <input type="file" accept="image/*" onChange={handleSectionImageUpload} disabled={saving} className="text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-cream-200 file:text-cream-800" />
+            <input type="file" accept=".jpeg,.jpg,.png,.webp,.gif,.pdf" onChange={handleSectionImageUpload} disabled={saving} className="text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-cream-200 file:text-cream-800" />
+            <p className="text-xs text-cream-500 mt-1">Accepted: .jpeg, .jpg, .png, .webp, .gif, .pdf</p>
           </div>
         </section>
 

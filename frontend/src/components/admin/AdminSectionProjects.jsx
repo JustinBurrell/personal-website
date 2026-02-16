@@ -239,7 +239,7 @@ export default function AdminSectionProjects({ data, onSave }) {
             )}
             <label className="cursor-pointer text-sm text-cinnabar-600 hover:underline">
               Change image
-              <input type="file" accept="image/*" className="sr-only" onChange={handleSectionImageUpload} disabled={saving} />
+              <input type="file" accept=".jpeg,.jpg,.png,.webp,.gif,.pdf" className="sr-only" onChange={handleSectionImageUpload} disabled={saving} />
             </label>
           </div>
         </section>
@@ -265,7 +265,7 @@ export default function AdminSectionProjects({ data, onSave }) {
                       </div>
                       <label className="cursor-pointer text-xs text-cinnabar-600 hover:underline mt-1 block">
                         Change image
-                        <input type="file" accept="image/*" className="sr-only" onChange={(e) => handleItemImageUpload(e, item.id)} disabled={saving} />
+                        <input type="file" accept=".jpeg,.jpg,.png,.webp,.gif,.pdf" className="sr-only" onChange={(e) => handleItemImageUpload(e, item.id)} disabled={saving} />
                       </label>
                     </div>
                     <div className="min-w-0 space-y-2">

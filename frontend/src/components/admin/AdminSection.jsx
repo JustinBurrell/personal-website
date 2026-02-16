@@ -269,11 +269,12 @@ export default function AdminSection() {
             {!currentImageUrl && <p className="text-sm text-cream-500 mb-3">No hero image yet.</p>}
             <input
               type="file"
-              accept="image/*"
+              accept=".jpeg,.jpg,.png,.webp,.gif,.pdf"
               onChange={handleImageUpload}
               disabled={saving}
               className="text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-cream-200 file:text-cream-800 file:text-sm"
             />
+            <p className="text-xs text-cream-500 mt-1">Accepted: .jpeg, .jpg, .png, .webp, .gif, .pdf</p>
           </section>
 
           <section className="bg-white/60 rounded-2xl border border-cream-300/80 p-6 shadow-sm">

@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import { WorkOS } from '@workos-inc/node';
 import { createClient } from '@supabase/supabase-js';
 import { authRouter } from './routes/auth.js';
@@ -19,6 +20,7 @@ const allowedOrigins = (process.env.FRONTEND_ORIGIN || 'http://localhost:3000')
   .split(',')
   .map((o) => o.trim())
   .filter(Boolean);
+app.use(helmet());
 app.use(cors({
   origin: (origin, cb) => {
     if (!origin || allowedOrigins.includes(origin)) return cb(null, origin || allowedOrigins[0]);

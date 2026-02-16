@@ -287,7 +287,8 @@ export default function AdminSectionEducation({ data, onSave }) {
           <div className="mb-3">
             <img src={backgroundDisplayUrl} alt="Education background" className="max-h-52 w-auto object-contain rounded-xl border border-cream-300" onError={(e) => { e.target.style.display = 'none'; }} />
           </div>
-          <input type="file" accept="image/*" onChange={handleBackgroundUpload} disabled={saving} className="text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-cream-200 file:text-cream-800 file:text-sm" />
+          <input type="file" accept=".jpeg,.jpg,.png,.webp,.gif,.pdf" onChange={handleBackgroundUpload} disabled={saving} className="text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-cream-200 file:text-cream-800 file:text-sm" />
+          <p className="text-xs text-cream-500 mt-1">Accepted: .jpeg, .jpg, .png, .webp, .gif, .pdf</p>
         </section>
 
         {EDUCATION_TYPES.map(({ value, label }) => (
@@ -356,7 +357,7 @@ export default function AdminSectionEducation({ data, onSave }) {
                           <label className="block text-xs text-cream-600 mb-1">Replace image (upload to <code className="bg-cream-200 px-1 rounded">assets → images → education</code> with chosen name)</label>
                           <input
                             type="file"
-                            accept="image/*"
+                            accept=".jpeg,.jpg,.png,.webp,.gif,.pdf"
                             onChange={(e) => {
                               const f = e.target.files?.[0];
                               if (!f) return;
@@ -472,7 +473,7 @@ function NewItemForm({ onAdd, disabled, typeLabel }) {
     <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-2">
       <input type="text" placeholder="Name (required)" value={name} onChange={(e) => setName(e.target.value)} className="px-2.5 py-1.5 border rounded-lg text-sm" required />
       <input type="text" placeholder="Image filename (no extension)" value={fileName} onChange={(e) => setFileName(e.target.value)} className="px-2.5 py-1.5 border rounded-lg text-sm w-40" title="Used as filename in assets/images/education/" />
-      <input type="file" accept="image/*" required onChange={(e) => setFile(e.target.files?.[0])} className="text-sm" />
+      <input type="file" accept=".jpeg,.jpg,.png,.webp,.gif,.pdf" required onChange={(e) => setFile(e.target.files?.[0])} className="text-sm" />
       <button type="submit" disabled={disabled || !canSubmit} className="px-3 py-1.5 bg-cinnabar-500 text-white rounded-lg text-sm hover:bg-cinnabar-600 disabled:opacity-50">Add to {typeLabel}</button>
     </form>
   );

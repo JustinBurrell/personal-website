@@ -4,7 +4,23 @@ import { requireAuth, requireAdmin } from '../middleware/requireAuth.js';
 import { updateSectionRow, updateSectionRowById, getTableForSection, camelToSnakeKeys } from '../lib/supabaseAdmin.js';
 import { getSectionParentId, SECTION_ITEMS_CONFIG, NESTED_ITEMS_CONFIG } from '../lib/sectionConfig.js';
 
-const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } }); // 10MB
+const isProd = process.env.NODE_ENV === 'production';
+const safeError = (err, fallback = 'Request failed') => isProd ? fallback : (err.message || fallback);
+
+const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/pdf'];
+const ALLOWED_EXTENSIONS = '.jpeg, .jpg, .png, .webp, .gif, .pdf';
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  fileFilter: (_req, file, cb) => {
+    if (ALLOWED_MIME_TYPES.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new multer.MulterError('LIMIT_UNEXPECTED_FILE', `Only ${ALLOWED_EXTENSIONS} files are allowed`));
+    }
+  },
+});
 
 /** Get value from payload for DB column name (payload has snake_case keys; dbColumn is camelCase from config). */
 function payloadValueForDbColumn(payload, dbColumn) {
@@ -62,7 +78,7 @@ adminRouter.get('/emails', async (req, res) => {
     res.json(data || []);
   } catch (err) {
     console.error('Admin GET emails error:', err);
-    res.status(500).json({ error: err.message || 'Failed' });
+    res.status(500).json({ error: safeError(err) });
   }
 });
 
@@ -77,7 +93,7 @@ adminRouter.delete('/emails/:id', async (req, res) => {
     res.status(204).send();
   } catch (err) {
     console.error('Admin DELETE email error:', err);
-    res.status(500).json({ error: err.message || 'Failed' });
+    res.status(500).json({ error: safeError(err) });
   }
 });
 
@@ -94,7 +110,7 @@ adminRouter.get('/admin-emails', async (req, res) => {
     res.json(data || []);
   } catch (err) {
     console.error('Admin GET admin-emails error:', err);
-    res.status(500).json({ error: err.message || 'Failed' });
+    res.status(500).json({ error: safeError(err) });
   }
 });
 
@@ -117,7 +133,7 @@ adminRouter.post('/admin-emails', async (req, res) => {
     res.status(201).json(data);
   } catch (err) {
     console.error('Admin POST admin-emails error:', err);
-    res.status(500).json({ error: err.message || 'Failed' });
+    res.status(500).json({ error: safeError(err) });
   }
 });
 
@@ -136,7 +152,7 @@ adminRouter.delete('/admin-emails/:id', async (req, res) => {
     res.status(204).send();
   } catch (err) {
     console.error('Admin DELETE admin-emails error:', err);
-    res.status(500).json({ error: err.message || 'Failed' });
+    res.status(500).json({ error: safeError(err) });
   }
 });
 
@@ -158,7 +174,7 @@ adminRouter.get('/sections/gallery/rows', async (req, res) => {
     res.json(data || []);
   } catch (err) {
     console.error('Admin GET gallery rows error:', err);
-    res.status(500).json({ error: err.message || 'Failed' });
+    res.status(500).json({ error: safeError(err) });
   }
 });
 
@@ -180,7 +196,7 @@ adminRouter.post('/sections/gallery/rows', async (req, res) => {
     res.status(201).json(data);
   } catch (err) {
     console.error('Admin POST gallery row error:', err);
-    res.status(500).json({ error: err.message || 'Create failed' });
+    res.status(500).json({ error: safeError(err, 'Create failed') });
   }
 });
 
@@ -192,7 +208,7 @@ adminRouter.patch('/sections/gallery/rows/:id', async (req, res) => {
     res.json(updated);
   } catch (err) {
     console.error('Admin PATCH gallery row error:', err);
-    res.status(500).json({ error: err.message || 'Update failed' });
+    res.status(500).json({ error: safeError(err, 'Update failed') });
   }
 });
 
@@ -214,7 +230,7 @@ adminRouter.delete('/sections/gallery/rows/:id', async (req, res) => {
     res.status(204).send();
   } catch (err) {
     console.error('Admin DELETE gallery row error:', err);
-    res.status(500).json({ error: err.message || 'Delete failed' });
+    res.status(500).json({ error: safeError(err, 'Delete failed') });
   }
 });
 
@@ -236,7 +252,7 @@ adminRouter.patch('/sections/:section', async (req, res) => {
     res.json(updated);
   } catch (err) {
     console.error('Admin PATCH section error:', err);
-    res.status(err.message?.includes('not found') ? 404 : 500).json({ error: err.message || 'Update failed' });
+    res.status(err.message?.includes('not found') ? 404 : 500).json({ error: safeError(err, 'Update failed') });
   }
 });
 
@@ -260,7 +276,7 @@ adminRouter.patch('/sections/:section/rows/:id', async (req, res) => {
     res.json(updated);
   } catch (err) {
     console.error('Admin PATCH row error:', err);
-    res.status(500).json({ error: err.message || 'Update failed' });
+    res.status(500).json({ error: safeError(err, 'Update failed') });
   }
 });
 
@@ -286,7 +302,7 @@ adminRouter.get('/sections/:section/items', async (req, res) => {
     res.json(data || []);
   } catch (err) {
     console.error('Admin GET items error:', err);
-    res.status(500).json({ error: err.message || 'Failed' });
+    res.status(500).json({ error: safeError(err) });
   }
 });
 
@@ -325,7 +341,7 @@ adminRouter.post('/sections/:section/items', async (req, res) => {
     res.status(201).json(data);
   } catch (err) {
     console.error('Admin POST item error:', err);
-    res.status(500).json({ error: err.message || 'Create failed' });
+    res.status(500).json({ error: safeError(err, 'Create failed') });
   }
 });
 
@@ -360,7 +376,7 @@ adminRouter.patch('/sections/:section/items/:id', async (req, res) => {
     res.json(data);
   } catch (err) {
     console.error('Admin PATCH item error:', err);
-    res.status(500).json({ error: err.message || 'Update failed' });
+    res.status(500).json({ error: safeError(err, 'Update failed') });
   }
 });
 
@@ -394,7 +410,7 @@ adminRouter.delete('/sections/:section/items/:id', async (req, res) => {
     res.status(204).send();
   } catch (err) {
     console.error('Admin DELETE item error:', err);
-    res.status(500).json({ error: err.message || 'Delete failed' });
+    res.status(500).json({ error: safeError(err, 'Delete failed') });
   }
 });
 
@@ -416,7 +432,7 @@ adminRouter.get('/sections/:section/nested/:parentTable/:parentId/:nestedType', 
     res.json(data || []);
   } catch (err) {
     console.error('Admin GET nested error:', err);
-    res.status(500).json({ error: err.message || 'Failed' });
+    res.status(500).json({ error: safeError(err) });
   }
 });
 
@@ -445,7 +461,7 @@ adminRouter.post('/sections/:section/nested/:parentTable/:parentId/:nestedType',
     res.status(201).json(data);
   } catch (err) {
     console.error('Admin POST nested error:', err);
-    res.status(500).json({ error: err.message || 'Create failed' });
+    res.status(500).json({ error: safeError(err, 'Create failed') });
   }
 });
 
@@ -469,7 +485,7 @@ adminRouter.patch('/sections/:section/nested/:parentTable/:parentId/:nestedType/
     res.json(data);
   } catch (err) {
     console.error('Admin PATCH nested error:', err);
-    res.status(500).json({ error: err.message || 'Update failed' });
+    res.status(500).json({ error: safeError(err, 'Update failed') });
   }
 });
 
@@ -485,7 +501,7 @@ adminRouter.delete('/sections/:section/nested/:parentTable/:parentId/:nestedType
     res.status(204).send();
   } catch (err) {
     console.error('Admin DELETE nested error:', err);
-    res.status(500).json({ error: err.message || 'Delete failed' });
+    res.status(500).json({ error: safeError(err, 'Delete failed') });
   }
 });
 
@@ -514,7 +530,7 @@ adminRouter.get('/storage/list', async (req, res) => {
     res.json({ files });
   } catch (err) {
     console.error('Admin storage list error:', err);
-    res.status(500).json({ error: err.message || 'List failed' });
+    res.status(500).json({ error: safeError(err, 'List failed') });
   }
 });
 
@@ -523,7 +539,15 @@ adminRouter.get('/storage/list', async (req, res) => {
  * Multipart: file (required), section, path (optional). path = storage path e.g. "home/hero.png"
  * Returns { path, url }.
  */
-adminRouter.post('/upload', upload.single('file'), async (req, res) => {
+adminRouter.post('/upload', (req, res, next) => {
+  upload.single('file')(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      return res.status(400).json({ error: `File rejected: Only ${ALLOWED_EXTENSIONS} files are allowed (max 10MB)` });
+    }
+    if (err) return res.status(400).json({ error: 'File upload failed' });
+    next();
+  });
+}, async (req, res) => {
   try {
     const supabase = req.supabaseAdmin;
     if (!supabase) return res.status(503).json({ error: 'Storage not configured' });
@@ -577,6 +601,6 @@ adminRouter.post('/upload', upload.single('file'), async (req, res) => {
     res.json({ path: data.path, url });
   } catch (err) {
     console.error('Admin upload error:', err);
-    res.status(500).json({ error: err.message || 'Upload failed' });
+    res.status(500).json({ error: safeError(err, 'Upload failed') });
   }
 });

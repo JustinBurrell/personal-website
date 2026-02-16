@@ -280,7 +280,7 @@ export default function AdminSectionGallery({ data, onSave }) {
                         Change image
                         <input
                           type="file"
-                          accept="image/*"
+                          accept=".jpeg,.jpg,.png,.webp,.gif,.pdf"
                           className="sr-only"
                           onChange={(e) => handleImageUpload(e, row.id)}
                           disabled={saving}
