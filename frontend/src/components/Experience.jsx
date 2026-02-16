@@ -3,6 +3,7 @@ import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import { useLanguage } from '../features/language';
 import { useTranslateText } from '../features/language/useTranslateText';
 import Card from '../assets/ui/Card';
+import { useScrollLock } from '../hooks/useScrollLock';
 import { Element } from 'react-scroll';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
@@ -61,14 +62,22 @@ const shouldHideImages = (company, position) => {
 
 // Simple modal for image lightbox
 const ImageModal = ({ isOpen, onClose, imageUrl, onPrev, onNext, hasPrev, hasNext }) => {
-  React.useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
+  const touchStartX = useRef(null);
+  useScrollLock(isOpen);
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(delta) > 50) {
+      if (delta > 0 && hasPrev) onPrev();
+      else if (delta < 0 && hasNext) onNext();
     }
-    return () => { document.body.style.overflow = ''; };
-  }, [isOpen]);
+  };
 
   if (!isOpen) return null;
 
@@ -78,12 +87,14 @@ const ImageModal = ({ isOpen, onClose, imageUrl, onPrev, onNext, hasPrev, hasNex
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-cream-800/80 backdrop-blur-sm"
+        className="fixed inset-0 z-[60] flex items-center justify-center bg-cream-800/80 backdrop-blur-sm"
         onClick={onClose}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
       >
         {hasPrev && (
           <button
-            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 bg-cream-50/90 hover:bg-cream-50 p-3 rounded-full border border-cream-300 hover:border-cinnabar-500 transition-all z-10"
+            className="hidden md:block absolute left-4 md:left-8 top-1/2 -translate-y-1/2 bg-cream-50/90 hover:bg-cream-50 p-3 rounded-full border border-cream-300 hover:border-cinnabar-500 transition-all z-10"
             onClick={e => { e.stopPropagation(); onPrev(); }}
             aria-label="Previous image"
           >
@@ -101,7 +112,7 @@ const ImageModal = ({ isOpen, onClose, imageUrl, onPrev, onNext, hasPrev, hasNex
         </div>
         {hasNext && (
           <button
-            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 bg-cream-50/90 hover:bg-cream-50 p-3 rounded-full border border-cream-300 hover:border-cinnabar-500 transition-all z-10"
+            className="hidden md:block absolute right-4 md:right-8 top-1/2 -translate-y-1/2 bg-cream-50/90 hover:bg-cream-50 p-3 rounded-full border border-cream-300 hover:border-cinnabar-500 transition-all z-10"
             onClick={e => { e.stopPropagation(); onNext(); }}
             aria-label="Next image"
           >
@@ -109,7 +120,7 @@ const ImageModal = ({ isOpen, onClose, imageUrl, onPrev, onNext, hasPrev, hasNex
           </button>
         )}
         <button
-          className="absolute top-4 right-4 bg-cream-50/90 hover:bg-cream-50 rounded-full p-2 border border-cream-300 transition-all"
+          className="absolute top-4 right-4 bg-cream-50/90 hover:bg-cream-50 rounded-full p-3 border border-cream-300 transition-all"
           onClick={onClose}
           aria-label="Close"
         >
@@ -191,14 +202,14 @@ const Timeline = ({ experiences, type }) => {
     <div className="relative w-full">
       <button
         onClick={() => scroll('left')}
-        className="absolute -left-4 md:-left-8 top-1/2 -translate-y-1/2 z-10 bg-cream-50/90 hover:bg-cream-50 p-3 rounded-full border border-cream-300 hover:border-cinnabar-500 transition-all"
+        className="hidden md:block absolute -left-4 md:-left-8 top-1/2 -translate-y-1/2 z-10 bg-cream-50/90 hover:bg-cream-50 p-3 rounded-full border border-cream-300 hover:border-cinnabar-500 transition-all"
         aria-label="Scroll left"
       >
         <FaChevronLeft className="text-cream-600 text-lg" />
       </button>
       <button
         onClick={() => scroll('right')}
-        className="absolute -right-4 md:-right-8 top-1/2 -translate-y-1/2 z-10 bg-cream-50/90 hover:bg-cream-50 p-3 rounded-full border border-cream-300 hover:border-cinnabar-500 transition-all"
+        className="hidden md:block absolute -right-4 md:-right-8 top-1/2 -translate-y-1/2 z-10 bg-cream-50/90 hover:bg-cream-50 p-3 rounded-full border border-cream-300 hover:border-cinnabar-500 transition-all"
         aria-label="Scroll right"
       >
         <FaChevronRight className="text-cream-600 text-lg" />
@@ -424,7 +435,7 @@ const Experience = () => {
           <div className="pt-16 pb-12 grid md:grid-cols-12 gap-8 items-start">
             <div className="md:col-span-8">
               <motion.h1
-                className="text-5xl md:text-7xl font-display font-bold text-cream-800 tracking-tight leading-[0.95] mb-6"
+                className="text-3xl sm:text-5xl md:text-7xl font-display font-bold text-cream-800 tracking-tight leading-[0.95] mb-6"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
@@ -477,7 +488,7 @@ const Experience = () => {
             </div>
             {expData.experienceImageUrl && (
               <motion.div
-                className="md:col-span-4 flex justify-end items-start"
+                className="md:col-span-4 hidden md:flex justify-end items-start"
                 initial={{ opacity: 0, rotate: 0 }}
                 animate={{ opacity: 1, rotate: -2 }}
                 transition={{ duration: 0.6, delay: 0.3 }}

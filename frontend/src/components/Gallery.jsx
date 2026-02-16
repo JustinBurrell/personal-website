@@ -35,7 +35,7 @@ const Gallery = () => {
   const NextArrow = ({ onClick }) => (
     <button
       onClick={onClick}
-      className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-cream-50 border border-cream-300 hover:border-cinnabar-500 hover:text-cinnabar-500 p-3 rounded-full transition-all duration-200"
+      className="hidden md:block absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-cream-50 border border-cream-300 hover:border-cinnabar-500 hover:text-cinnabar-500 p-3 rounded-full transition-all duration-200"
       aria-label="Next slide"
     >
       <FaChevronRight className="text-lg" />
@@ -45,7 +45,7 @@ const Gallery = () => {
   const PrevArrow = ({ onClick }) => (
     <button
       onClick={onClick}
-      className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-cream-50 border border-cream-300 hover:border-cinnabar-500 hover:text-cinnabar-500 p-3 rounded-full transition-all duration-200"
+      className="hidden md:block absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-cream-50 border border-cream-300 hover:border-cinnabar-500 hover:text-cinnabar-500 p-3 rounded-full transition-all duration-200"
       aria-label="Previous slide"
     >
       <FaChevronLeft className="text-lg" />
@@ -94,7 +94,7 @@ const Gallery = () => {
                         <img
                           src={item.imageUrl}
                           alt={item.title}
-                          className="max-h-[600px] w-auto object-contain rounded-2xl border border-cream-300"
+                          className="max-h-[70vh] md:max-h-[600px] w-auto object-contain rounded-2xl border border-cream-300"
                         />
                       </div>
                       <div className="pt-6 pb-2">

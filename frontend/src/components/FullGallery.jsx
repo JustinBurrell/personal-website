@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AnimationWrapper from '../assets/shared/AnimationWrapper';
 import SectionTitle from '../assets/ui/SectionTitle';
 import { useSectionData } from '../hooks/useGlobalData';
+import { useScrollLock } from '../hooks/useScrollLock';
 
 const MONTH_ORDER = [
   'january', 'february', 'march', 'april', 'may', 'june',
@@ -77,7 +78,7 @@ function GalleryCard({ item, index, onClick }) {
             {item.category.map((cat, catIdx) => (
               <span
                 key={catIdx}
-                className="font-mono text-[10px] uppercase tracking-wider bg-cinnabar-50 text-cinnabar-500 border border-cinnabar-200/60 rounded-full px-2.5 py-0.5"
+                className="font-mono text-xs uppercase tracking-wider bg-cinnabar-50 text-cinnabar-500 border border-cinnabar-200/60 rounded-full px-2.5 py-0.5"
               >
                 {cat.categoryName}
               </span>
@@ -90,12 +91,7 @@ function GalleryCard({ item, index, onClick }) {
 }
 
 function GalleryModal({ item, onClose }) {
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, []);
+  useScrollLock(!!item);
 
   useEffect(() => {
     const handleKey = (e) => {
@@ -113,7 +109,7 @@ function GalleryModal({ item, onClose }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.25 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-10"
+      className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 md:p-10"
       onClick={onClose}
     >
       {/* Backdrop */}
@@ -131,7 +127,7 @@ function GalleryModal({ item, onClose }) {
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-cream-100/90 border border-cream-300/60 text-cream-600 hover:text-cinnabar-500 hover:border-cinnabar-300 transition-colors duration-200 backdrop-blur-sm"
+          className="absolute top-4 right-4 z-10 w-11 h-11 flex items-center justify-center rounded-full bg-cream-100/90 border border-cream-300/60 text-cream-600 hover:text-cinnabar-500 hover:border-cinnabar-300 transition-colors duration-200 backdrop-blur-sm"
           aria-label="Close"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

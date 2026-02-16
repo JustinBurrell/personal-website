@@ -6,16 +6,10 @@ import Card from '../assets/ui/Card';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt, FaTimes } from 'react-icons/fa';
 import { Element } from 'react-scroll';
+import { useScrollLock } from '../hooks/useScrollLock';
 
 const ProjectModal = ({ project, isOpen, onClose }) => {
-  React.useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => { document.body.style.overflow = ''; };
-  }, [isOpen]);
+  useScrollLock(isOpen);
 
   if (!isOpen || !project) return null;
 
@@ -25,7 +19,7 @@ const ProjectModal = ({ project, isOpen, onClose }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-cream-800/80 backdrop-blur-sm p-4"
+        className="fixed inset-0 z-[60] flex items-center justify-center bg-cream-800/80 backdrop-blur-sm p-4"
         onClick={onClose}
       >
         <motion.div
@@ -38,7 +32,7 @@ const ProjectModal = ({ project, isOpen, onClose }) => {
           <div className="relative">
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 z-10 bg-cream-50/90 hover:bg-cream-50 rounded-full p-2 border border-cream-300 transition-all"
+              className="absolute top-4 right-4 z-10 bg-cream-50/90 hover:bg-cream-50 rounded-full p-3 border border-cream-300 transition-all"
               aria-label="Close modal"
             >
               <FaTimes className="text-cream-500 hover:text-cinnabar-500 text-xl" />
@@ -148,7 +142,7 @@ const ProjectsGrid = ({ projects, onProjectClick }) => {
                 </div>
               )}
 
-              <div className="absolute inset-0 bg-cream-800/0 group-hover:bg-cream-800/80 backdrop-blur-0 group-hover:backdrop-blur-sm transition-all duration-300 flex items-center justify-center p-4 opacity-0 group-hover:opacity-100">
+              <div className="absolute inset-0 bg-cream-800/0 group-hover:bg-cream-800/80 backdrop-blur-0 group-hover:backdrop-blur-sm transition-all duration-300 hidden md:flex items-center justify-center p-4 opacity-0 group-hover:opacity-100">
                 <div className="text-cream-50 text-center transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                   <h3 className="text-xl font-display font-bold mb-2">{project.title}</h3>
                   <p className="text-sm font-body text-cream-200 line-clamp-3">{project.description}</p>
@@ -202,7 +196,7 @@ const Projects = () => {
           <div className="pt-16 pb-12 grid md:grid-cols-12 gap-8 items-start">
             <div className="md:col-span-8">
               <motion.h1
-                className="text-5xl md:text-7xl font-display font-bold text-cream-800 tracking-tight leading-[0.95] mb-6"
+                className="text-3xl sm:text-5xl md:text-7xl font-display font-bold text-cream-800 tracking-tight leading-[0.95] mb-6"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
@@ -232,7 +226,7 @@ const Projects = () => {
             </div>
             {projectData.projectImageUrl && (
               <motion.div
-                className="md:col-span-4 flex justify-end items-start"
+                className="md:col-span-4 hidden md:flex justify-end items-start"
                 initial={{ opacity: 0, rotate: 0 }}
                 animate={{ opacity: 1, rotate: -2 }}
                 transition={{ duration: 0.6, delay: 0.3 }}

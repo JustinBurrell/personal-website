@@ -36,7 +36,7 @@ const Awards = () => {
           <div className="pt-16 pb-12 grid md:grid-cols-12 gap-8 items-start">
             <div className="md:col-span-8">
               <motion.h1
-                className="text-5xl md:text-7xl font-display font-bold text-cream-800 tracking-tight leading-[0.95] mb-6"
+                className="text-3xl sm:text-5xl md:text-7xl font-display font-bold text-cream-800 tracking-tight leading-[0.95] mb-6"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
@@ -54,7 +54,7 @@ const Awards = () => {
             </div>
             {awardGroup.awardImageUrl && (
               <motion.div
-                className="md:col-span-4 flex justify-end items-start"
+                className="md:col-span-4 hidden md:flex justify-end items-start"
                 initial={{ opacity: 0, rotate: 0 }}
                 animate={{ opacity: 1, rotate: 2 }}
                 transition={{ duration: 0.6, delay: 0.3 }}

@@ -12,14 +12,10 @@ import { safeScrollTo } from '../utils/scrollUtils';
 import { FaTimes } from 'react-icons/fa';
 import { StaggerContainer, StaggerItem } from '../assets/ui/StaggerContainer';
 import { portfolioService } from '../services/supabase';
+import { useScrollLock } from '../hooks/useScrollLock';
 
 const ImageModal = ({ src, alt, onClose }) => {
-  React.useEffect(() => {
-    if (src) {
-      document.body.style.overflow = 'hidden';
-    }
-    return () => { document.body.style.overflow = ''; };
-  }, [src]);
+  useScrollLock(!!src);
 
   if (!src) return null;
 
@@ -29,7 +25,7 @@ const ImageModal = ({ src, alt, onClose }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-cream-800/80 backdrop-blur-sm p-4"
+        className="fixed inset-0 z-[60] flex items-center justify-center bg-cream-800/80 backdrop-blur-sm p-4"
         onClick={onClose}
       >
         <motion.div
@@ -41,7 +37,7 @@ const ImageModal = ({ src, alt, onClose }) => {
         >
           <img src={src} alt={alt} className="max-h-[80vh] w-auto rounded-2xl border border-cream-300" />
           <button
-            className="absolute top-3 right-3 bg-cream-50/90 hover:bg-cream-50 rounded-full p-2 border border-cream-300 transition-all"
+            className="absolute top-3 right-3 bg-cream-50/90 hover:bg-cream-50 rounded-full p-3 border border-cream-300 transition-all"
             onClick={onClose}
             aria-label="Close image modal"
           >
@@ -334,7 +330,7 @@ const Education = () => {
           <div className="pt-16 pb-12 grid md:grid-cols-12 gap-8 items-start">
             <div className="md:col-span-8">
               <motion.h1
-                className="text-5xl md:text-7xl font-display font-bold text-cream-800 tracking-tight leading-[0.95] mb-6"
+                className="text-3xl sm:text-5xl md:text-7xl font-display font-bold text-cream-800 tracking-tight leading-[0.95] mb-6"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
@@ -371,7 +367,7 @@ const Education = () => {
               const displayUrl = sectionImageUrl ? (sectionImageUrl.startsWith('http') ? sectionImageUrl : portfolioService.getAssetUrl(sectionImageUrl)) : '';
               return displayUrl ? (
                 <motion.div
-                  className="md:col-span-4 flex justify-end items-start"
+                  className="md:col-span-4 hidden md:flex justify-end items-start"
                   initial={{ opacity: 0, rotate: 0 }}
                   animate={{ opacity: 1, rotate: 2 }}
                   transition={{ duration: 0.6, delay: 0.3 }}

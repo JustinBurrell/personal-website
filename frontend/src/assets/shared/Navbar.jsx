@@ -282,7 +282,7 @@ const Navbar = () => {
           <div className={isMobileDevice ? "flex items-center" : "md:hidden flex items-center"}>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-xl text-cream-500 hover:text-cinnabar-500 hover:bg-cream-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cinnabar-500 transition-colors"
+              className="inline-flex items-center justify-center p-3 rounded-xl text-cream-500 hover:text-cinnabar-500 hover:bg-cream-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cinnabar-500 transition-colors"
             >
               <span className="sr-only">{menuText}</span>
               {!isOpen ? (
