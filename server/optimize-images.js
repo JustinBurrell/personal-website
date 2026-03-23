@@ -5,13 +5,13 @@
  * Downloads all images from Supabase Storage, compresses them to WebP,
  * and re-uploads them alongside the originals.
  *
- * Usage:
- *   node scripts/optimize-images.js
+ * Usage (from the server/ directory):
+ *   node optimize-images.js
  *
- * Requirements:
- *   npm install @supabase/supabase-js sharp dotenv
+ * Requirements (already in server/):
+ *   npm install sharp   (run once in server/)
  *
- * Set env vars (copy from server/.env):
+ * Reads credentials from server/.env:
  *   SUPABASE_URL=https://xxxx.supabase.co
  *   SUPABASE_SERVICE_ROLE_KEY=eyJ...
  */
@@ -21,10 +21,10 @@ import sharp from 'sharp';
 import { readFileSync } from 'fs';
 import path from 'path';
 
-// Load env from server/.env
+// Load env from .env in the same directory as this script
 let env = {};
 try {
-  const envFile = readFileSync(new URL('../server/.env', import.meta.url), 'utf-8');
+  const envFile = readFileSync(new URL('./.env', import.meta.url), 'utf-8');
   envFile.split('\n').forEach(line => {
     const [key, ...val] = line.split('=');
     if (key && !key.startsWith('#')) env[key.trim()] = val.join('=').trim();
@@ -59,7 +59,7 @@ const DEFAULT_MAX_WIDTH = 1200;
 const WEBP_QUALITY = 78;
 
 // Extensions that sharp can process
-const PROCESSABLE = new Set(['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif', 'tiff']);
+const PROCESSABLE = new Set(['jpg', 'jpeg', 'png', 'gif', 'avif', 'tiff']);
 
 async function listAllFiles(prefix = '') {
   const files = [];
@@ -100,8 +100,6 @@ function getMaxWidth(filePath) {
 }
 
 function getWebpPath(filePath) {
-  const ext = path.extname(filePath).toLowerCase().slice(1);
-  if (ext === 'webp') return null; // Already WebP
   return filePath.replace(/\.[^.]+$/, '.webp');
 }
 
@@ -125,20 +123,15 @@ async function main() {
   const allFiles = await listAllFiles('images');
   const imageFiles = allFiles.filter(f => {
     const ext = path.extname(f).toLowerCase().slice(1);
-    return PROCESSABLE.has(ext) && !f.endsWith('.webp');
+    return PROCESSABLE.has(ext);
   });
 
   console.log(`Found ${imageFiles.length} images to process.\n`);
 
-  const results = { skipped: [], optimized: [], failed: [] };
+  const results = { optimized: [], failed: [] };
 
   for (const filePath of imageFiles) {
     const webpPath = getWebpPath(filePath);
-    if (!webpPath) {
-      results.skipped.push(filePath);
-      continue;
-    }
-
     const maxWidth = getMaxWidth(filePath);
     process.stdout.write(`Processing: ${filePath} → ${webpPath} (max ${maxWidth}px)... `);
 
@@ -167,13 +160,9 @@ async function main() {
 
   console.log('\n--- Summary ---');
   console.log(`Optimized: ${results.optimized.length}`);
-  console.log(`Skipped (already WebP): ${results.skipped.length}`);
   console.log(`Failed: ${results.failed.length}`);
 
   if (results.optimized.length > 0) {
-    const totalOriginalKB = results.optimized.reduce((sum, r) => {
-      return sum; // We'd need to track this separately for total
-    }, 0);
     console.log('\nOptimized files (update these URLs in your database to use .webp versions):');
     results.optimized.forEach(r => {
       console.log(`  ${r.original} → ${r.webp} (${r.savings}% smaller)`);
