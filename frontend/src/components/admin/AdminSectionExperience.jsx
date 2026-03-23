@@ -475,7 +475,7 @@ export default function AdminSectionExperience({ data, onSave }) {
       }, getAccessToken);
       await loadAll();
       await portfolioService.clearCache();
-      onSave();
+      await onSave();
     } catch (err) {
       setError(err.message);
     } finally {
@@ -513,7 +513,7 @@ export default function AdminSectionExperience({ data, onSave }) {
         }
         await loadAll();
         await portfolioService.clearCache();
-        onSave();
+        await onSave();
         setPendingCompanyDeletes((prev) => { const s = new Set(prev); s.delete(company.id); return s; });
       } catch (err) {
         setError(err.message);

@@ -124,7 +124,7 @@ export default function AdminSectionGallery({ data, onSave }) {
       const withCats = { ...created, categories: [] };
       setRows((prev) => [withCats, ...prev]);
       await portfolioService.clearCache();
-      onSave();
+      await onSave();
     } catch (err) {
       setError(err.message);
     } finally {
