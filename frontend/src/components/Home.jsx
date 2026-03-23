@@ -136,11 +136,11 @@ const Home = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
-                <div className="relative">
+                <div className="relative w-full max-w-md aspect-[4/5]">
                   <img
                     src={home.imageUrl ? (home.imageUrl.startsWith('http') ? home.imageUrl : portfolioService.getAssetUrl(home.imageUrl)) : ''}
                     alt="Justin Burrell"
-                    className="w-full max-w-md rounded-2xl border-4 border-cream-200 object-cover"
+                    className="w-full h-full rounded-2xl border-4 border-cream-200 object-cover"
                     fetchpriority="high"
                     width="448"
                     height="560"

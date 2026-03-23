@@ -90,7 +90,7 @@ const Gallery = () => {
                 {carouselItems.map((item, index) => (
                   <div key={index} className="outline-none">
                     <div className="overflow-hidden">
-                      <div className="relative w-full flex justify-center">
+                      <div className="relative w-full flex justify-center min-h-[300px] md:min-h-[400px]">
                         <img
                           src={item.imageUrl}
                           alt={item.title}
