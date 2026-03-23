@@ -16,8 +16,10 @@ import { portfolioService } from '../services/supabase';
 const Home = () => {
   const { translatedData, isLoading } = useLanguage();
   const location = useLocation();
+  const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
   const { scrollYProgress } = useScroll();
-  const imageY = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const imageY = useTransform(scrollYProgress, [0, 1], (prefersReducedMotion || isMobile) ? [0, 0] : [0, -30]);
 
   const organizationsLabel = useTranslateText("Organizations:");
   const viewResumeText = useTranslateText("View Resume");
@@ -138,11 +140,14 @@ const Home = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
-                <motion.div style={{ y: imageY }} className="relative">
+                <motion.div style={{ y: imageY }} className="relative will-change-transform">
                   <img
                     src={home.imageUrl ? (home.imageUrl.startsWith('http') ? home.imageUrl : portfolioService.getAssetUrl(home.imageUrl)) : ''}
                     alt="Justin Burrell"
                     className="w-full max-w-md rounded-2xl border-4 border-cream-200 object-cover"
+                    fetchpriority="high"
+                    width="448"
+                    height="560"
                   />
                 </motion.div>
               </motion.div>

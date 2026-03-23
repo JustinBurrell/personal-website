@@ -135,6 +135,9 @@ const ProjectsGrid = ({ projects, onProjectClick }) => {
                   src={project.imageUrl}
                   alt={project.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                  width="800"
+                  height="256"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-cream-200 to-cream-300">
@@ -235,6 +238,9 @@ const Projects = () => {
                   src={projectData.projectImageUrl}
                   alt="Projects"
                   className="w-72 h-72 md:w-80 md:h-80 object-cover rounded-2xl border border-cream-300"
+                  loading="lazy"
+                  width="320"
+                  height="320"
                 />
               </motion.div>
             )}

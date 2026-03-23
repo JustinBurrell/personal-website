@@ -26,9 +26,6 @@ export const GlobalDataProvider = ({ children }) => {
       logger.data('Fetching global portfolio data...');
       const startTime = performance.now();
 
-      // Start preloading critical images immediately (non-blocking)
-      imagePreloader.preloadCriticalImages();
-
       // Load all data in parallel for fastest overall load time
       const [
         homeData,
@@ -70,11 +67,6 @@ export const GlobalDataProvider = ({ children }) => {
       indexedDBCache.set(cacheKey, completeData, 30 * 60 * 1000).catch(err => {
         logger.warn('Failed to cache data:', err);
       });
-
-      // Preload images from complete data (non-blocking)
-      if (completeData) {
-        imagePreloader.preloadDataImages(completeData);
-      }
 
       const endTime = performance.now();
       const fetchTime = endTime - startTime;

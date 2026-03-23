@@ -95,6 +95,9 @@ const Gallery = () => {
                           src={item.imageUrl}
                           alt={item.title}
                           className="max-h-[70vh] md:max-h-[600px] w-auto object-contain rounded-2xl border border-cream-300"
+                          loading="lazy"
+                          width="1200"
+                          height="600"
                         />
                       </div>
                       <div className="pt-6 pb-2">

@@ -63,6 +63,9 @@ const Awards = () => {
                   src={awardGroup.awardImageUrl.startsWith('http') ? awardGroup.awardImageUrl : portfolioService.getAssetUrl(awardGroup.awardImageUrl)}
                   alt="Awards"
                   className="w-72 h-72 md:w-80 md:h-80 object-cover rounded-2xl border border-cream-300"
+                  loading="lazy"
+                  width="320"
+                  height="320"
                 />
               </motion.div>
             )}

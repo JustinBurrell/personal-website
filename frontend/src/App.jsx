@@ -29,25 +29,26 @@ const Contact = lazy(() => import('./components/Contact'));
 const FullGallery = lazy(() => import('./components/FullGallery'));
 const Admin = lazy(() => import('./components/Admin'));
 
-// Aggressive preloading strategy
+// Deferred preloading — only runs when browser is idle, well after LCP
 const preloadComponents = () => {
-  // Immediate preload of critical components
-  Promise.all([
-    import('./components/About'),
-    import('./components/Gallery'),
-    import('./components/Contact')
-  ]);
-  
-  // Preload other components after a short delay
-  setTimeout(() => {
-    Promise.all([
-      import('./components/Education'),
-      import('./components/Experience'),
-      import('./components/Projects'),
-      import('./components/Awards'),
-      import('./components/FullGallery')
-    ]);
-  }, 500);
+  const load = () => {
+    import('./components/About');
+    import('./components/Gallery');
+    import('./components/Contact');
+    setTimeout(() => {
+      import('./components/Education');
+      import('./components/Experience');
+      import('./components/Projects');
+      import('./components/Awards');
+      import('./components/FullGallery');
+    }, 2000);
+  };
+
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(load, { timeout: 5000 });
+  } else {
+    setTimeout(load, 3000);
+  }
 };
 
 // Optimized loading fallback component
@@ -130,14 +131,6 @@ const App = memo(() => {
         <meta name="description" content="With a passion for technology and a knack for problem-solving, I aim to leverage my technical skills, consulting experience, and leadership background to drive innovation and create scalable solutions that make a positive impact." />
         <meta name="keywords" content="Justin Burrell, thejustinburrell.com, Justin Burrell portfolio website, Justin Burrell Lehigh, Justin Burrell Computer Science, Justin Burrell CSE, Lehigh University Computer Science, Lehigh CSE, Lehigh University Class of 2026, Software Engineer, Horace Mann, Prep for Prep, All Star Code, Lehigh University, Consulting, Portfolio, Python, Java, Kappa Alpha Psi, Kappa" />
         
-        {/* Aggressive preloading for critical resources */}
-        <link rel="preload" href="/assets/images/home/FLOC Headshot.jpeg" as="image" />
-        <link rel="preload" href="/assets/images/about/About Background Photo.jpg" as="image" />
-        <link rel="preload" href="/assets/images/gallery/Gallery Background Photo.jpg" as="image" />
-        
-        {/* Preload critical fonts */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </Helmet>
       
       {/* Hide navbar on admin routes */}

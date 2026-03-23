@@ -6,9 +6,6 @@ class ImagePreloader {
     this.preloadedImages = new Set();
     this.preloadingImages = new Set(); // Track images currently being preloaded
     this.supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    
-    // Start preloading critical images immediately
-    this.preloadCriticalImages();
   }
 
   // Get full Supabase URL for an asset (path or full URL; if full URL return as-is)

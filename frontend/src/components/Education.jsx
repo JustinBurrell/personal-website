@@ -138,6 +138,9 @@ const EducationCard = ({ edu, translatedEdu, type, index, onImageClick, relevant
                 alt={`${translatedEdu.name}`}
                 className="max-h-[380px] w-auto object-contain rounded-xl cursor-pointer hover:scale-105 transition-transform duration-300"
                 onClick={() => onImageClick({ src: edu.educationImageUrl.startsWith('http') ? edu.educationImageUrl : portfolioService.getAssetUrl(edu.educationImageUrl), alt: `${translatedEdu.name}` })}
+                loading="lazy"
+                width="200"
+                height="380"
               />
             </div>
           )}
@@ -376,6 +379,9 @@ const Education = () => {
                     src={displayUrl}
                     alt="Education"
                     className="w-72 h-72 md:w-80 md:h-80 object-cover rounded-2xl border border-cream-300"
+                    loading="lazy"
+                    width="320"
+                    height="320"
                   />
                 </motion.div>
               ) : null;
