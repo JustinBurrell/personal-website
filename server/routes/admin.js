@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import multer from 'multer';
+import sharp from 'sharp';
 import { requireAuth, requireAdmin } from '../middleware/requireAuth.js';
 import { updateSectionRow, updateSectionRowById, getTableForSection, camelToSnakeKeys } from '../lib/supabaseAdmin.js';
 import { getSectionParentId, SECTION_ITEMS_CONFIG, NESTED_ITEMS_CONFIG } from '../lib/sectionConfig.js';
@@ -12,7 +13,7 @@ const ALLOWED_EXTENSIONS = '.jpeg, .jpg, .png, .webp, .gif, .pdf';
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB — raw photos can be large; server converts to WebP
   fileFilter: (_req, file, cb) => {
     if (ALLOWED_MIME_TYPES.includes(file.mimetype)) {
       cb(null, true);
@@ -554,11 +555,33 @@ adminRouter.post('/upload', (req, res, next) => {
 
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
+    // Convert images to WebP (except PDFs and animated GIFs which need special handling)
+    let fileBuffer = req.file.buffer;
+    let fileMime = req.file.mimetype;
+    let fileExt = req.file.originalname?.split('.').pop()?.toLowerCase() || 'bin';
+    const isAnimatedGif = fileMime === 'image/gif';
+    const isPdf = fileMime === 'application/pdf';
+
+    if (!isPdf && fileMime.startsWith('image/') && fileMime !== 'image/webp') {
+      try {
+        const sharpInstance = sharp(fileBuffer, { animated: isAnimatedGif });
+        fileBuffer = await sharpInstance
+          .webp({ quality: 78, effort: 4 })
+          .toBuffer();
+        fileMime = 'image/webp';
+        fileExt = 'webp';
+      } catch (convErr) {
+        // If conversion fails, upload original
+        console.warn('WebP conversion failed, uploading original:', convErr.message);
+      }
+    }
+
     const section = (req.body.section || 'misc').replace(/[^a-z0-9_-]/gi, '');
     const experienceType = (req.body.experienceType || '').replace(/[^a-z0-9_-]/gi, '').toLowerCase();
     let customPath = req.body.path?.replace(/^\/+|\/+/g, '/').replace(/\.\./g, '');
-    const ext = req.file.originalname?.split('.').pop() || 'bin';
-    const safeName = `${Date.now()}.${ext}`;
+    // Replace original extension in customPath with the actual output extension
+    if (customPath) customPath = customPath.replace(/\.[^.]+$/, `.${fileExt}`);
+    const safeName = `${Date.now()}.${fileExt}`;
     // All uploads go inside the assets folder in the bucket. Path = assets/images/... so we never create a top-level "images" folder.
     const assetsPrefix = 'assets/';
     if (section === 'education') {
@@ -592,7 +615,7 @@ adminRouter.post('/upload', (req, res, next) => {
 
     const { data, error } = await supabase.storage
       .from('assets')
-      .upload(path, req.file.buffer, { contentType: req.file.mimetype, upsert: true });
+      .upload(path, fileBuffer, { contentType: fileMime, upsert: true });
 
     if (error) throw error;
 
