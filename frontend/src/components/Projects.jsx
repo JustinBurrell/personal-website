@@ -11,28 +11,29 @@ import { useScrollLock } from '../hooks/useScrollLock';
 const ProjectModal = ({ project, isOpen, onClose }) => {
   useScrollLock(isOpen);
 
-  if (!isOpen || !project) return null;
-
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
+      {isOpen && project && (
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
         className="fixed inset-0 z-[60] flex items-center justify-center bg-cream-800/80 backdrop-blur-sm p-4"
         onClick={onClose}
       >
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 16 }}
+          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
           onClick={(e) => e.stopPropagation()}
           className="bg-cream-50 border border-cream-300 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
         >
           <div className="relative">
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 z-10 bg-cream-50/90 hover:bg-cream-50 rounded-full p-3 border border-cream-300 transition-all"
+              className="absolute top-4 right-4 z-10 bg-cream-50/90 hover:bg-cream-50 rounded-full p-3 border border-cream-300 transition-colors"
               aria-label="Close modal"
             >
               <FaTimes className="text-cream-500 hover:text-cinnabar-500 text-xl" />
@@ -102,6 +103,7 @@ const ProjectModal = ({ project, isOpen, onClose }) => {
           </div>
         </motion.div>
       </motion.div>
+      )}
     </AnimatePresence>
   );
 };
@@ -134,7 +136,7 @@ const ProjectsGrid = ({ projects, onProjectClick }) => {
                 <img
                   src={project.imageUrl}
                   alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                   loading="lazy"
                   width="800"
                   height="256"
@@ -145,7 +147,7 @@ const ProjectsGrid = ({ projects, onProjectClick }) => {
                 </div>
               )}
 
-              <div className="absolute inset-0 bg-cream-800/0 group-hover:bg-cream-800/80 backdrop-blur-0 group-hover:backdrop-blur-sm transition-all duration-300 hidden md:flex items-center justify-center p-4 opacity-0 group-hover:opacity-100">
+              <div className="absolute inset-0 bg-cream-800/0 group-hover:bg-cream-800/80 transition-colors duration-200 hidden md:flex items-center justify-center p-4 opacity-0 group-hover:opacity-100">
                 <div className="text-cream-50 text-center transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                   <h3 className="text-xl font-display font-bold mb-2">{project.title}</h3>
                   <p className="text-sm font-body text-cream-200 line-clamp-3">{project.description}</p>

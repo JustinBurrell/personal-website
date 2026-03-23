@@ -104,7 +104,7 @@ const renderTextWithLinks = (text) => {
         href={match[2]}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-cinnabar-500 hover:text-cinnabar-700 underline decoration-cinnabar-200 hover:decoration-cinnabar-500 underline-offset-4 transition-all font-semibold"
+        className="text-cinnabar-500 hover:text-cinnabar-700 underline decoration-cinnabar-200 hover:decoration-cinnabar-500 underline-offset-4 transition-colors font-semibold"
       >
         {match[1]}
       </a>
@@ -170,7 +170,7 @@ const About = () => {
               initial={{ scaleX: 0, transformOrigin: 'left' }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             />
 
             {/* Skills and Interests - 7/5 split */}
@@ -195,17 +195,15 @@ const About = () => {
                           key={index}
                           className="group relative cursor-pointer"
                           title={skill}
-                          initial={{ opacity: 0, scale: 0.5 }}
+                          initial={{ opacity: 0, scale: 0.8 }}
                           whileInView={{ opacity: 1, scale: 1 }}
                           viewport={{ once: true }}
                           transition={{
-                            duration: 0.4,
-                            delay: index * 0.05,
-                            type: "spring",
-                            stiffness: 100,
-                            damping: 15
+                            duration: 0.3,
+                            delay: index * 0.03,
+                            ease: [0.22, 1, 0.36, 1],
                           }}
-                          whileHover={{ scale: 1.2 }}
+                          whileHover={{ scale: 1.15 }}
                         >
                           <a
                             href={skillUrls[skill]}

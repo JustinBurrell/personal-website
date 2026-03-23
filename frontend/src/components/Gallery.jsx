@@ -35,7 +35,7 @@ const Gallery = () => {
   const NextArrow = ({ onClick }) => (
     <button
       onClick={onClick}
-      className="hidden md:block absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-cream-50 border border-cream-300 hover:border-cinnabar-500 hover:text-cinnabar-500 p-3 rounded-full transition-all duration-200"
+      className="hidden md:block absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-cream-50 border border-cream-300 hover:border-cinnabar-500 hover:text-cinnabar-500 p-3 rounded-full transition-colors duration-150"
       aria-label="Next slide"
     >
       <FaChevronRight className="text-lg" />
@@ -45,7 +45,7 @@ const Gallery = () => {
   const PrevArrow = ({ onClick }) => (
     <button
       onClick={onClick}
-      className="hidden md:block absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-cream-50 border border-cream-300 hover:border-cinnabar-500 hover:text-cinnabar-500 p-3 rounded-full transition-all duration-200"
+      className="hidden md:block absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-cream-50 border border-cream-300 hover:border-cinnabar-500 hover:text-cinnabar-500 p-3 rounded-full transition-colors duration-150"
       aria-label="Previous slide"
     >
       <FaChevronLeft className="text-lg" />

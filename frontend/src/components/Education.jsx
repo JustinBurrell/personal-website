@@ -17,27 +17,28 @@ import { useScrollLock } from '../hooks/useScrollLock';
 const ImageModal = ({ src, alt, onClose }) => {
   useScrollLock(!!src);
 
-  if (!src) return null;
-
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
+      {!!src && (
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
         className="fixed inset-0 z-[60] flex items-center justify-center bg-cream-800/80 backdrop-blur-sm p-4"
         onClick={onClose}
       >
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 16 }}
+          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
           className="relative max-w-3xl w-full flex justify-center"
           onClick={e => e.stopPropagation()}
         >
           <img src={src} alt={alt} className="max-h-[80vh] w-auto rounded-2xl border border-cream-300" />
           <button
-            className="absolute top-3 right-3 bg-cream-50/90 hover:bg-cream-50 rounded-full p-3 border border-cream-300 transition-all"
+            className="absolute top-3 right-3 bg-cream-50/90 hover:bg-cream-50 rounded-full p-3 border border-cream-300 transition-colors"
             onClick={onClose}
             aria-label="Close image modal"
           >
@@ -45,6 +46,7 @@ const ImageModal = ({ src, alt, onClose }) => {
           </button>
         </motion.div>
       </motion.div>
+      )}
     </AnimatePresence>
   );
 };

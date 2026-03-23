@@ -15,8 +15,8 @@ const TextReveal = ({ text, className = '', as: Tag = 'h1', delay = 0 }) => {
             initial={{ y: '110%' }}
             animate={{ y: 0 }}
             transition={{
-              duration: 0.7,
-              delay: delay + i * 0.05,
+              duration: 0.45,
+              delay: delay + i * 0.04,
               ease: [0.22, 1, 0.36, 1],
             }}
           >

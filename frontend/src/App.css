@@ -37,9 +37,9 @@ html:focus-within {
   scroll-behavior: smooth;
 }
 
-/* Section transitions */
+/* Section transitions — only compositable properties */
 section {
-  transition: all 0.3s ease-in-out;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 /* Responsive container */

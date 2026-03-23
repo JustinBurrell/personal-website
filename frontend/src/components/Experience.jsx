@@ -79,14 +79,14 @@ const ImageModal = ({ isOpen, onClose, imageUrl, onPrev, onNext, hasPrev, hasNex
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
+      {isOpen && (
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
         className="fixed inset-0 z-[60] flex items-center justify-center bg-cream-800/80 backdrop-blur-sm"
         onClick={onClose}
         onTouchStart={handleTouchStart}
@@ -94,7 +94,7 @@ const ImageModal = ({ isOpen, onClose, imageUrl, onPrev, onNext, hasPrev, hasNex
       >
         {hasPrev && (
           <button
-            className="hidden md:block absolute left-4 md:left-8 top-1/2 -translate-y-1/2 bg-cream-50/90 hover:bg-cream-50 p-3 rounded-full border border-cream-300 hover:border-cinnabar-500 transition-all z-10"
+            className="hidden md:block absolute left-4 md:left-8 top-1/2 -translate-y-1/2 bg-cream-50/90 hover:bg-cream-50 p-3 rounded-full border border-cream-300 hover:border-cinnabar-500 transition-colors z-10"
             onClick={e => { e.stopPropagation(); onPrev(); }}
             aria-label="Previous image"
           >
@@ -112,7 +112,7 @@ const ImageModal = ({ isOpen, onClose, imageUrl, onPrev, onNext, hasPrev, hasNex
         </div>
         {hasNext && (
           <button
-            className="hidden md:block absolute right-4 md:right-8 top-1/2 -translate-y-1/2 bg-cream-50/90 hover:bg-cream-50 p-3 rounded-full border border-cream-300 hover:border-cinnabar-500 transition-all z-10"
+            className="hidden md:block absolute right-4 md:right-8 top-1/2 -translate-y-1/2 bg-cream-50/90 hover:bg-cream-50 p-3 rounded-full border border-cream-300 hover:border-cinnabar-500 transition-colors z-10"
             onClick={e => { e.stopPropagation(); onNext(); }}
             aria-label="Next image"
           >
@@ -120,13 +120,14 @@ const ImageModal = ({ isOpen, onClose, imageUrl, onPrev, onNext, hasPrev, hasNex
           </button>
         )}
         <button
-          className="absolute top-4 right-4 bg-cream-50/90 hover:bg-cream-50 rounded-full p-3 border border-cream-300 transition-all"
+          className="absolute top-4 right-4 bg-cream-50/90 hover:bg-cream-50 rounded-full p-3 border border-cream-300 transition-colors"
           onClick={onClose}
           aria-label="Close"
         >
           <FaTimes className="text-cream-500 hover:text-cinnabar-500 text-xl" />
         </button>
       </motion.div>
+      )}
     </AnimatePresence>
   );
 };
@@ -202,14 +203,14 @@ const Timeline = ({ experiences, type }) => {
     <div className="relative w-full">
       <button
         onClick={() => scroll('left')}
-        className="hidden md:block absolute -left-4 md:-left-8 top-1/2 -translate-y-1/2 z-10 bg-cream-50/90 hover:bg-cream-50 p-3 rounded-full border border-cream-300 hover:border-cinnabar-500 transition-all"
+        className="hidden md:block absolute -left-4 md:-left-8 top-1/2 -translate-y-1/2 z-10 bg-cream-50/90 hover:bg-cream-50 p-3 rounded-full border border-cream-300 hover:border-cinnabar-500 transition-colors"
         aria-label="Scroll left"
       >
         <FaChevronLeft className="text-cream-600 text-lg" />
       </button>
       <button
         onClick={() => scroll('right')}
-        className="hidden md:block absolute -right-4 md:-right-8 top-1/2 -translate-y-1/2 z-10 bg-cream-50/90 hover:bg-cream-50 p-3 rounded-full border border-cream-300 hover:border-cinnabar-500 transition-all"
+        className="hidden md:block absolute -right-4 md:-right-8 top-1/2 -translate-y-1/2 z-10 bg-cream-50/90 hover:bg-cream-50 p-3 rounded-full border border-cream-300 hover:border-cinnabar-500 transition-colors"
         aria-label="Scroll right"
       >
         <FaChevronRight className="text-cream-600 text-lg" />
